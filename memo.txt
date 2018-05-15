@@ -1,0 +1,35 @@
+go web template
+
+main
+
+authentication
+
+jsonrpc2handler
+
+handler
+
+service
+
+bizlogic
+
+dataaccess
+
+infra
+ mysql.go
+ datastore.go
+ inmem.go
+
+
+
+
+client
+
+
+config
+ routing.go
+   middleware
+   registHandler
+
+
+gzipにも対応したい
+https://ja.louisaandlily.com/gzip-with-golang
