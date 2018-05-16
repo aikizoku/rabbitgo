@@ -8,12 +8,6 @@ type Response struct {
 	Error   ResponseError `json:"error,omitempty"`
 }
 
-// ResponseError ... JSONRPC2のエラーレスポンス定義
-type ResponseError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
 // NewResponse ... JSONRPC2のレスポンスを取得
 func NewResponse(id string, result interface{}) Response {
 	return Response{
@@ -21,6 +15,12 @@ func NewResponse(id string, result interface{}) Response {
 		ID:      id,
 		Result:  result,
 	}
+}
+
+// ResponseError ... JSONRPC2のエラーレスポンス定義
+type ResponseError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 // NewErrorResponse ... JSONRPC2のエラーレスポンスを取得

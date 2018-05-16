@@ -12,11 +12,16 @@ const (
 )
 
 type Server struct {
+	handlers map[string]Handler
 }
 
 type Handler interface {
 	ParseParams(*json.RawMessage) (interface{}, error)
 	Exec() interface{}
+}
+
+func (s *Server) Register(name string, handler Handler) {
+
 }
 
 func (s *Server) handleSingleRequest() {
