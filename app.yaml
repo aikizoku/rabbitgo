@@ -1,6 +1,6 @@
 runtime: go
 api_version: go1.8
-service: go-api-sample
+service: go-web-sample
 
 handlers:
 - url: /.*

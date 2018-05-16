@@ -17,9 +17,9 @@ var (
 
 func main() {
 	flag.Parse()
-	fmt.Printf("env: %s", env)
-	fmt.Printf("configFile: %s", configFile)
-	fmt.Printf("basePath: %s", basePath)
+	fmt.Printf("env: %s", *env)
+	fmt.Printf("configFile: %s", *configFile)
+	fmt.Printf("basePath: %s", *basePath)
 	http.HandleFunc("/", handler)
 	appengine.Main()
 }
