@@ -1,5 +1,8 @@
 package service
 
+import "context"
+
+// Sample ... サービスのインターフェースを定義
 type Sample interface {
-	hoge()
+	Hoge(ctx context.Context)
 }

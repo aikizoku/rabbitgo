@@ -1,5 +1,8 @@
 package repository
 
+import "context"
+
+// Sample ... リポジトリのインターフェースを定義
 type Sample interface {
-	hoge()
+	Hoge(ctx context.Context)
 }

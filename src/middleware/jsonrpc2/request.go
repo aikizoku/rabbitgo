@@ -2,20 +2,25 @@ package jsonrpc2
 
 import "encoding/json"
 
-// Request ... JSONRPC2のリクエスト定義
-type Request struct {
+type request struct {
 	Version string           `json:"jsonrpc"`
 	ID      string           `json:"id"`
 	Method  string           `json:"method"`
 	Params  *json.RawMessage `json:"params"`
 }
 
-// NewRequest ... JSONRPC2のリクエストを取得
-func NewRequest(id string, method string, params *json.RawMessage) Request {
-	return Request{
-		Version: "2.0",
-		ID:      id,
-		Method:  method,
-		Params:  params,
+func (r *request) isValid() bool {
+	if r.Version != "2.0" {
+		return false
 	}
+	if r.ID == "" {
+		return false
+	}
+	if r.Method == "" {
+		return false
+	}
+	if r.Params == nil {
+		return false
+	}
+	return true
 }
