@@ -6,7 +6,8 @@ var accounts = map[string]string{
 	"hoge": "hoge",
 }
 
-func basicAuth(next http.Handler) http.Handler {
+// BasicAuth ... ベーシック認証機能を提供するミドルウェア
+func BasicAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, password, ok := r.BasicAuth()
 		if !ok {
