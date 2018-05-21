@@ -3,14 +3,15 @@ package api
 import (
 	"net/http"
 
-	"github.com/aikizoku/go-web-template/src/middleware/jsonrpc2"
-	"github.com/aikizoku/go-web-template/src/service"
+	"github.com/aikizoku/go-gae-template/src/middleware"
+	"google.golang.org/appengine"
 )
 
-type Sample struct {
-	sample service.Sample
+type Jsonrpc2 struct {
+	Rpc middleware.Jsonrpc2
 }
 
-func (h *Sample) Jsonrpc2(w http.ResponseWriter, r *http.Request) {
-	rpc := jsonrpc2.Jsonrpc2{}
+func (h *Jsonrpc2) Handler(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	h.Rpc.Handle(ctx, w, r)
 }

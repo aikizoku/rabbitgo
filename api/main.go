@@ -5,6 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aikizoku/go-gae-template/src/handler/api"
+	"github.com/aikizoku/go-gae-template/src/middleware"
+	"github.com/aikizoku/go-gae-template/src/repository"
+	"github.com/aikizoku/go-gae-template/src/service"
+	"github.com/go-chi/chi"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -21,6 +26,28 @@ func main() {
 	fmt.Printf("configFile: %s", *configFile)
 	fmt.Printf("basePath: %s", *basePath)
 	http.HandleFunc("/", handler)
+
+	r := chi.NewRouter()
+
+	// Setup Middleware
+
+	// Dependency Injection
+	sampleRepo := repository.NewSample()
+	sampleSvc := service.NewSample(sampleRepo)
+	sampleHandler := &api.SampleHandler{
+		Service: sampleSvc,
+	}
+
+	// Routing
+	rpc := *middleware.NewJsonrpc2()
+	rpc.Register("sample", sampleHandler)
+
+	jsonrpc2 := api.Jsonrpc2{
+		Rpc: rpc,
+	}
+	r.Post("/api/v1/rpc", jsonrpc2.Handler)
+
+	// Run
 	appengine.Main()
 }
 

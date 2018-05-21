@@ -1,15 +1,15 @@
-package jsonrpc2
+package middleware
 
 import "encoding/json"
 
-type request struct {
+type jsonrpc2Request struct {
 	Version string           `json:"jsonrpc"`
 	ID      string           `json:"id"`
 	Method  string           `json:"method"`
 	Params  *json.RawMessage `json:"params"`
 }
 
-func (r *request) isValid() bool {
+func (r *jsonrpc2Request) isValid() bool {
 	if r.Version != version {
 		return false
 	}
