@@ -14,7 +14,7 @@ type responseError struct {
 
 func newResponse(id string, result interface{}) response {
 	return response{
-		Version: "2.0",
+		Version: version,
 		ID:      id,
 		Result:  result,
 	}
@@ -22,7 +22,7 @@ func newResponse(id string, result interface{}) response {
 
 func newErrorResponse(id string, code int, message string) response {
 	return response{
-		Version: "2.0",
+		Version: version,
 		ID:      id,
 		Error: responseError{
 			Code:    code,

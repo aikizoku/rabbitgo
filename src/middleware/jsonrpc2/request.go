@@ -10,7 +10,7 @@ type request struct {
 }
 
 func (r *request) isValid() bool {
-	if r.Version != "2.0" {
+	if r.Version != version {
 		return false
 	}
 	if r.ID == "" {

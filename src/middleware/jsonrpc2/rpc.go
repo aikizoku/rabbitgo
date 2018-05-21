@@ -7,7 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/aikizoku/go-gae-template/src/handler"
+	"github.com/aikizoku/go-web-template/src/handler"
+	"google.golang.org/appengine/log"
 )
 
 const (
@@ -25,6 +26,7 @@ const (
 	ErrInternal = 50001
 
 	contentType = "application/json"
+	version     = "2.0"
 )
 
 type Handler interface {
@@ -54,8 +56,8 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 
 	// POSTで送信されていること
 	if r.Method != "POST" {
-		msg := fmt.Sprintf("invalid http method: %s", r.Method)
-		handler.RenderJSON(w, http.StatusNotAcceptable, newErrorResponse("", ErrInvalidRequest, msg))
+		log.Errorf(ctx, "invalid http method: %s", r.Method)
+		handler.RenderJSON(w, http.StatusNotAcceptable, nil)
 		return
 	}
 
@@ -63,15 +65,15 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 	contentType := r.Header.Get("Content-Type")
 	accept := r.Header.Get("Accept")
 	if contentType != contentType || accept != contentType {
-		msg := fmt.Sprintf("invalid http header content-type: %s, accept: %s", contentType, accept)
-		handler.RenderJSON(w, http.StatusUnsupportedMediaType, newErrorResponse("", ErrInvalidRequest, msg))
+		log.Errorf(ctx, "invalid http header content-type: %s, accept: %s", contentType, accept)
+		handler.RenderJSON(w, http.StatusUnsupportedMediaType, nil)
 		return
 	}
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		msg := "failed to read http body"
-		handler.RenderJSON(w, http.StatusBadRequest, newErrorResponse("", ErrInvalidRequest, msg))
+		log.Errorf(ctx, "failed to read http body")
+		handler.RenderJSON(w, http.StatusBadRequest, nil)
 		return
 	}
 
@@ -80,8 +82,8 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 		err = j.handleBatchRequest(ctx, w, r, data)
 	}
 	if err != nil {
-		msg := "failed to parse json"
-		handler.RenderJSON(w, http.StatusBadRequest, newErrorResponse("", ErrInvalidJSON, msg))
+		log.Errorf(ctx, "failed to parse json")
+		handler.RenderJSON(w, http.StatusBadRequest, nil)
 		return
 	}
 }
@@ -119,22 +121,26 @@ func (j *Jsonrpc2) handleBatchRequest(ctx context.Context, w http.ResponseWriter
 
 func (j *Jsonrpc2) handleRequest(ctx context.Context, r *http.Request, req request) response {
 	if !req.isValid() {
-		msg := "invalid jsonrpc2 params"
+		msg := fmt.Sprintf("invalid jsonrpc2 params: %v", req)
+		log.Errorf(ctx, msg)
 		return newErrorResponse(req.ID, ErrInvalidJsonrpc2, msg)
 	}
 	handler := j.handlers[req.Method]
 	if handler == nil {
 		msg := fmt.Sprintf("method not found: %s", req.Method)
+		log.Errorf(ctx, msg)
 		return newErrorResponse(req.ID, ErrMehodNotFaund, msg)
 	}
 	params, err := handler.ParseParams(ctx, req.Params)
 	if err != nil {
 		msg := fmt.Sprintf("invalid params: %v", err)
+		log.Errorf(ctx, msg)
 		return newErrorResponse(req.ID, ErrInvalidParams, msg)
 	}
 	result, err := handler.Exec(ctx, req.Method, params)
 	if err != nil {
 		msg := fmt.Sprintf("invalid params: %v", err)
+		log.Errorf(ctx, msg)
 		return newErrorResponse(req.ID, ErrInternal, msg)
 	}
 	return newResponse(req.ID, result)
