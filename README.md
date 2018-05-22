@@ -3,7 +3,8 @@ GAE/goで色々やるためのテンプレート
 
 APIとWebとTaskが作れるよ
 
-# Goのセットアップ
+# 開発環境構築
+## Goのセットアップ
 ```bash
 # goenv(Goのバージョン管理)のインストール
 brew install goenv
@@ -21,7 +22,7 @@ goenv global 1.8.7
 go version
 ```
 
-GOPATHを通す
+## GOPATHを通す
 ```bash
 vi .bash_profile
 
@@ -30,7 +31,7 @@ export GOPATH=$HOME/go
 source .bash_profile
 ```
 
-# ghq(リポジトリ管理)のセットアップ
+## ghq(リポジトリ管理)のセットアップ
 ```bash
 # インストール
 brew install ghq
@@ -42,7 +43,7 @@ git config --global ghq.root $GOPATH/src
 ghq get xxxxxxxxx
 ```
 
-# Google Cloud SDKのセットアップ
+## Google Cloud SDKのセットアップ
 ```bash
 # 対話型パッケージ
 curl https://sdk.cloud.google.com | bash
@@ -54,7 +55,7 @@ exec -l $SHELL
 gcloud init
 ```
 
-# 動かす
+## 動かす
 
 
 
