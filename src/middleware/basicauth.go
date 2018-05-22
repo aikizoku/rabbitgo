@@ -13,11 +13,11 @@ func BasicAuth(next http.Handler) http.Handler {
 		if !ok {
 			w.Header().Set("WWW-Authenticate", "Basic")
 			w.WriteHeader(http.StatusUnauthorized)
-			http.Error(w, "basic auth required", http.StatusUnauthorized)
+			http.Error(w, "basic auth required.", http.StatusUnauthorized)
 			return
 		}
 		if accounts[user] != password {
-			http.Error(w, "failed to auth", http.StatusUnauthorized)
+			http.Error(w, "basic auth error.", http.StatusUnauthorized)
 			return
 		}
 		next.ServeHTTP(w, r)

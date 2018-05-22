@@ -75,7 +75,7 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Errorf(ctx, "failed to read http body")
+		log.Errorf(ctx, "read http body")
 		RenderJSON(w, http.StatusBadRequest, nil)
 		return
 	}
@@ -85,7 +85,7 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 		err = j.handleBatchRequest(ctx, w, r, data)
 	}
 	if err != nil {
-		log.Errorf(ctx, "failed to parse json")
+		log.Errorf(ctx, "parse json")
 		RenderJSON(w, http.StatusBadRequest, nil)
 		return
 	}
