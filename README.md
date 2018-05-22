@@ -55,10 +55,34 @@ exec -l $SHELL
 gcloud init
 ```
 
+## 依存パッケージのインストール
+```bash
+go get ./...
+```
+
 ## 動かす
+```bash
+# API
+make run svc=api
 
+# Web
+make run svc=web
 
+# Task
+make run svc=task
+```
 
+## デプロイ
+```bash
+# API
+make deploy svc=api
+
+# Web
+make deploy svc=web
+
+# Task
+make deploy svc=task
+```
 
 
 

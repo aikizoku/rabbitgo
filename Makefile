@@ -1,6 +1,6 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
 
-.PHONY: hello, run, deploy, browse, api
+.PHONY: hello, run, deploy, api
 
 hello:
 	@echo Hello go project ${GOPHER}
@@ -10,15 +10,8 @@ run:
 	dev_appserver.py ${svc}/app.yaml
 
 # デプロイ
-deploy-dev:
+deploy:
 	@gcloud app deploy ${svc}/app.yaml
-
-deploy-prod:
-	@gcloud app deploy ${svc}/app.yaml
-
-# 閲覧
-browse:
-	@gcloud app browse
 
 # APIテスト
 api:
