@@ -67,9 +67,8 @@ func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Re
 
 	// リクエストのContent-TypeもしくはAcceptがapplication/jsonであること
 	contentType := r.Header.Get("Content-Type")
-	accept := r.Header.Get("Accept")
-	if contentType != contentType || accept != contentType {
-		log.Errorf(ctx, "invalid http header content-type: %s, accept: %s", contentType, accept)
+	if contentType != contentType {
+		log.Errorf(ctx, "invalid http header content-type: %s", contentType)
 		RenderJSON(w, http.StatusUnsupportedMediaType, nil)
 		return
 	}

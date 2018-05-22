@@ -5,27 +5,21 @@ GOPHER = 'ʕ◔ϖ◔ʔ'
 hello:
 	@echo Hello go project ${GOPHER}
 
-# セットアップ
-setup:
-	dep 
-
 # 実行
-run-:
-	@go run 
+run:
+	dev_appserver.py ${svc}/app.yaml
 
 # デプロイ
 deploy-dev:
-	gcloud app deploy
+	@gcloud app deploy ${svc}/app.yaml
 
 deploy-prod:
-	gcloud app deploy
+	@gcloud app deploy ${svc}/app.yaml
 
 # 閲覧
 browse:
-	gcloud app browse
+	@gcloud app browse
 
 # APIテスト
-init
-
 api:
-	@echo curl -s -X POST --data '{"jsonrpc":"2.0","id":1,"method":"${method}","params":"${params}"}' -H 'Authorization: Bearer ${token}' http://localhost:8080/v1/rpc | jq .
+	curl -s -X POST --data '{"jsonrpc":"2.0","id":1,"method":"${method}","params":"${params}"}' -H 'Authorization: Bearer ${token}' http://localhost:8080/api/v1/rpc | jq .

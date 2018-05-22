@@ -6,10 +6,11 @@ import (
 
 	"github.com/aikizoku/go-gae-template/src/model"
 	"github.com/aikizoku/go-gae-template/src/service"
+	"google.golang.org/appengine/log"
 )
 
 type SampleHandler struct {
-	Service service.Sample
+	Svc service.Sample
 }
 
 func (s *SampleHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
@@ -19,7 +20,8 @@ func (s *SampleHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) 
 }
 
 func (s *SampleHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
-	s.Service.Hoge(ctx)
+	log.Debugf(ctx, "call handler sample")
+	s.Svc.Hoge(ctx)
 	sample := params.(model.Sample)
 	return []model.Sample{
 		sample,
