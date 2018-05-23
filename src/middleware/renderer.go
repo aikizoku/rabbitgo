@@ -16,6 +16,12 @@ func RenderJSON(w http.ResponseWriter, status int, v interface{}) {
 	r.JSON(w, status, v)
 }
 
+// RenderHTML ... HTMLをレンダリングする
+func RenderHTML(w http.ResponseWriter, status int, name string, values interface{}) {
+	r := render.New()
+	r.HTML(w, status, name, values)
+}
+
 // RenderCSV ... CSVをレンダリングする
 func RenderCSV(w http.ResponseWriter, name string, data [][]string) {
 	w.Header().Set("Content-Type", "text/csv")

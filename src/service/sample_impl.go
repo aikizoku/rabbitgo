@@ -8,16 +8,17 @@ import (
 )
 
 type sample struct {
-	Repository repository.Sample
-}
-
-func NewSample(repo repository.Sample) Sample {
-	return &sample{
-		Repository: repo,
-	}
+	repo repository.Sample
 }
 
 func (s *sample) Hoge(ctx context.Context) {
 	log.Debugf(ctx, "call service hoge")
-	s.Repository.Hoge(ctx)
+	s.repo.Hoge(ctx)
+}
+
+// NewSample ...
+func NewSample(repo repository.Sample) Sample {
+	return &sample{
+		repo: repo,
+	}
 }

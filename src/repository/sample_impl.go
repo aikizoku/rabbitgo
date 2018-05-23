@@ -8,15 +8,16 @@ import (
 )
 
 type sample struct {
-	Http infrastructure.HTTP
-}
-
-func NewSample(http infrastructure.HTTP) Sample {
-	return &sample{
-		Http: http,
-	}
+	http infrastructure.HTTP
 }
 
 func (s *sample) Hoge(ctx context.Context) {
 	log.Debugf(ctx, "call repository hoge")
+}
+
+// NewSample ...
+func NewSample(http infrastructure.HTTP) Sample {
+	return &sample{
+		http: http,
+	}
 }

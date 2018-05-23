@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aikizoku/go-gae-template/src/handler"
 	"github.com/aikizoku/go-gae-template/src/handler/api"
 	"github.com/aikizoku/go-gae-template/src/infrastructure"
 	"github.com/aikizoku/go-gae-template/src/middleware"
@@ -24,11 +25,8 @@ func main() {
 	}
 
 	// Routing
-	// r.Use(middleware.BasicAuth)
-	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("pong"))
-	})
+	r.Use(middleware.AccessControl)
+	r.Get("/ping", handler.PingHandler)
 	rpc := *middleware.NewJsonrpc2()
 	r.Route("/v1/rpc", func(subr chi.Router) {
 		subr.Use(rpc.Handle)
