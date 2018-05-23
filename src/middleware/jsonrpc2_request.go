@@ -10,7 +10,7 @@ type jsonrpc2Request struct {
 }
 
 func (r *jsonrpc2Request) isValid() bool {
-	if r.Version != version {
+	if r.Version != jsonrpc2Version {
 		return false
 	}
 	if r.ID == "" {

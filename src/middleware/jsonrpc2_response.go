@@ -14,7 +14,7 @@ type jsonrpc2ErrorResponse struct {
 
 func newJsonrpc2Response(id string, result interface{}) jsonrpc2Response {
 	return jsonrpc2Response{
-		Version: version,
+		Version: jsonrpc2Version,
 		ID:      id,
 		Result:  result,
 	}
@@ -22,7 +22,7 @@ func newJsonrpc2Response(id string, result interface{}) jsonrpc2Response {
 
 func newJsonrpc2ErrorResponse(id string, code int, message string) jsonrpc2Response {
 	return jsonrpc2Response{
-		Version: version,
+		Version: jsonrpc2Version,
 		ID:      id,
 		Error: jsonrpc2ErrorResponse{
 			Code:    code,

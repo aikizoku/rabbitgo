@@ -1,54 +1,143 @@
 package infrastructure
 
 import (
+	"bytes"
 	"context"
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
+	"strings"
 	"time"
 
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/urlfetch"
 )
 
-type HTTPRequestOption struct {
+// HTTP ... HTTP通信モジュール
+type HTTP struct {
+	Timeout time.Duration
+}
+
+// HTTPOption ...
+type HTTPOption struct {
 	Headers map[string]string
 	Timeout time.Duration
 }
 
-func HTTPGet(ctx context.Context, url string, params map[string]string, opt *HTTPRequestOption) (bool, int, []byte) {
-	req, err := http.NewRequest("GET", url, nil)
+// NewHTTP ... HTTP通信モジュールを作成する
+func NewHTTP(timeout time.Duration) HTTP {
+	return HTTP{
+		Timeout: timeout,
+	}
+}
+
+// Get ... Getリクエスト(URL)
+func (h *HTTP) Get(ctx context.Context, u string, opt *HTTPOption) (bool, int, []byte) {
+	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
 		return false, 0, nil
 	}
-
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
+	return h.send(ctx, req, opt.Timeout)
+}
 
+// GetForm ... Getリクエスト(URL, Params)
+func (h *HTTP) GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
+	req, err := http.NewRequest("GET", u, nil)
+	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
+		return false, 0, nil
+	}
+	for key, value := range opt.Headers {
+		req.Header.Set(key, value)
+	}
 	query := req.URL.Query()
 	for key, value := range params {
 		query.Add(key, value)
 	}
 	req.URL.RawQuery = query.Encode()
+	return h.send(ctx, req, opt.Timeout)
+}
 
+// GetQueryString ... Getリクエスト(URL, QueryString)
+func (h *HTTP) GetQueryString(ctx context.Context, u string, qs string, opt *HTTPOption) (bool, int, []byte) {
+	req, err := http.NewRequest("GET", u+"?"+qs, nil)
+	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
+		return false, 0, nil
+	}
+	for key, value := range opt.Headers {
+		req.Header.Set(key, value)
+	}
+	return h.send(ctx, req, opt.Timeout)
+}
+
+// PostForm ... Postリクエスト(URL, Params)
+func (h *HTTP) PostForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
+	values := url.Values{}
+	for key, value := range params {
+		values.Add(key, value)
+	}
+	req, err := http.NewRequest("POST", u, strings.NewReader(values.Encode()))
+	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
+		return false, 0, nil
+	}
+	for key, value := range opt.Headers {
+		req.Header.Set(key, value)
+	}
+	return h.send(ctx, req, opt.Timeout)
+}
+
+// PostJSON ... Postリクエスト(URL, JSON)
+func (h *HTTP) PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOption) (bool, int, []byte) {
+	req, err := http.NewRequest("POST", u, bytes.NewBuffer(json))
+	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
+		return false, 0, nil
+	}
+	for key, value := range opt.Headers {
+		req.Header.Set(key, value)
+	}
+	opt.Headers["Content-Type"] = "application/json"
+	return h.send(ctx, req, opt.Timeout)
+}
+
+// PostBody ... Postリクエスト(URL, Body)
+func (h *HTTP) PostBody(ctx context.Context, u string, body []byte, opt *HTTPOption) (bool, int, []byte) {
+	req, err := http.NewRequest("POST", u, bytes.NewBuffer(body))
+	if err != nil {
+		log.Warningf(ctx, "create request error: %s", err.Error())
+		return false, 0, nil
+	}
+	for key, value := range opt.Headers {
+		req.Header.Set(key, value)
+	}
+	return h.send(ctx, req, opt.Timeout)
+}
+
+func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duration) (bool, int, []byte) {
 	dump, err := httputil.DumpRequestOut(req, true)
 	if err == nil {
 		log.Debugf(ctx, "send http request: %s", dump)
 	} else {
-		log.Errorf(ctx, "dumb http request: url=%s, params=%v, opt=%v", url, params, opt)
+		log.Warningf(ctx, "dumb http request error: %v, error=%s", req, err.Error())
 	}
 
 	client := urlfetch.Client(ctx)
-	if opt.Timeout > 0 {
-		client.Timeout = opt.Timeout
+	if timeout > 0 {
+		client.Timeout = timeout
 	} else {
-		client.Timeout = 10 * time.Second
+		client.Timeout = h.Timeout
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		log.Errorf(ctx, "http request: error=%v", err)
+		log.Warningf(ctx, "http request error: %s", err.Error())
 		return false, 0, nil
 	}
 
@@ -56,19 +145,15 @@ func HTTPGet(ctx context.Context, url string, params map[string]string, opt *HTT
 	if err == nil {
 		log.Debugf(ctx, "http response: %s", dump)
 	} else {
-		log.Errorf(ctx, "dumb http response: url=%s, params=%v, opt=%v, response=%v", url, params, opt, res)
+		log.Warningf(ctx, "dumb http response error: %v, error=%s", req, err.Error())
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Warningf(ctx, "unread body http response: url=%s, params=%v, opt=%v, response=%v", url, params, opt, res)
+		log.Warningf(ctx, "read http response body error: %v, error=%s", res, err.Error())
 		return true, res.StatusCode, nil
 	}
 	defer res.Body.Close()
 
-	return true, http.StatusOK, body
-}
-
-func HTTPPost() {
-
+	return true, res.StatusCode, body
 }

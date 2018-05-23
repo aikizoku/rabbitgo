@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
@@ -24,15 +25,9 @@ const (
 	// Jsonrpc2ErrInternal ... 内部エラー
 	Jsonrpc2ErrInternal = 50001
 
-	contentType = "application/json"
-	version     = "2.0"
+	jsonrpc2ContentType = "application/json"
+	jsonrpc2Version     = "2.0"
 )
-
-// Jsonrpc2Handler ... JSORPC2ハンドラの定義
-type Jsonrpc2Handler interface {
-	DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error)
-	Exec(ctx context.Context, method string, params interface{}) (interface{}, error)
-}
 
 // Jsonrpc2 ... JSONRPC2に準拠したライブラリ
 type Jsonrpc2 struct {
@@ -46,6 +41,12 @@ func NewJsonrpc2() *Jsonrpc2 {
 	}
 }
 
+// Jsonrpc2Handler ... JSORPC2ハンドラの定義
+type Jsonrpc2Handler interface {
+	DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error)
+	Exec(ctx context.Context, method string, params interface{}) (interface{}, error)
+}
+
 // Register ... JSONRPC2のリクエストを登録する
 func (j *Jsonrpc2) Register(method string, handler Jsonrpc2Handler) {
 	if method == "" || handler == nil {
@@ -55,40 +56,44 @@ func (j *Jsonrpc2) Register(method string, handler Jsonrpc2Handler) {
 }
 
 // Handle ... JSONRPC2のリクエストをハンドルする
-func (j *Jsonrpc2) Handle(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", contentType)
+func (j *Jsonrpc2) Handle(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := appengine.NewContext(r)
+		w.Header().Set("Content-Type", jsonrpc2ContentType)
 
-	// POSTで送信されていること
-	if r.Method != "POST" {
-		log.Errorf(ctx, "invalid http method: %s", r.Method)
-		RenderJSON(w, http.StatusNotAcceptable, nil)
-		return
-	}
+		// POSTで送信されていること
+		if r.Method != "POST" {
+			log.Errorf(ctx, "invalid http method: %s", r.Method)
+			RenderJSON(w, http.StatusNotAcceptable, nil)
+			return
+		}
 
-	// リクエストのContent-TypeもしくはAcceptがapplication/jsonであること
-	contentType := r.Header.Get("Content-Type")
-	if contentType != contentType {
-		log.Errorf(ctx, "invalid http header content-type: %s", contentType)
-		RenderJSON(w, http.StatusUnsupportedMediaType, nil)
-		return
-	}
+		// リクエストのContent-TypeもしくはAcceptがapplication/jsonであること
+		contentType := r.Header.Get("Content-Type")
+		if contentType != contentType {
+			log.Errorf(ctx, "invalid http header content-type: %s", contentType)
+			RenderJSON(w, http.StatusUnsupportedMediaType, nil)
+			return
+		}
 
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Errorf(ctx, "read http body")
-		RenderJSON(w, http.StatusBadRequest, nil)
-		return
-	}
+		data, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Errorf(ctx, "read http body error: %s", err.Error())
+			RenderJSON(w, http.StatusBadRequest, nil)
+			return
+		}
 
-	err = j.handleSingleRequest(ctx, w, r, data)
-	if err != nil {
-		err = j.handleBatchRequest(ctx, w, r, data)
-	}
-	if err != nil {
-		log.Errorf(ctx, "parse json")
-		RenderJSON(w, http.StatusBadRequest, nil)
-		return
-	}
+		err = j.handleSingleRequest(ctx, w, r, data)
+		if err != nil {
+			err = j.handleBatchRequest(ctx, w, r, data)
+		}
+		if err != nil {
+			log.Errorf(ctx, "parse json error: %s", err.Error())
+			RenderJSON(w, http.StatusBadRequest, nil)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (j *Jsonrpc2) handleSingleRequest(ctx context.Context, w http.ResponseWriter, r *http.Request, data []byte) error {
@@ -136,13 +141,13 @@ func (j *Jsonrpc2) handleRequest(ctx context.Context, r *http.Request, req jsonr
 	}
 	params, err := handler.DecodeParams(ctx, req.Params)
 	if err != nil {
-		msg := fmt.Sprintf("invalid params: %v", err)
+		msg := fmt.Sprintf("invalid params: %s", err.Error())
 		log.Errorf(ctx, msg)
 		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrInvalidParams, msg)
 	}
 	result, err := handler.Exec(ctx, req.Method, params)
 	if err != nil {
-		msg := fmt.Sprintf("invalid params: %v", err)
+		msg := fmt.Sprintf("invalid params: %s", err.Error())
 		log.Errorf(ctx, msg)
 		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrInternal, msg)
 	}
