@@ -20,17 +20,10 @@ type HTTP struct {
 	Timeout time.Duration
 }
 
-// HTTPOption ...
+// HTTPOption ... HTTP通信モジュールの追加設定
 type HTTPOption struct {
 	Headers map[string]string
 	Timeout time.Duration
-}
-
-// NewHTTP ... HTTP通信モジュールを作成する
-func NewHTTP(timeout time.Duration) HTTP {
-	return HTTP{
-		Timeout: timeout,
-	}
 }
 
 // Get ... Getリクエスト(URL)
@@ -157,4 +150,11 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 	defer res.Body.Close()
 
 	return true, res.StatusCode, body
+}
+
+// NewHTTP ... HTTP通信モジュールを作成する
+func NewHTTP(timeout time.Duration) HTTP {
+	return HTTP{
+		Timeout: timeout,
+	}
 }

@@ -35,13 +35,6 @@ type Jsonrpc2 struct {
 	handlers map[string]Jsonrpc2Handler
 }
 
-// NewJsonrpc2 ... JSONRPC2を作成する
-func NewJsonrpc2() *Jsonrpc2 {
-	return &Jsonrpc2{
-		handlers: map[string]Jsonrpc2Handler{},
-	}
-}
-
 // Jsonrpc2Handler ... JSORPC2ハンドラの定義
 type Jsonrpc2Handler interface {
 	DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error)
@@ -153,4 +146,11 @@ func (j *Jsonrpc2) renderErrorJSON(ctx context.Context, rpcID string, rpcStatus 
 	msg := fmt.Sprintf(format, a)
 	log.Errorf(ctx, msg)
 	return newJsonrpc2ErrorResponse(rpcID, rpcStatus, msg)
+}
+
+// NewJsonrpc2 ... JSONRPC2を作成する
+func NewJsonrpc2() *Jsonrpc2 {
+	return &Jsonrpc2{
+		handlers: map[string]Jsonrpc2Handler{},
+	}
 }
