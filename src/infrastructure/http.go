@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/urlfetch"
 )
@@ -125,7 +126,7 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 	if err == nil {
 		log.Debugf(ctx, "send http request: %s", dump)
 	} else {
-		log.Warningf(ctx, "dumb http request error: %v, error=%s", req, err.Error())
+		log.Warningf(ctx, "dumb http request error: %s, error=%s", spew.Sdump(req), err.Error())
 	}
 
 	client := urlfetch.Client(ctx)
@@ -145,12 +146,12 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 	if err == nil {
 		log.Debugf(ctx, "http response: %s", dump)
 	} else {
-		log.Warningf(ctx, "dumb http response error: %v, error=%s", req, err.Error())
+		log.Warningf(ctx, "dumb http response error: %s, error=%s", spew.Sdump(req), err.Error())
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Warningf(ctx, "read http response body error: %v, error=%s", res, err.Error())
+		log.Warningf(ctx, "read http response body error: %s, error=%s", spew.Sdump(res), err.Error())
 		return true, res.StatusCode, nil
 	}
 	defer res.Body.Close()

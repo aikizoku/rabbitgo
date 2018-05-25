@@ -22,5 +22,6 @@ Config
     secret.yaml
     basicAuthの秘密化
 
+JSONRPCのエラーハンドリングをわかりやすく
 
 

@@ -27,10 +27,13 @@ func main() {
 	// Routing
 	r.Use(middleware.AccessControl)
 	r.Get("/ping", handler.PingHandler)
+
 	rpc := *middleware.NewJsonrpc2()
 	r.Route("/v1/rpc", func(subr chi.Router) {
 		subr.Use(rpc.Handle)
+		subr.Post("/", func(w http.ResponseWriter, r *http.Request) {})
 	})
+
 	http.Handle("/", r)
 
 	// API

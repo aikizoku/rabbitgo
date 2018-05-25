@@ -1,10 +1,10 @@
 package middleware
 
 type jsonrpc2Response struct {
-	Version string                `json:"jsonrpc"`
-	ID      string                `json:"id"`
-	Result  interface{}           `json:"result,omitempty"`
-	Error   jsonrpc2ErrorResponse `json:"error,omitempty"`
+	Version string      `json:"jsonrpc"`
+	ID      string      `json:"id"`
+	Result  interface{} `json:"result,omitempty"`
+	Error   interface{} `json:"error,omitempty"`
 }
 
 type jsonrpc2ErrorResponse struct {

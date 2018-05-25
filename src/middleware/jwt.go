@@ -1,5 +1,7 @@
 package middleware
 
+import "net/http"
+
 type JWTAuthenticator struct {
 	Secret    []byte
 	WhiteList []string
@@ -20,8 +22,18 @@ type JWTAuthenticatorUserClaims struct {
 	CreatedAt int64
 }
 
-func (a *JWTAuthenticator) decode() {
+func Encode(jwt JWTAuthenticatorClaims) {
 
+}
+
+func Decode(jwt string) {
+
+}
+
+func (a *JWTAuthenticator) Handle(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+	})
 }
 
 // NewJWTAuthenticator ... JWTAuthenticatorを作成する

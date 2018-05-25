@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/aikizoku/go-gae-template/src/model"
 	"github.com/aikizoku/go-gae-template/src/service"
@@ -23,6 +24,7 @@ func (s *SampleHandler) Exec(ctx context.Context, method string, params interfac
 	log.Debugf(ctx, "call handler sample")
 	s.Svc.Hoge(ctx)
 	sample := params.(model.Sample)
+	sample.UpdatedAt = time.Now().Unix()
 	return []model.Sample{
 		sample,
 		sample,

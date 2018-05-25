@@ -10,6 +10,12 @@ import (
 	"golang.org/x/text/transform"
 )
 
+// RenderError ... エラーレスポンスをレンダリングする
+func RenderError(w http.ResponseWriter, status int, msg string) {
+	r := render.New()
+	r.Text(w, status, fmt.Sprintf("%d %s", status, msg))
+}
+
 // RenderJSON ... JSONをレンダリングする
 func RenderJSON(w http.ResponseWriter, status int, v interface{}) {
 	r := render.New(render.Options{IndentJSON: true})

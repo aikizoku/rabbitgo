@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/davecgh/go-spew/spew"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -63,23 +64,20 @@ func (j *Jsonrpc2) Handle(next http.Handler) http.Handler {
 
 		// POSTで送信されていること
 		if r.Method != "POST" {
-			log.Errorf(ctx, "invalid http method: %s", r.Method)
-			RenderJSON(w, http.StatusNotAcceptable, nil)
+			j.renderError(ctx, w, http.StatusNotAcceptable, "invalid http method: %s", r.Method)
 			return
 		}
 
 		// リクエストのContent-TypeもしくはAcceptがapplication/jsonであること
 		contentType := r.Header.Get("Content-Type")
 		if contentType != contentType {
-			log.Errorf(ctx, "invalid http header content-type: %s", contentType)
-			RenderJSON(w, http.StatusUnsupportedMediaType, nil)
+			j.renderError(ctx, w, http.StatusUnsupportedMediaType, "invalid http header content-type: %s", contentType)
 			return
 		}
 
 		data, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			log.Errorf(ctx, "read http body error: %s", err.Error())
-			RenderJSON(w, http.StatusBadRequest, nil)
+			j.renderError(ctx, w, http.StatusUnsupportedMediaType, "read http body error: %s", err.Error())
 			return
 		}
 
@@ -88,8 +86,7 @@ func (j *Jsonrpc2) Handle(next http.Handler) http.Handler {
 			err = j.handleBatchRequest(ctx, w, r, data)
 		}
 		if err != nil {
-			log.Errorf(ctx, "parse json error: %s", err.Error())
-			RenderJSON(w, http.StatusBadRequest, nil)
+			j.renderError(ctx, w, http.StatusBadRequest, "parse json error: %s", err.Error())
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -129,27 +126,31 @@ func (j *Jsonrpc2) handleBatchRequest(ctx context.Context, w http.ResponseWriter
 
 func (j *Jsonrpc2) handleRequest(ctx context.Context, r *http.Request, req jsonrpc2Request) jsonrpc2Response {
 	if !req.isValid() {
-		msg := fmt.Sprintf("invalid jsonrpc2 params: %v", req)
-		log.Errorf(ctx, msg)
-		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrInvalidJsonrpc2, msg)
+		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInvalidJsonrpc2, "invalid jsonrpc2 params: %s", spew.Sdump(req))
 	}
 	handler := j.handlers[req.Method]
 	if handler == nil {
-		msg := fmt.Sprintf("method not found: %s", req.Method)
-		log.Errorf(ctx, msg)
-		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrMehodNotFaund, msg)
+		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrMehodNotFaund, "method not found: %s", req.Method)
 	}
 	params, err := handler.DecodeParams(ctx, req.Params)
 	if err != nil {
-		msg := fmt.Sprintf("invalid params: %s", err.Error())
-		log.Errorf(ctx, msg)
-		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrInvalidParams, msg)
+		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInvalidParams, "invalid params: %s", err.Error())
 	}
 	result, err := handler.Exec(ctx, req.Method, params)
 	if err != nil {
-		msg := fmt.Sprintf("invalid params: %s", err.Error())
-		log.Errorf(ctx, msg)
-		return newJsonrpc2ErrorResponse(req.ID, Jsonrpc2ErrInternal, msg)
+		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInternal, "internal error: %s", err.Error())
 	}
 	return newJsonrpc2Response(req.ID, result)
+}
+
+func (j *Jsonrpc2) renderError(ctx context.Context, w http.ResponseWriter, status int, format string, a ...interface{}) {
+	msg := fmt.Sprintf(format, a)
+	log.Errorf(ctx, msg)
+	RenderError(w, status, msg)
+}
+
+func (j *Jsonrpc2) renderErrorJSON(ctx context.Context, rpcID string, rpcStatus int, format string, a ...interface{}) jsonrpc2Response {
+	msg := fmt.Sprintf(format, a)
+	log.Errorf(ctx, msg)
+	return newJsonrpc2ErrorResponse(rpcID, rpcStatus, msg)
 }
