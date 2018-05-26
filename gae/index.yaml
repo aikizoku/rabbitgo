@@ -1,0 +1,9 @@
+indexes:
+
+- kind: Sample
+  ancestor: no
+  properties:
+  - name: updated_at
+  - name: name
+    direction: desc
+

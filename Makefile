@@ -7,15 +7,19 @@ hello:
 
 # 実行
 run:
-	dev_appserver.py ${s}/app.yaml
+	dev_appserver.py gae/${s}/app.yaml
 
 # デプロイ
 deploy:
-	@gcloud app deploy ${s}/app.yaml
+	@gcloud app deploy gae/${s}/app.yaml
 
 # ドメイン設定をデプロイ
 deploy-domain:
-	@gcloud app deploy dispatch.yaml --project pj-trial-id
+	@gcloud app deploy gae/dispatch.yaml --project pj-trial-id
+
+# Datastoreの複合インデックス定義をデプロイ
+deploy-index:
+	@gcloud app deploy gae/index.yaml
 
 # APIテスト
 api:

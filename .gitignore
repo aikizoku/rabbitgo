@@ -147,6 +147,7 @@ tramp
 
 # VS Code
 .vscode/
+
 #####=== Project specific settings ===#####
 biwako-api
 config.yaml
@@ -156,3 +157,7 @@ config.yaml
 node_modules
 static/js/*
 static/css/*
+
+#####=== Google cloud platform settings ===#####
+secret.yaml
+

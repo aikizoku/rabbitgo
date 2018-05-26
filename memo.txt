@@ -1,8 +1,6 @@
 gzipにも対応したい
 https://ja.louisaandlily.com/gzip-with-golang
 
-DataStore実験
-DataStoreモジュール
 DataStoreのソート
 
 SearchAPI実験
@@ -14,14 +12,11 @@ renderXML
 
 renderHTML
 
-JWT
-
 Firebase認証
 
 Config
     secret.yaml
     basicAuthの秘密化
 
-JSONRPCのエラーハンドリングをわかりやすく
 
 
