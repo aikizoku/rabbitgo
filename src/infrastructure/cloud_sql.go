@@ -3,30 +3,22 @@ package infrastructure
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/aikizoku/go-gae-template/src/config"
+	_ "github.com/go-sql-driver/mysql" // Driverの読み込み
 )
 
-type cloudSQL struct {
-	ConnectionName string
-	User           string
-	Password       string
-}
+// NewCSQLClient ... CloudSQLのクライアントを取得する
+func NewCSQLClient(cfg *config.CSQLConfig) *sql.DB {
+	ds := fmt.Sprintf("%s:%s@cloudsql(%s)/",
+		cfg.User,
+		cfg.Password,
+		cfg.ConnectionName)
 
-func (csc cloudSQL) Datasource() string {
-	return fmt.Sprintf("%s:%s@cloudsql(%s)/",
-		csc.User,
-		csc.Password,
-		csc.ConnectionName)
-}
-
-func NewDBClient(cName string, user string, password string) *sql.DB {
-	cSQL := cloudSQL{
-		ConnectionName: cName,
-		User:           user,
-		Password:       password,
-	}
-	c, err := sql.Open("mysql", cSQL.Datasource())
+	cli, err := sql.Open("mysql", ds)
 	if err != nil {
 		panic(err)
 	}
-	return c
+
+	return cli
 }

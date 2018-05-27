@@ -33,9 +33,11 @@ func (h *HTTP) Get(ctx context.Context, u string, opt *HTTPOption) (bool, int, [
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return false, 0, nil
 	}
+
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
+
 	return h.send(ctx, req, opt.Timeout)
 }
 
@@ -46,13 +48,16 @@ func (h *HTTP) GetForm(ctx context.Context, u string, params map[string]string, 
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return false, 0, nil
 	}
+
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
+
 	query := req.URL.Query()
 	for key, value := range params {
 		query.Add(key, value)
 	}
+
 	req.URL.RawQuery = query.Encode()
 	return h.send(ctx, req, opt.Timeout)
 }
@@ -94,10 +99,12 @@ func (h *HTTP) PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOpt
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return false, 0, nil
 	}
+
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
 	opt.Headers["Content-Type"] = "application/json"
+
 	return h.send(ctx, req, opt.Timeout)
 }
 
@@ -108,9 +115,11 @@ func (h *HTTP) PostBody(ctx context.Context, u string, body []byte, opt *HTTPOpt
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return false, 0, nil
 	}
+
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
+
 	return h.send(ctx, req, opt.Timeout)
 }
 
@@ -153,8 +162,8 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 }
 
 // NewHTTP ... HTTP通信モジュールを作成する
-func NewHTTP(timeout time.Duration) HTTP {
-	return HTTP{
+func NewHTTP(timeout time.Duration) *HTTP {
+	return &HTTP{
 		Timeout: timeout,
 	}
 }

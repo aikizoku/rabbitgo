@@ -1,8 +1,6 @@
 gzipにも対応したい
 https://ja.louisaandlily.com/gzip-with-golang
 
-DataStoreのソート
-
 SearchAPI実験
 SearchAPIモジュール
 
@@ -10,13 +8,5 @@ Push通知
 
 renderXML
 
-renderHTML
-
 Firebase認証
-
-Config
-    secret.yaml
-    basicAuthの秘密化
-
-
 

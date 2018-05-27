@@ -103,6 +103,7 @@ func (j *Jsonrpc2) handleBatchRequest(ctx context.Context, w http.ResponseWriter
 	if err != nil {
 		return err
 	}
+
 	var responses []jsonrpc2Response
 	ch := make(chan jsonrpc2Response, len(reqs))
 	for _, req := range reqs {
@@ -113,6 +114,7 @@ func (j *Jsonrpc2) handleBatchRequest(ctx context.Context, w http.ResponseWriter
 	for i := 0; i < len(reqs); i++ {
 		responses = append(responses, <-ch)
 	}
+
 	encoder := json.NewEncoder(w)
 	return encoder.Encode(responses)
 }
@@ -121,18 +123,22 @@ func (j *Jsonrpc2) handleRequest(ctx context.Context, r *http.Request, req jsonr
 	if !req.isValid() {
 		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInvalidJsonrpc2, "invalid jsonrpc2 params: %s", spew.Sdump(req))
 	}
+
 	handler := j.handlers[req.Method]
 	if handler == nil {
 		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrMehodNotFaund, "method not found: %s", req.Method)
 	}
+
 	params, err := handler.DecodeParams(ctx, req.Params)
 	if err != nil {
 		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInvalidParams, "invalid params: %s", err.Error())
 	}
+
 	result, err := handler.Exec(ctx, req.Method, params)
 	if err != nil {
 		return j.renderErrorJSON(ctx, req.ID, Jsonrpc2ErrInternal, "internal error: %s", err.Error())
 	}
+
 	return newJsonrpc2Response(req.ID, result)
 }
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aikizoku/go-gae-template/src/config"
 	"github.com/aikizoku/go-gae-template/src/handler"
 	"github.com/aikizoku/go-gae-template/src/handler/api"
 	"github.com/aikizoku/go-gae-template/src/infrastructure"
@@ -18,8 +19,12 @@ func main() {
 	r := chi.NewRouter()
 
 	// Dependency Injection
-	sampleRepo := repository.NewSample(infrastructure.NewHTTP(10 * time.Second))
+	csql := infrastructure.NewCSQLClient(config.GetCSQLConfig("trial"))
+
+	sampleRepo := repository.NewSample(infrastructure.NewHTTP(10*time.Second), csql)
+
 	sampleSvc := service.NewSample(sampleRepo)
+
 	sampleHandler := &api.SampleHandler{
 		Svc: sampleSvc,
 	}

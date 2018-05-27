@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/aikizoku/go-gae-template/src/model"
@@ -13,12 +14,16 @@ import (
 )
 
 type sample struct {
-	http infrastructure.HTTP
+	http *infrastructure.HTTP
+	csql *sql.DB
 }
 
 func (s *sample) Hoge(ctx context.Context) {
 	log.Debugf(ctx, "call repository hoge")
 
+}
+
+func (s *sample) testDatastore(ctx context.Context) {
 	now := time.Now().Unix()
 
 	client := goon.FromContext(ctx)
@@ -49,8 +54,9 @@ func (s *sample) Hoge(ctx context.Context) {
 }
 
 // NewSample ...
-func NewSample(http infrastructure.HTTP) Sample {
+func NewSample(http *infrastructure.HTTP, csql *sql.DB) Sample {
 	return &sample{
 		http: http,
+		csql: csql,
 	}
 }

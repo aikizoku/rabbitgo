@@ -32,6 +32,7 @@ func RenderHTML(w http.ResponseWriter, status int, name string, values interface
 func RenderCSV(w http.ResponseWriter, name string, data [][]string) {
 	w.Header().Set("Content-Type", "text/csv")
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=%s.csv", name))
+
 	writer := csv.NewWriter(transform.NewWriter(w, japanese.ShiftJIS.NewEncoder()))
 	for _, datum := range data {
 		writer.Write(datum)
