@@ -1,24 +1,32 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
 
-.PHONY: hello, run, deploy, api
+.PHONY: hello, run, run-prod, deploy, deploy-prod, domain, domain-prod, index, index-prod, api
 
 hello:
 	@echo Hello go project ${GOPHER}
 
 # 実行
 run:
-	dev_appserver.py gae/${s}/app.yaml
+	dev_appserver.py gae/${s}/app_dev.yaml
+run-prod:
+	dev_appserver.py gae/${s}/app_prod.yaml	
 
 # デプロイ
 deploy:
-	@gcloud app deploy gae/${s}/app.yaml
+	@gcloud app deploy gae/${s}/app_dev.yaml
+deploy-prod:
+	@gcloud app deploy gae/${s}/app_prod.yaml
 
 # ドメイン設定をデプロイ
-deploy-domain:
-	@gcloud app deploy gae/dispatch.yaml --project pj-trial-id
+domain:
+	@gcloud app deploy gae/dispatch_dev.yaml --project pj-trial-id
+domain-prod:
+	@gcloud app deploy gae/dispatch_prod.yaml --project pj-trial-id
 
 # Datastoreの複合インデックス定義をデプロイ
-deploy-index:
+index:
+	@gcloud app deploy gae/index.yaml
+index-prod:
 	@gcloud app deploy gae/index.yaml
 
 # APIテスト

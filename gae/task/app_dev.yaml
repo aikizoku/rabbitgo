@@ -1,0 +1,22 @@
+runtime: go
+api_version: go1.8
+env: standard
+threadsafe: true
+instance_class: F1
+
+automatic_scaling:
+  min_idle_instances: automatic
+  max_idle_instances: 1
+  min_pending_latency: 3000ms
+  max_pending_latency: automatic
+
+service: go-api-sample
+
+handlers:
+- url: /.*
+  script: _go_app
+  secure: always
+
+includes:
+- ../secret_dev.yaml
+
