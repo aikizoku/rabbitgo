@@ -63,25 +63,30 @@ go get ./...
 ## 動かす
 ```bash
 # API
-make run svc=api
+make run s=api
 
 # Web
-make run svc=web
+make run s=web
 
 # Task
-make run svc=task
+make run s=task
+```
+
+## 各種データを確認
+```
+http://localhost:8000/instances
 ```
 
 ## デプロイ
 ```bash
 # API
-make deploy svc=api
+make deploy s=api
 
 # Web
-make deploy svc=web
+make deploy s=web
 
 # Task
-make deploy svc=task
+make deploy s=task
 ```
 
 

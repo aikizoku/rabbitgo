@@ -20,7 +20,10 @@ func (s *SampleRegister) HogeRegister(w http.ResponseWriter, r *http.Request) {
 	values := url.Values{}
 	task := taskqueue.NewPOSTTask("/worker/sample", values)
 
-	taskqueue.Add(ctx, task, "hoge-queue")
+	_, err := taskqueue.Add(ctx, task, "hoge-queue")
+	if err != nil {
+		log.Errorf(ctx, "add task error: %s", err.Error())
+	}
 
 	middleware.RenderSuccess(w)
 }

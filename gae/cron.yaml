@@ -1,7 +1,9 @@
 cron:
 - description: "CronDemo"
   url: /register/sample
+  target: go-task-sample
   schedule: every 1 mins
+  timezone: Asia/Tokyo
   retry_parameters:
     min_backoff_seconds: 2.5
     max_doublings: 5

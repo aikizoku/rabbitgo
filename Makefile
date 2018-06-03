@@ -17,17 +17,21 @@ deploy:
 deploy-prod:
 	@gcloud app deploy gae/${s}/app_prod.yaml
 
-# ドメイン設定をデプロイ
-domain:
-	@gcloud app deploy gae/dispatch_dev.yaml --project pj-trial-id
-domain-prod:
-	@gcloud app deploy gae/dispatch_prod.yaml --project pj-trial-id
+# ディスパッチ設定をデプロイ
+dispatch:
+	@gcloud app deploy gae/dispatch.yaml --project pj-trial-id
+
+# Cron設定をデプロイ
+cron:
+	@gcloud app deploy gae/task/cron.yaml --project pj-trial-id
+
+# Queue設定をデプロイ
+queue:
+	@gcloud app deploy gae/task/queue.yaml --project pj-trial-id
 
 # Datastoreの複合インデックス定義をデプロイ
 index:
-	@gcloud app deploy gae/index.yaml
-index-prod:
-	@gcloud app deploy gae/index.yaml
+	@gcloud app deploy gae/index.yaml --project pj-trial-id
 
 # APIテスト
 api:

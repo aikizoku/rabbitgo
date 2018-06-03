@@ -25,7 +25,7 @@ type TaskQueueHeaders struct {
 	TaskExecutionCount int
 	// タスクの目標実行時間
 	// 1970 年 1 月 1 日からの秒数で表します
-	TaskETA int64
+	TaskETA string
 }
 
 // GetTaskQueueHeaders ... GAEからのタスクキューリクエストのヘッダー情報を取得する
@@ -47,23 +47,19 @@ func GetTaskQueueHeaders(ctx context.Context, r *http.Request) *TaskQueueHeaders
 	}
 
 	teta := r.Header.Get("X-AppEngine-TaskETA")
-	iteta, err := strconv.ParseInt(teta, 10, 64)
-	if err != nil {
-		log.Warningf(ctx, "TaskETA parse int error: %s value=%s", err.Error(), teta)
-	}
 
 	log.Debugf(ctx, `TaskQueueHeaders
 		QueueName: %s
 		TaskName: %s
-		TaskRetryCount: %s
-		TaskExecutionCount: %s
-		TaskETA: %s`, qn, tn, itrc, itec, iteta)
+		TaskRetryCount: %d
+		TaskExecutionCount: %d
+		TaskETA: %s`, qn, tn, itrc, itec, teta)
 
 	return &TaskQueueHeaders{
 		QueueName:          qn,
 		TaskName:           tn,
 		TaskRetryCount:     itrc,
 		TaskExecutionCount: itec,
-		TaskETA:            iteta,
+		TaskETA:            teta,
 	}
 }

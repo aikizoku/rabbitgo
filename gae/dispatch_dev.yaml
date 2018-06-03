@@ -1,3 +1,0 @@
-dispatch:
-- url: "*api.dev.trial.thehero.jp/*"
-  service: go-api-sample

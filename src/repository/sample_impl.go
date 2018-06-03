@@ -19,7 +19,7 @@ type sample struct {
 
 func (s *sample) Hoge(ctx context.Context) {
 	log.Debugf(ctx, "call repository hoge")
-
+	s.testDatastore(ctx)
 }
 
 func (s *sample) testCloudSQL(ctx context.Context) {
@@ -31,9 +31,11 @@ func (s *sample) testDatastore(ctx context.Context) {
 
 	client := goon.FromContext(ctx)
 
+	id := int64(112233)
+
 	v := &model.Sample{
-		ID:        123,
-		Name:      "広瀬",
+		IDA:       id,
+		Name:      "ひろせ",
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -48,12 +50,12 @@ func (s *sample) testDatastore(ctx context.Context) {
 	}
 	log.Infof(ctx, "%v", key)
 
-	err = client.Get(&model.Sample{ID: 123})
-	if err != nil {
-		log.Errorf(ctx, err.Error())
-		return
-	}
-	log.Infof(ctx, "%v", key)
+	// err = client.Get(&model.Sample{ID: 123})
+	// if err != nil {
+	// 	log.Errorf(ctx, err.Error())
+	// 	return
+	// }
+	// log.Infof(ctx, "%v", key)
 }
 
 // NewSample ...

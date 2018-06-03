@@ -4,19 +4,17 @@ env: standard
 threadsafe: true
 instance_class: F1
 
-automatic_scaling:
-  min_idle_instances: automatic
-  max_idle_instances: 1
-  min_pending_latency: 3000ms
-  max_pending_latency: automatic
-
-service: go-api-sample
+service: go-task-sample
 
 handlers:
 - url: /.*
   script: _go_app
-  secure: always
+- url: /register/.*
+  script: _go_app
+  login: admin
+- url: /worker/.*
+  script: _go_app
+  login: admin
 
 includes:
-- ../secret_prod.yaml
-
+- ../secret.yaml
