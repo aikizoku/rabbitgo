@@ -23,11 +23,11 @@ dispatch:
 
 # Cron設定をデプロイ
 cron:
-	@gcloud app deploy gae/task/cron.yaml --project pj-trial-id
+	@gcloud app deploy gae/cron.yaml --project pj-trial-id
 
 # Queue設定をデプロイ
 queue:
-	@gcloud app deploy gae/task/queue.yaml --project pj-trial-id
+	@gcloud app deploy gae/queue.yaml --project pj-trial-id
 
 # Datastoreの複合インデックス定義をデプロイ
 index:

@@ -2,7 +2,7 @@ cron:
 - description: "CronDemo"
   url: /register/sample
   target: go-task-sample
-  schedule: every 1 mins
+  schedule: every 24 hours
   timezone: Asia/Tokyo
   retry_parameters:
     min_backoff_seconds: 2.5
