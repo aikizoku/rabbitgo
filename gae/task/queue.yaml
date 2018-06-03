@@ -1,0 +1,5 @@
+queue:
+- name: hoge-queue
+  bucket_size: 1 # queueのサイズ
+  rate: 500/s # enqueueの間隔
+  max_concurrent_requests: 1 # 並列実行数

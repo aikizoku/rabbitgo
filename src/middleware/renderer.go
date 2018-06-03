@@ -10,6 +10,12 @@ import (
 	"golang.org/x/text/transform"
 )
 
+// RenderSuccess ... 成功レスポンスをレンダリングする
+func RenderSuccess(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
 // RenderError ... エラーレスポンスをレンダリングする
 func RenderError(w http.ResponseWriter, status int, msg string) {
 	r := render.New()

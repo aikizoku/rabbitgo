@@ -9,7 +9,12 @@ service: go-task-sample
 handlers:
 - url: /.*
   script: _go_app
-  secure: always
+- url: /register/.*
+  script: _go_app
+  login: admin
+- url: /worker/.*
+  script: _go_app
+  login: admin
 
 includes:
 - ../secret.yaml
