@@ -1,10 +1,21 @@
-gzipにも対応したい
-https://ja.louisaandlily.com/gzip-with-golang
+WEBサイト
+    普通に表示する
+    include系
+    if
+    for
 
 SearchAPI実験
 SearchAPIモジュール
 
+Memcache
+
+gzipにも対応したい
+https://ja.louisaandlily.com/gzip-with-golang
+
 Push通知
 
+Datastore理解深める
+
 Firebase認証
+
 
