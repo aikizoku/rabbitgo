@@ -6,7 +6,5 @@ SearchAPIモジュール
 
 Push通知
 
-renderXML
-
 Firebase認証
 
