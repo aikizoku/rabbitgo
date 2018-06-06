@@ -1,5 +1,5 @@
 dispatch:
-- url: "*dev.api.trial.thehero.jp/*"
+- url: "*api.trial.thehero.jp/*"
   service: go-api-sample
-- url: "*dev.task.trial.thehero.jp/*"
+- url: "*task.trial.thehero.jp/*"
   service: go-task-sample

@@ -22,18 +22,18 @@ func main() {
 
 	sampleSvc := service.NewSample(sampleRepo)
 
-	sampleRgs := task.SampleRegister{}
-	sampleWkr := task.SampleWorker{Svc: sampleSvc}
+	sampleQue := task.SampleQueueing{}
+	sampleTsk := task.SampleTask{Svc: sampleSvc}
 
 	// Routing
 	r.Get("/ping", handler.PingHandler)
 
-	r.Route("/register", func(subr chi.Router) {
-		subr.Get("/sample", sampleRgs.HogeRegister)
+	r.Route("/queueing", func(subr chi.Router) {
+		subr.Get("/sample", sampleQue.HogeQueueing)
 	})
 
-	r.Route("/worker", func(subr chi.Router) {
-		subr.Post("/sample", sampleWkr.HogeWorker)
+	r.Route("/task", func(subr chi.Router) {
+		subr.Post("/sample", sampleTsk.HogeTask)
 	})
 
 	http.Handle("/", r)

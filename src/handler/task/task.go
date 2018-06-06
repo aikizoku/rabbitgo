@@ -9,11 +9,11 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-type SampleWorker struct {
+type SampleTask struct {
 	Svc service.Sample
 }
 
-func (s *SampleWorker) HogeWorker(w http.ResponseWriter, r *http.Request) {
+func (s *SampleTask) HogeTask(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 	log.Debugf(ctx, "cal sample task handler")
 	_ = middleware.GetTaskQueueHeaders(ctx, r)

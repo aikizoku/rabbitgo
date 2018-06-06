@@ -12,8 +12,8 @@ import (
 
 // RenderSuccess ... 成功レスポンスをレンダリングする
 func RenderSuccess(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("success"))
+	r := render.New()
+	r.Text(w, http.StatusOK, "success")
 }
 
 // RenderError ... エラーレスポンスをレンダリングする

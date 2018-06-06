@@ -10,15 +10,15 @@ import (
 	"google.golang.org/appengine/taskqueue"
 )
 
-type SampleRegister struct {
+type SampleQueueing struct {
 }
 
-func (s *SampleRegister) HogeRegister(w http.ResponseWriter, r *http.Request) {
+func (s *SampleQueueing) HogeQueueing(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 	log.Debugf(ctx, "cal sample task handler")
 
 	values := url.Values{}
-	task := taskqueue.NewPOSTTask("/worker/sample", values)
+	task := taskqueue.NewPOSTTask("/task/sample", values)
 
 	_, err := taskqueue.Add(ctx, task, "hoge-queue")
 	if err != nil {

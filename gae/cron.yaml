@@ -1,6 +1,6 @@
 cron:
 - description: "CronDemo"
-  url: /register/sample
+  url: /queueing/sample
   target: go-task-sample
   schedule: every 24 hours
   timezone: Asia/Tokyo
