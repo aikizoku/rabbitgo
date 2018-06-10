@@ -27,6 +27,15 @@ func main() {
 	sampleHandler := &api.SampleHandler{
 		Svc: sampleSvc,
 	}
+	testPutHandler := &api.TestPutHandler{
+		Svc: sampleSvc,
+	}
+	testGetHandler := &api.TestGetHandler{
+		Svc: sampleSvc,
+	}
+	testDeleteHandler := &api.TestDeleteHandler{
+		Svc: sampleSvc,
+	}
 
 	// Routing
 	r.Use(middleware.AccessControl)
@@ -42,6 +51,9 @@ func main() {
 
 	// API
 	rpc.Register("sample", sampleHandler)
+	rpc.Register("test_put", testPutHandler)
+	rpc.Register("test_get", testGetHandler)
+	rpc.Register("test_delete", testDeleteHandler)
 
 	// Run
 	appengine.Main()

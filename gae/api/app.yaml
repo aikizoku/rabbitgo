@@ -18,5 +18,5 @@ handlers:
   secure: always
 
 includes:
-- ../secret_dev.yaml
+- ../secret.yaml
 
