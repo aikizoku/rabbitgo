@@ -1,7 +1,8 @@
 # これはなに？
-GAE/goで色々やるためのテンプレート
+Fast + Star = Faster (最速で輝ける)
 
-APIとWebとTaskが作れるよ
+GAE/Go環境で動作するサーバー開発のテンプレート
+とても早くて軽いAPI/WEB/Taskがワンソースでインフラの知識なくて作れます。
 
 # 開発環境構築
 ## Goのセットアップ
@@ -60,7 +61,8 @@ gcloud init
 go get ./...
 ```
 
-## 動かす
+# 動かす
+## 起動
 ```bash
 # API
 make run s=api
@@ -88,6 +90,3 @@ make deploy s=web
 # Task
 make deploy s=task
 ```
-
-
-
