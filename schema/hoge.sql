@@ -1,6 +1,6 @@
-CREATE DATABASE hoge DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE beego DEFAULT CHARACTER SET utf8mb4;
 
-CREATE TABLE hoge (
+CREATE TABLE beego (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `fuga` varchar(1024) NOT NULL COMMENT 'fugafuga',
   `aaaa` varchar(255) NOT NULL DEFAULT 'bbb',
@@ -12,7 +12,7 @@ CREATE TABLE hoge (
   PRIMARY KEY (`id`),
   KEY idx_fuga_and_enabled (`fuga`, `enabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-COMMENT 'ほげほげ';
+COMMENT 'beego';
 
 
 

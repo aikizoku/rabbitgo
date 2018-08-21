@@ -1,6 +1,8 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
+DEV_PROJECT_ID = 'beego-dev-thehero-jp'
+PROD_PROJECT_ID = 'beego-prd-thehero-jp'
 
-.PHONY: hello, run, deploy, dispatch, cron, queue, index, api
+.PHONY: hello, run, deploy, dispatch, cron, queue, index
 
 hello:
 	@echo Hello go project ${GOPHER}
@@ -11,24 +13,35 @@ run:
 
 # デプロイ
 deploy:
-	@gcloud app deploy gae/${s}/app.yaml
+	@gcloud app deploy -q gae/${s}/app.yaml
+
+deploy-prod:
+	@gcloud app deploy -q gae/${s}/app_prod.yaml
 
 # ディスパッチ設定をデプロイ
 dispatch:
-	@gcloud app deploy gae/dispatch.yaml --project pj-trial-id
+	@gcloud app deploy -q gae/config/dispatch.yaml --project ${DEV_PROJECT_ID}
+
+dispatch-prod:
+	@gcloud app deploy -q gae/config/dispatch_prod.yaml --project ${PROD_PROJECT_ID}
 
 # Cron設定をデプロイ
 cron:
-	@gcloud app deploy gae/cron.yaml --project pj-trial-id
+	@gcloud app deploy -q gae/config/cron.yaml --project ${DEV_PROJECT_ID}
+
+cron-prod:
+	@gcloud app deploy -q gae/config/cron.yaml --project ${PROD_PROJECT_ID}
 
 # Queue設定をデプロイ
 queue:
-	@gcloud app deploy gae/queue.yaml --project pj-trial-id
+	@gcloud app deploy -q gae/config/queue.yaml --project ${DEV_PROJECT_ID}
+
+queue-prod:
+	@gcloud app deploy -q gae/config/queue.yaml --project ${PROD_PROJECT_ID}
 
 # Datastoreの複合インデックス定義をデプロイ
 index:
-	@gcloud app deploy gae/index.yaml --project pj-trial-id
+	@gcloud app deploy -q gae/config/index.yaml --project ${DEV_PROJECT_ID}
 
-# APIテスト
-api:
-	curl -s -X POST --data '{"jsonrpc":"2.0","id":"1","method":"${m}","params":"${p}"}' -H 'Content-Type: application/json' -H 'Authorization: Bearer ${t}' http://localhost:8080/api/v1/rpc | jq .
+index-prod:
+	@gcloud app deploy -q gae/config/index.yaml --project ${PROD_PROJECT_ID}
