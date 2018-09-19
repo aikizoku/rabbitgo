@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+// BasicAuthConfig ... ベーシック認証の設定
 type BasicAuthConfig struct {
 	Accounts map[string]string
 }
 
+// GetBasicAuthConfig ... ベーシック認証の設定を読み込む
 func GetBasicAuthConfig(aKeys []string) *BasicAuthConfig {
 	if len(aKeys) == 0 {
 		panic(fmt.Errorf("no param basic auth account keys"))

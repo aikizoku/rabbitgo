@@ -13,6 +13,3 @@ CREATE TABLE beego (
   KEY idx_fuga_and_enabled (`fuga`, `enabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 COMMENT 'beego';
-
-
-

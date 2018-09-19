@@ -1,0 +1,25 @@
+runtime: go
+api_version: go1.8
+env: standard
+threadsafe: true
+instance_class: F2
+automatic_scaling:
+  min_idle_instances: 1
+  max_idle_instances: 1
+  min_instances: 1
+  max_instances: 1
+
+service: worker
+
+handlers:
+- url: /.*
+  script: _go_app
+- url: /admin.*
+  script: _go_app
+  login: admin
+- url: /task.*
+  script: _go_app
+  login: admin
+
+includes:
+- ../secret/env_variables.yaml

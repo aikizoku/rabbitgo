@@ -1,9 +1,0 @@
-cron:
-- description: "CronDemo"
-  url: /queueing/sample
-  target: go-task-sample
-  schedule: every 24 hours
-  timezone: Asia/Tokyo
-  retry_parameters:
-    min_backoff_seconds: 2.5
-    max_doublings: 5
