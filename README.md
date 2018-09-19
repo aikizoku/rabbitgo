@@ -1,6 +1,6 @@
 # これはなに？
 GAE/Go環境で動作するサーバー開発のテンプレート
-とても早くて軽いAPI/WEB/Taskがワンソースでインフラをあまり考えずにサービスだけに注力して開発できる事を目指す。
+とても早くて軽いAPI/WEB/Workerがワンソースでインフラをあまり考えずにサービスだけに注力して開発できる事を目指す。
 
 # 開発環境構築
 ## Goのセットアップ
@@ -12,10 +12,10 @@ brew install goenv
 goenv install -l
 
 # バージョンを指定してインストール
-goenv install 1.8.7
+goenv install 1.9.5
 
 # バージョン切り替え
-goenv global 1.8.7
+goenv global 1.9.5
 
 # バージョン確認
 go version
@@ -68,8 +68,8 @@ make run s=api
 # Web
 make run s=web
 
-# Task
-make run s=task
+# Worker
+make run s=worker
 ```
 
 ## 各種データを確認
@@ -85,6 +85,6 @@ make deploy s=api
 # Web
 make deploy s=web
 
-# Task
-make deploy s=task
+# Worker
+make deploy s=worker
 ```
