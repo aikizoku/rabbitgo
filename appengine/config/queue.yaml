@@ -1,0 +1,7 @@
+queue:
+- name: default
+  bucket_size: 30 # queueのサイズ
+  rate: 500/s # enqueueの間隔
+  max_concurrent_requests: 5 # 並列実行数
+  retry_parameters:
+    task_retry_limit: 1

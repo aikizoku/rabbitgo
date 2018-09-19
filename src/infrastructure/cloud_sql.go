@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/aikizoku/go-gae-template/src/config"
+	"github.com/aikizoku/beego/src/config"
 	_ "github.com/go-sql-driver/mysql" // Driverの読み込み
 )
 

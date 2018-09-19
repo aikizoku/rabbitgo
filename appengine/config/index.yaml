@@ -1,0 +1,6 @@
+indexes:
+
+- kind: Beego
+  properties:
+  - name: ID
+  - name: Enabled

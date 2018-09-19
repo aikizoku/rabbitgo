@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/aikizoku/go-gae-template/src/config"
+	"github.com/aikizoku/beego/src/config"
 )
 
 // BasicAuth ... ベーシック認証機能を提供するミドルウェア
