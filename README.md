@@ -1,6 +1,6 @@
 # これはなに？
 GAE/Go環境で動作するサーバー開発のテンプレート
-とても早くて軽いAPI/WEB/Workerをワンソースで作る事が出来ます。
+とても早くて軽いAPI/Workerをワンソースで作る事が出来ます。
 - インフラをあまり考えなくて良い
 - 適当に作っていても循環参照が発生しない
 - 緩い命名規則で縛っているので、柔軟かつ迷わない命名が可能
@@ -67,13 +67,12 @@ go get ./...
 ## 起動
 ```bash
 # API
-make run s=api
-
-# Web
-make run s=web
+make run app=api
+make run-production app=api
 
 # Worker
-make run s=worker
+make run app=worker
+make run-production app=worker
 ```
 
 ## 各種データを確認
@@ -84,11 +83,26 @@ http://localhost:8000/instances
 ## デプロイ
 ```bash
 # API
-make deploy s=api
-
-# Web
-make deploy s=web
+make deploy-app app=api
+make deploy-app-production app=api
 
 # Worker
-make deploy s=worker
+make deploy-app app=worker
+make deploy-app-production app=worker
+
+# Cron
+make deploy-cron
+make deploy-cron-production
+
+# Dispatch
+make deploy-dispatch
+make deploy-dispatch-production
+
+# Index
+make deploy-index
+make deploy-index-production
+
+# Queue
+make deploy-queue
+make deploy-queue-production
 ```

@@ -1,7 +1,7 @@
 cron:
 - description: "beego"
   url: /beego/cron
-  target: api
+  target: worker
   schedule: every 10 minutes
   timezone: Asia/Tokyo
   retry_parameters:

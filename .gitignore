@@ -158,6 +158,8 @@ node_modules
 static/js/*
 static/css/*
 
-#####=== Google cloud platform settings ===#####
-secret.yaml
-
+# GCP
+# env_variables_staging.yaml
+# env_variables_production.yaml
+# firebase_credentials_staging.json
+# firebase_credentials_production.json

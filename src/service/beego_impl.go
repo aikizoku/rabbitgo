@@ -18,16 +18,18 @@ func (s *beego) Beego(ctx context.Context) (model.Beego, error) {
 	return model.Beego{
 		ID:   123,
 		Name: "beego",
-		Type: model.BeegoType{
-			ID:        456,
-			Name:      "beego_type",
-			CreatedAt: util.TimeNow(),
-			UpdatedAt: util.TimeNow(),
+		Types: []model.BeegoType{
+			model.BeegoType{
+				ID:        456,
+				Name:      "beego_type",
+				CreatedAt: util.TimeNow().Unix(),
+				UpdatedAt: util.TimeNow().Unix(),
+			},
 		},
 		Enabled:   true,
-		CreatedAt: util.TimeNow(),
-		UpdatedAt: util.TimeNow(),
-	}
+		CreatedAt: util.TimeNow().Unix(),
+		UpdatedAt: util.TimeNow().Unix(),
+	}, nil
 }
 
 // NewBeego ... サービスを取得する
