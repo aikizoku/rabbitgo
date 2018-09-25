@@ -1,1 +1,1 @@
-../../../appengine/application/api/dependency.go
+../../../appengine/app/api/dependency.go

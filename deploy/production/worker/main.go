@@ -1,1 +1,1 @@
-../../../appengine/application/worker/main.go
+../../../appengine/app/worker/main.go
