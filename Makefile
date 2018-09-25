@@ -30,7 +30,7 @@ deploy-init:
 	@ln -s ../../../appengine/config/index.yaml deploy/staging/api/index.yaml
 	@ln -s ../../../appengine/config/queue.yaml deploy/staging/api/queue.yaml
 	@ln -s ../../../appengine/secret/env_variables_staging.yaml deploy/staging/api/env_variables.yaml
-	@ln -s ../../../appengine/secret/firebase_credentials_staging.yaml deploy/staging/api/firebase_credentials.yaml
+	@ln -s ../../../appengine/secret/firebase_credentials_staging.json deploy/staging/api/firebase_credentials.json
 
 	@mkdir deploy/production/api
 	@ln -s ../../../appengine/app/api/app_production.yaml deploy/production/api/app.yaml
@@ -42,7 +42,7 @@ deploy-init:
 	@ln -s ../../../appengine/config/index.yaml deploy/production/api/index.yaml
 	@ln -s ../../../appengine/config/queue.yaml deploy/production/api/queue.yaml
 	@ln -s ../../../appengine/secret/env_variables_production.yaml deploy/production/api/env_variables.yaml
-	@ln -s ../../../appengine/secret/firebase_credentials_production.yaml deploy/production/api/firebase_credentials.yaml
+	@ln -s ../../../appengine/secret/firebase_credentials_production.json deploy/production/api/firebase_credentials.json
 
 	# Worker
 	@mkdir deploy/staging/worker
@@ -55,7 +55,7 @@ deploy-init:
 	@ln -s ../../../appengine/config/index.yaml deploy/staging/worker/index.yaml
 	@ln -s ../../../appengine/config/queue.yaml deploy/staging/worker/queue.yaml
 	@ln -s ../../../appengine/secret/env_variables_staging.yaml deploy/staging/worker/env_variables.yaml
-	@ln -s ../../../appengine/secret/firebase_credentials_staging.yaml deploy/staging/worker/firebase_credentials.yaml
+	@ln -s ../../../appengine/secret/firebase_credentials_staging.json deploy/staging/worker/firebase_credentials.json
 
 	@mkdir deploy/production/worker
 	@ln -s ../../../appengine/app/worker/app_production.yaml deploy/production/worker/app.yaml
@@ -67,7 +67,7 @@ deploy-init:
 	@ln -s ../../../appengine/config/index.yaml deploy/production/worker/index.yaml
 	@ln -s ../../../appengine/config/queue.yaml deploy/production/worker/queue.yaml
 	@ln -s ../../../appengine/secret/env_variables_production.yaml deploy/production/worker/env_variables.yaml
-	@ln -s ../../../appengine/secret/firebase_credentials_production.yaml deploy/production/worker/firebase_credentials.yaml
+	@ln -s ../../../appengine/secret/firebase_credentials_production.json deploy/production/worker/firebase_credentials.json
 
 # アプリのデプロイ
 deploy-app:
