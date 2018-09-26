@@ -1,6 +1,6 @@
 cron:
-- description: "beego"
-  url: /beego/cron
+- description: "sample"
+  url: /sample/cron
   target: worker
   schedule: every 10 minutes
   timezone: Asia/Tokyo

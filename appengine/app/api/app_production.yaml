@@ -18,4 +18,4 @@ handlers:
   secure: always
 
 includes:
-- ../secret/env_variables.yaml
+- env_variables.yaml

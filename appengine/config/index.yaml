@@ -1,6 +1,6 @@
 indexes:
 
-- kind: Beego
+- kind: Sample
   properties:
   - name: ID
   - name: Enabled

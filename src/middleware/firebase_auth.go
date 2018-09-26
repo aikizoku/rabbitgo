@@ -48,7 +48,10 @@ func (m *FirebaseAuth) Authentication(next http.Handler) http.Handler {
 func (m *FirebaseAuth) DummyAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := "DUMMY_USER_ID"
-		claims := model.Claims{}
+		claims := model.Claims{
+			// ダミーのClaimsを設定する
+			Sample: "sample",
+		}
 		rctx := r.Context()
 		rctx = context.WithValue(rctx, UserIDContextKey, userID)
 		rctx = context.WithValue(rctx, ClaimsContextKey, claims)

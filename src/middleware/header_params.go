@@ -15,7 +15,7 @@ import (
 const HeaderParamsContextKey config.ContextKey = "header_params"
 
 const (
-	headerKeyBeego string = "X-Beego"
+	headerKeySample string = "X-Sample"
 )
 
 // GetHeaderParams ... リクエストヘッダーのパラメータを取得する
@@ -23,7 +23,7 @@ func GetHeaderParams(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := appengine.NewContext(r)
 		h := model.HeaderParams{
-			Beego: r.Header.Get(headerKeyBeego),
+			Sample: r.Header.Get(headerKeySample),
 		}
 		v := validator.New()
 		if err := v.Struct(h); err != nil {
@@ -42,7 +42,8 @@ func GetDummyHeaderParams(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := appengine.NewContext(r)
 		h := model.HeaderParams{
-			Beego: "beego",
+			// ダミーのHeaderParamsを設定する
+			Sample: "sample",
 		}
 		v := validator.New()
 		if err := v.Struct(h); err != nil {

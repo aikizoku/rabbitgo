@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/aikizoku/beego/src/handler"
+	"github.com/aikizoku/beego/src/middleware"
 	"github.com/go-chi/chi"
-	"github.com/phi-jp/lightning-backend/src/handler"
-	"github.com/phi-jp/lightning-backend/src/middleware"
 )
 
 // Routing ... アプリのルーティング設定
@@ -34,6 +34,6 @@ func Routing(r *chi.Mux, d *Dependency) {
 }
 
 func subRouting(r chi.Router, d *Dependency) {
-	r.Get("/beego", d.BeegoHandler.Beego)
-	r.Post("/rpc", d.BeegoHandler)
+	r.Get("/sample", d.SampleHandler.Get)
+	r.Post("/rpc", d.SampleHandler)
 }
