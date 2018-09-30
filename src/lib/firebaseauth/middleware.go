@@ -1,12 +1,13 @@
-package middleware
+package firebaseauth
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/aikizoku/beego/src/config"
 	"github.com/aikizoku/beego/src/model"
-	"github.com/aikizoku/beego/src/service"
+	"github.com/unrolled/render"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -17,19 +18,14 @@ const UserIDContextKey config.ContextKey = "user_id"
 // ClaimsContextKey ... ClaimsのContextKey
 const ClaimsContextKey config.ContextKey = "claims"
 
-// FirebaseAuth ... Firebase認証
-type FirebaseAuth struct {
-	Authenticator service.Authenticator
-}
-
-// Authentication ... 認証をする
-func (m *FirebaseAuth) Authentication(next http.Handler) http.Handler {
+// FirebaseAuth ... Firebase認証をする
+func FirebaseAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := appengine.NewContext(r)
 
-		userID, claims, err := m.Authenticator.Authentication(ctx, r)
+		userID, claims, err := Authentication(ctx, r)
 		if err != nil {
-			m.renderError(ctx, w, http.StatusForbidden, "Authentication: "+err.Error())
+			renderError(ctx, w, http.StatusForbidden, "Authentication: "+err.Error())
 			return
 		}
 
@@ -44,8 +40,8 @@ func (m *FirebaseAuth) Authentication(next http.Handler) http.Handler {
 	})
 }
 
-// DummyAuthentication ... ダミー認証をする
-func (m *FirebaseAuth) DummyAuthentication(next http.Handler) http.Handler {
+// DummyFirebaseAuth ... Firebaseダミー認証をする
+func DummyFirebaseAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := "DUMMY_USER_ID"
 		claims := model.Claims{
@@ -59,7 +55,7 @@ func (m *FirebaseAuth) DummyAuthentication(next http.Handler) http.Handler {
 	})
 }
 
-func (m *FirebaseAuth) renderError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
+func renderError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
 	log.Warningf(ctx, msg)
-	RenderError(w, status, msg)
+	render.New().Text(w, status, fmt.Sprintf("%d %s", status, msg))
 }

@@ -17,7 +17,9 @@ type SampleRepository interface {
 	// CloudSQL
 	CloudSQLGet(ctx context.Context, id int64) (model.Sample, error)
 	CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error)
-	CloudSQLPut(ctx context.Context, obj model.Sample) error
+	CloudSQLInsert(ctx context.Context, obj model.Sample) error
+	CloudSQLUpdate(ctx context.Context, obj model.Sample) error
+	CloudSQLUpsert(ctx context.Context, obj model.Sample) error
 	CloudSQLDelete(ctx context.Context, id int64) error
 
 	// HTTP

@@ -35,5 +35,8 @@ func Routing(r *chi.Mux, d *Dependency) {
 
 func subRouting(r chi.Router, d *Dependency) {
 	r.Get("/sample", d.SampleHandler.Get)
-	r.Post("/rpc", d.SampleHandler)
+	r.Route("/rpc", func(r chi.Router) {
+		r.Post("/", d.SampleHandler)
+	})
+
 }

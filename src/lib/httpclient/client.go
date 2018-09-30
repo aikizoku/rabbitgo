@@ -1,4 +1,4 @@
-package infrastructure
+package httpclient
 
 import (
 	"bytes"
@@ -15,10 +15,7 @@ import (
 	"google.golang.org/appengine/urlfetch"
 )
 
-// HTTP ... HTTP通信モジュール
-type HTTP struct {
-	Timeout time.Duration
-}
+const defaultTimeout time.Duration = 15
 
 // HTTPOption ... HTTP通信モジュールの追加設定
 type HTTPOption struct {
@@ -27,7 +24,7 @@ type HTTPOption struct {
 }
 
 // Get ... Getリクエスト(URL)
-func (h *HTTP) Get(ctx context.Context, u string, opt *HTTPOption) (bool, int, []byte) {
+func Get(ctx context.Context, u string, opt *HTTPOption) (bool, int, []byte) {
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
@@ -38,11 +35,11 @@ func (h *HTTP) Get(ctx context.Context, u string, opt *HTTPOption) (bool, int, [
 		req.Header.Set(key, value)
 	}
 
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
 // GetForm ... Getリクエスト(URL, Params)
-func (h *HTTP) GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
+func GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
@@ -59,11 +56,11 @@ func (h *HTTP) GetForm(ctx context.Context, u string, params map[string]string, 
 	}
 
 	req.URL.RawQuery = query.Encode()
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
 // GetQueryString ... Getリクエスト(URL, QueryString)
-func (h *HTTP) GetQueryString(ctx context.Context, u string, qs string, opt *HTTPOption) (bool, int, []byte) {
+func GetQueryString(ctx context.Context, u string, qs string, opt *HTTPOption) (bool, int, []byte) {
 	req, err := http.NewRequest("GET", u+"?"+qs, nil)
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
@@ -72,11 +69,11 @@ func (h *HTTP) GetQueryString(ctx context.Context, u string, qs string, opt *HTT
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
 // PostForm ... Postリクエスト(URL, Params)
-func (h *HTTP) PostForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
+func PostForm(ctx context.Context, u string, params map[string]string, opt *HTTPOption) (bool, int, []byte) {
 	values := url.Values{}
 	for key, value := range params {
 		values.Add(key, value)
@@ -89,11 +86,11 @@ func (h *HTTP) PostForm(ctx context.Context, u string, params map[string]string,
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
 // PostJSON ... Postリクエスト(URL, JSON)
-func (h *HTTP) PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOption) (bool, int, []byte) {
+func PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOption) (bool, int, []byte) {
 	req, err := http.NewRequest("POST", u, bytes.NewBuffer(json))
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
@@ -105,11 +102,11 @@ func (h *HTTP) PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOpt
 	}
 	opt.Headers["Content-Type"] = "application/json"
 
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
 // PostBody ... Postリクエスト(URL, Body)
-func (h *HTTP) PostBody(ctx context.Context, u string, body []byte, opt *HTTPOption) (bool, int, []byte) {
+func PostBody(ctx context.Context, u string, body []byte, opt *HTTPOption) (bool, int, []byte) {
 	req, err := http.NewRequest("POST", u, bytes.NewBuffer(body))
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
@@ -120,10 +117,10 @@ func (h *HTTP) PostBody(ctx context.Context, u string, body []byte, opt *HTTPOpt
 		req.Header.Set(key, value)
 	}
 
-	return h.send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt.Timeout)
 }
 
-func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duration) (bool, int, []byte) {
+func send(ctx context.Context, req *http.Request, timeout time.Duration) (bool, int, []byte) {
 	dump, err := httputil.DumpRequestOut(req, true)
 	if err == nil {
 		log.Debugf(ctx, "send http request: %s", dump)
@@ -135,7 +132,7 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 	if timeout > 0 {
 		client.Timeout = timeout
 	} else {
-		client.Timeout = h.Timeout
+		client.Timeout = defaultTimeout
 	}
 
 	res, err := client.Do(req)
@@ -159,11 +156,4 @@ func (h *HTTP) send(ctx context.Context, req *http.Request, timeout time.Duratio
 	defer res.Body.Close()
 
 	return true, res.StatusCode, body
-}
-
-// NewHTTP ... HTTP通信モジュールを作成する
-func NewHTTP(timeout time.Duration) *HTTP {
-	return &HTTP{
-		Timeout: timeout,
-	}
 }

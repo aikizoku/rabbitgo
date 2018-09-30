@@ -1,4 +1,4 @@
-package service
+package firebaseauth
 
 import (
 	"context"
@@ -14,20 +14,18 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-type authenticator struct {
-}
-
-func (s *authenticator) Authentication(ctx context.Context, r *http.Request) (string, model.Claims, error) {
+// Authentication ... 認証
+func Authentication(ctx context.Context, r *http.Request) (string, model.Claims, error) {
 	var userID string
 	claims := model.Claims{}
 
-	c, err := s.getAuthClient(ctx)
+	c, err := getAuthClient(ctx)
 	if err != nil {
 		log.Warningf(ctx, "faild to get auth client")
 		return userID, claims, err
 	}
 
-	idToken := s.getAuthorizationHeader(r)
+	idToken := getAuthorizationHeader(r)
 	if idToken == "" {
 		err = fmt.Errorf("no auth token error")
 		return userID, claims, err
@@ -45,8 +43,9 @@ func (s *authenticator) Authentication(ctx context.Context, r *http.Request) (st
 	return userID, claims, nil
 }
 
-func (s *authenticator) SetCustomClaims(ctx context.Context, userID string, claims model.Claims) error {
-	c, err := s.getAuthClient(ctx)
+// SetCustomClaims ... カスタムClaimsを設定
+func SetCustomClaims(ctx context.Context, userID string, claims model.Claims) error {
+	c, err := getAuthClient(ctx)
 	if err != nil {
 		log.Errorf(ctx, "faild to get auth client")
 		return err
@@ -61,7 +60,7 @@ func (s *authenticator) SetCustomClaims(ctx context.Context, userID string, clai
 	return nil
 }
 
-func (s *authenticator) getAuthClient(ctx context.Context) (*auth.Client, error) {
+func getAuthClient(ctx context.Context) (*auth.Client, error) {
 	app, err := firebase.NewApp(ctx, nil, option.WithCredentialsFile(config.FirebaseCredentialFilePath))
 	if err != nil {
 		log.Warningf(ctx, "create firebase app error: %s", err.Error())
@@ -75,16 +74,11 @@ func (s *authenticator) getAuthClient(ctx context.Context) (*auth.Client, error)
 	return c, nil
 }
 
-func (s *authenticator) getAuthorizationHeader(r *http.Request) string {
+func getAuthorizationHeader(r *http.Request) string {
 	if ah := r.Header.Get("Authorization"); ah != "" {
 		if len(ah) > 6 && strings.ToUpper(ah[0:6]) == "BEARER" {
 			return ah[7:]
 		}
 	}
 	return ""
-}
-
-// NewAuthenticator ... 認証を取得する
-func NewAuthenticator() Authenticator {
-	return &authenticator{}
 }
