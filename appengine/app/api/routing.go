@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Routing ... アプリのルーティング設定
+// Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
 	// アクセスコントロール
 	r.Use(middleware.AccessControl)
@@ -18,14 +18,14 @@ func Routing(r *chi.Mux, d *Dependency) {
 
 	// 認証なし
 	r.Route("/internal/v1", func(r chi.Router) {
-		r.Use(d.FirebaseAuth.DummyAuthentication)
+		r.Use(d.FirebaseAuth.DummyAuth)
 		r.Use(middleware.GetDummyHeaderParams)
 		subRouting(r, d)
 	})
 
 	// 認証あり
 	r.Route("/v1", func(r chi.Router) {
-		r.Use(d.FirebaseAuth.Authentication)
+		r.Use(d.FirebaseAuth.Auth)
 		r.Use(middleware.GetHeaderParams)
 		subRouting(r, d)
 	})
@@ -34,9 +34,12 @@ func Routing(r *chi.Mux, d *Dependency) {
 }
 
 func subRouting(r chi.Router, d *Dependency) {
-	r.Get("/sample", d.SampleHandler.Get)
+	// API
+	r.Get("/sample", d.SampleHandler.Sample)
+
+	// API(JSONRPC2)
 	r.Route("/rpc", func(r chi.Router) {
-		r.Post("/", d.SampleHandler)
+		r.Post("/", handler.EmptyHandler)
 	})
 
 }

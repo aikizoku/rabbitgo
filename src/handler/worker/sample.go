@@ -4,25 +4,24 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/beego/src/middleware"
-	"github.com/aikizoku/beego/src/service"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 // SampleHandler ... サンプルのハンドラ定義
 type SampleHandler struct {
-	Svc service.SampleService
 }
 
-// Beegos ... サンプルのハンドラ
-func (h *SampleHandler) Beegos(w http.ResponseWriter, r *http.Request) {
+// CronHandler ... Cronから実行されるハンドラ
+func (h *SampleHandler) CronHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
-
+	log.Debugf(ctx, "call cron handler")
 	middleware.RenderSuccess(w)
 }
 
-// Beego ... サンプルのハンドラ
-func (h *SampleHandler) Beego(w http.ResponseWriter, r *http.Request) {
+// TaskQueueHandler ... TaskQueueで実行されるハンドラ
+func (h *SampleHandler) TaskQueueHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
-
+	log.Debugf(ctx, "call task queue handler")
 	middleware.RenderSuccess(w)
 }

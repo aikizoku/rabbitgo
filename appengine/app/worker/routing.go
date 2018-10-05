@@ -7,18 +7,21 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Routing ... アプリのルーティング設定
+// Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
 	r.Get("/ping", handler.PingHandler)
 
 	r.Route("/admin", func(r chi.Router) {
-		r.Get("/migration", d.BeegoAdminHandler.Migration)
+		r.Route("/migration", func(r chi.Router) {
+			r.Get("/masterdata", d.AdminHandler.MigrateMasterData)
+			r.Get("/testdata", d.AdminHandler.MigrateTestData)
+		})
 	})
 
 	r.Route("/task", func(r chi.Router) {
-		r.Route("/beego", func(r chi.Router) {
-			r.Get("/beegos", d.BeegoTaskHandler.Beegos)
-			r.Post("/beego", d.BeegoTaskHandler.Beego)
+		r.Route("/sample", func(r chi.Router) {
+			r.Get("/cron", d.SampleHandler.CronHandler)
+			r.Post("/taskqueue", d.SampleHandler.TaskQueueHandler)
 		})
 	})
 

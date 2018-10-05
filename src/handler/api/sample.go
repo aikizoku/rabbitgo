@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi"
 
+	"github.com/aikizoku/beego/src/lib/firebaseauth"
 	"github.com/aikizoku/beego/src/middleware"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
@@ -43,11 +44,11 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	log.Debugf(ctx, "FormParams: %s", formParam)
 
 	// FirebaseAuthのユーザーIDを取得
-	userID := r.Context().Value(middleware.UserIDContextKey).(string)
+	userID := r.Context().Value(firebaseauth.UserIDContextKey).(string)
 	log.Debugf(ctx, "UserID: %s", userID)
 
 	// FirebaseAuthのJWTClaimsの値を取得
-	claims := r.Context().Value(middleware.ClaimsContextKey).(model.Claims)
+	claims := r.Context().Value(firebaseauth.ClaimsContextKey).(model.Claims)
 	log.Debugf(ctx, "Claims: %v", claims)
 
 	// Serviceを実行する

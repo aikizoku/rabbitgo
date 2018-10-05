@@ -4,9 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/aikizoku/beego/src/lib/cloudsql"
+	"github.com/aikizoku/beego/src/lib/httpclient"
 	"github.com/aikizoku/beego/src/lib/util"
 	"github.com/aikizoku/beego/src/model"
 	"google.golang.org/appengine/log"
@@ -193,6 +195,16 @@ func (r *sampleRepository) CloudSQLDelete(ctx context.Context, id int64) error {
 
 // HTTP
 func (r *sampleRepository) HTTPGet(ctx context.Context) error {
+	status, res, err := httpclient.Get(ctx, "https://www.google.co.jp/", nil)
+	if err != nil {
+		log.Errorf(ctx, "HTTPGet: "+err.Error())
+		return err
+	}
+	if status != http.StatusOK {
+		err := fmt.Errorf("http status: %d", status)
+		return err
+	}
+	log.Debugf(ctx, string(res))
 	return nil
 }
 
