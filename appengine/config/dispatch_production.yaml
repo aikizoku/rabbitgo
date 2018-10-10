@@ -1,7 +1,5 @@
 dispatch:
-- url: "*api.beego.thehero.jp/*"
+- url: "*api.sample.thehero.jp/*"
   service: api
-- url: "*worker.beego.thehero.jp/*"
+- url: "*worker.sample.thehero.jp/*"
   service: worker
-- url: "*web.beego.thehero.jp/*"
-  service: web
