@@ -27,9 +27,9 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := appengine.NewContext(r)
 
-		userID, claims, err := Authentication(ctx, r)
+		userID, claims, err := authentication(ctx, r)
 		if err != nil {
-			m.renderError(ctx, w, http.StatusForbidden, "Authentication: "+err.Error())
+			m.renderError(ctx, w, http.StatusForbidden, "authentication: "+err.Error())
 			return
 		}
 

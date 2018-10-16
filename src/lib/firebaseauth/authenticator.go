@@ -8,14 +8,28 @@ import (
 
 	"firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/aikizoku/beego/src/config"
-	"github.com/aikizoku/beego/src/model"
-	"google.golang.org/api/option"
+	"github.com/filmapp/livelive-shop/src/model"
 	"google.golang.org/appengine/log"
 )
 
-// Authentication ... 認証
-func Authentication(ctx context.Context, r *http.Request) (string, model.Claims, error) {
+// SetCustomClaims ... カスタムClaimsを設定
+func SetCustomClaims(ctx context.Context, userID string, claims model.Claims) error {
+	c, err := getAuthClient(ctx)
+	if err != nil {
+		log.Errorf(ctx, "faild to get auth client")
+		return err
+	}
+
+	err = c.SetCustomUserClaims(ctx, userID, claims.ToMap())
+	if err != nil {
+		log.Errorf(ctx, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func authentication(ctx context.Context, r *http.Request) (string, model.Claims, error) {
 	var userID string
 	claims := model.Claims{}
 
@@ -43,25 +57,8 @@ func Authentication(ctx context.Context, r *http.Request) (string, model.Claims,
 	return userID, claims, nil
 }
 
-// SetCustomClaims ... カスタムClaimsを設定
-func SetCustomClaims(ctx context.Context, userID string, claims model.Claims) error {
-	c, err := getAuthClient(ctx)
-	if err != nil {
-		log.Errorf(ctx, "faild to get auth client")
-		return err
-	}
-
-	err = c.SetCustomUserClaims(ctx, userID, claims.ToMap())
-	if err != nil {
-		log.Errorf(ctx, err.Error())
-		return err
-	}
-
-	return nil
-}
-
 func getAuthClient(ctx context.Context) (*auth.Client, error) {
-	app, err := firebase.NewApp(ctx, nil, option.WithCredentialsFile(config.FirebaseCredentialFilePath))
+	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
 		log.Warningf(ctx, "create firebase app error: %s", err.Error())
 		return nil, err
