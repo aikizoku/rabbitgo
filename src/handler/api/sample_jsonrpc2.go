@@ -11,7 +11,7 @@ import (
 
 // SampleJSONRPC2Handler ... JSONRPC2のハンドラ
 type SampleJSONRPC2Handler struct {
-	Svc service.SampleService
+	Svc service.Sample
 }
 
 type sampleJSONRPC2Params struct {

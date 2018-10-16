@@ -14,29 +14,29 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-type sampleRepository struct {
+type sample struct {
 	csql *sql.DB
 }
 
 // DataStore
-func (r *sampleRepository) DataStoreGet(ctx context.Context, id int64) (model.Sample, error) {
+func (r *sample) DataStoreGet(ctx context.Context, id int64) (model.Sample, error) {
 	return model.Sample{}, nil
 }
 
-func (r *sampleRepository) DataStoreGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
+func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
 	return []model.Sample{}, nil
 }
 
-func (r *sampleRepository) DataStorePut(ctx context.Context, obj model.Sample) error {
+func (r *sample) DataStorePut(ctx context.Context, obj model.Sample) error {
 	return nil
 }
 
-func (r *sampleRepository) DataStoreDelete(ctx context.Context, id int64) error {
+func (r *sample) DataStoreDelete(ctx context.Context, id int64) error {
 	return nil
 }
 
 // CloudSQL
-func (r *sampleRepository) CloudSQLGet(ctx context.Context, id int64) (model.Sample, error) {
+func (r *sample) CloudSQLGet(ctx context.Context, id int64) (model.Sample, error) {
 	var ret model.Sample
 
 	q := sq.Select(
@@ -68,7 +68,7 @@ func (r *sampleRepository) CloudSQLGet(ctx context.Context, id int64) (model.Sam
 	return ret, nil
 }
 
-func (r *sampleRepository) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
+func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
 	var rets []model.Sample
 
 	q := sq.Select(
@@ -110,7 +110,7 @@ func (r *sampleRepository) CloudSQLGetMulti(ctx context.Context, ids []int64) ([
 	return rets, nil
 }
 
-func (r *sampleRepository) CloudSQLInsert(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLInsert(ctx context.Context, obj model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
@@ -128,7 +128,7 @@ func (r *sampleRepository) CloudSQLInsert(ctx context.Context, obj model.Sample)
 	return nil
 }
 
-func (r *sampleRepository) CloudSQLUpdate(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLUpdate(ctx context.Context, obj model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Update("sample").
@@ -154,7 +154,7 @@ func (r *sampleRepository) CloudSQLUpdate(ctx context.Context, obj model.Sample)
 	return nil
 }
 
-func (r *sampleRepository) CloudSQLUpsert(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLUpsert(ctx context.Context, obj model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
@@ -173,7 +173,7 @@ func (r *sampleRepository) CloudSQLUpsert(ctx context.Context, obj model.Sample)
 	return nil
 }
 
-func (r *sampleRepository) CloudSQLDelete(ctx context.Context, id int64) error {
+func (r *sample) CloudSQLDelete(ctx context.Context, id int64) error {
 	q := sq.Delete("sample").Where(sq.Eq{"id": id})
 
 	cloudsql.DumpDeleteQuery(ctx, q)
@@ -194,7 +194,7 @@ func (r *sampleRepository) CloudSQLDelete(ctx context.Context, id int64) error {
 }
 
 // HTTP
-func (r *sampleRepository) HTTPGet(ctx context.Context) error {
+func (r *sample) HTTPGet(ctx context.Context) error {
 	status, res, err := httpclient.Get(ctx, "https://www.google.co.jp/", nil)
 	if err != nil {
 		log.Errorf(ctx, "HTTPGet: "+err.Error())
@@ -208,13 +208,13 @@ func (r *sampleRepository) HTTPGet(ctx context.Context) error {
 	return nil
 }
 
-func (r *sampleRepository) HTTPPost(ctx context.Context) error {
+func (r *sample) HTTPPost(ctx context.Context) error {
 	return nil
 }
 
-// NewSampleRepository ... サンプルリポジトリを取得する
-func NewSampleRepository(csql *sql.DB) SampleRepository {
-	return &sampleRepository{
+// NewSample ... サンプルリポジトリを取得する
+func NewSample(csql *sql.DB) Sample {
+	return &sample{
 		csql: csql,
 	}
 }

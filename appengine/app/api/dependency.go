@@ -25,10 +25,10 @@ func (d *Dependency) Inject() {
 	// dbConn := cloudsql.NewCSQLClient(dbCfg)
 
 	// Repository
-	repo := repository.NewSampleRepository(nil)
+	repo := repository.NewSample(nil)
 
 	// Service
-	svc := service.NewSampleService(repo)
+	svc := service.NewSample(repo)
 
 	// Middleware
 	d.FirebaseAuth = firebaseauth.NewMiddleware()

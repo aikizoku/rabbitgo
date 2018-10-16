@@ -6,8 +6,8 @@ import (
 	"github.com/aikizoku/beego/src/model"
 )
 
-// SampleRepository ... リポジトリのインターフェース
-type SampleRepository interface {
+// Sample ... リポジトリのインターフェース
+type Sample interface {
 	// DataStore
 	DataStoreGet(ctx context.Context, id int64) (model.Sample, error)
 	DataStoreGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error)

@@ -9,11 +9,11 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-type sampleService struct {
-	repo repository.SampleRepository
+type sample struct {
+	repo repository.Sample
 }
 
-func (s *sampleService) Sample(ctx context.Context) (model.Sample, error) {
+func (s *sample) Sample(ctx context.Context) (model.Sample, error) {
 	log.Debugf(ctx, "call service beego")
 	return model.Sample{
 		ID:        123,
@@ -24,21 +24,21 @@ func (s *sampleService) Sample(ctx context.Context) (model.Sample, error) {
 	}, nil
 }
 
-func (s *sampleService) TestDataStore(ctx context.Context) error {
+func (s *sample) TestDataStore(ctx context.Context) error {
 	return nil
 }
 
-func (s *sampleService) TestCloudSQL(ctx context.Context) error {
+func (s *sample) TestCloudSQL(ctx context.Context) error {
 	return nil
 }
 
-func (s *sampleService) TestHTTP(ctx context.Context) error {
+func (s *sample) TestHTTP(ctx context.Context) error {
 	return nil
 }
 
-// NewSampleService ... サンプルサービスを取得する
-func NewSampleService(repo repository.SampleRepository) SampleService {
-	return &sampleService{
+// NewSample ... サンプルサービスを取得する
+func NewSample(repo repository.Sample) Sample {
+	return &sample{
 		repo: repo,
 	}
 }

@@ -16,7 +16,7 @@ import (
 
 // SampleHandler ... 記事のハンドラ
 type SampleHandler struct {
-	Svc service.SampleService
+	Svc service.Sample
 }
 
 // Sample ... サンプルハンドラ

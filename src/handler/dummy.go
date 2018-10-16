@@ -2,6 +2,6 @@ package handler
 
 import "net/http"
 
-// EmptyHandler ... 空のハンドラ
-func EmptyHandler(w http.ResponseWriter, r *http.Request) {
+// Empty ... 空のハンドラ
+func Empty(w http.ResponseWriter, r *http.Request) {
 }
