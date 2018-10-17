@@ -71,3 +71,6 @@ env_variables_production.yaml
 # Firebase
 firebase_credentials_staging.json
 firebase_credentials_production.json
+
+# Beego
+/deploy/

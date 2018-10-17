@@ -93,12 +93,12 @@ dep ensure update
 ## 起動
 ```bash
 # API
-make run-appengine-app app=api
-make run-appengine-app-production app=api
+make run app=api
+make run-production app=api
 
 # Worker
-make run-appengine-app app=worker
-make run-appengine-app-production app=worker
+make run app=worker
+make run-production app=worker
 ```
 
 ## 各種データを確認
@@ -109,26 +109,26 @@ http://localhost:8000/instances
 ## デプロイ
 ```bash
 # API
-make deploy-appengine-app app=api
-make deploy-appengine-app-production app=api
+make deploy app=api
+make deploy-production app=api
 
 # Worker
-make deploy-appengine-app app=worker
-make deploy-appengine-app-production app=worker
+make deploy app=worker
+make deploy-production app=worker
 
 # Cron
-make deploy-appengine-cron
-make deploy-appengine-cron-production
+make deploy-cron
+make deploy-cron-production
 
 # Dispatch
-make deploy-appengine-dispatch
-make deploy-appengine-dispatch-production
+make deploy-dispatch
+make deploy-dispatch-production
 
 # Index
-make deploy-appengine-index
-make deploy-appengine-index-production
+make deploy-index
+make deploy-index-production
 
 # Queue
-make deploy-appengine-queue
-make deploy-appengine-queue-production
+make deploy-queue
+make deploy-queue-production
 ```
