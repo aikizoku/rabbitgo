@@ -12,14 +12,17 @@ GAE/Go環境で動作するサーバー開発のテンプレート
 # goenv(Goのバージョン管理)のインストール
 brew install goenv
 
+# goenv(Goのバージョン管理)のアップデート
+brew upgrade goenv
+
 # インストール可能なバージョンを確認
 goenv install -l
 
 # バージョンを指定してインストール
-goenv install 1.9.5
+goenv install 1.11.1
 
 # バージョン切り替え
-goenv global 1.9.5
+goenv global 1.11.1
 
 # バージョン確認
 go version
@@ -56,23 +59,45 @@ exec -l $SHELL
 
 # 初期化
 gcloud init
+
+# 新しいアカウントでログイン
+gcloud auth login
+
+# アカウントリスト
+$ gcloud auth list
+
+# アカウントの切り替え
+$ gcloud config set account <your-account>
+
+# 自分のプロジェクトリスト
+gcloud projects list
+
+# プロジェクトの切り替え
+gcloud config set project <your-project-id>
 ```
 
 ## 依存パッケージのインストール
 ```bash
-go get ./...
+# インストール
+brew install dep
+
+# 依存パッケージのインストール
+dep ensure
+
+# 依存パッケージのアップデート
+dep ensure update
 ```
 
 # 動かす
 ## 起動
 ```bash
 # API
-make run app=api
-make run-production app=api
+make run-appengine-app app=api
+make run-appengine-app-production app=api
 
 # Worker
-make run app=worker
-make run-production app=worker
+make run-appengine-app app=worker
+make run-appengine-app-production app=worker
 ```
 
 ## 各種データを確認
@@ -83,26 +108,26 @@ http://localhost:8000/instances
 ## デプロイ
 ```bash
 # API
-make deploy-app app=api
-make deploy-app-production app=api
+make deploy-appengine-app app=api
+make deploy-appengine-app-production app=api
 
 # Worker
-make deploy-app app=worker
-make deploy-app-production app=worker
+make deploy-appengine-app app=worker
+make deploy-appengine-app-production app=worker
 
 # Cron
-make deploy-cron
-make deploy-cron-production
+make deploy-appengine-cron
+make deploy-appengine-cron-production
 
 # Dispatch
-make deploy-dispatch
-make deploy-dispatch-production
+make deploy-appengine-dispatch
+make deploy-appengine-dispatch-production
 
 # Index
-make deploy-index
-make deploy-index-production
+make deploy-appengine-index
+make deploy-appengine-index-production
 
 # Queue
-make deploy-queue
-make deploy-queue-production
+make deploy-appengine-queue
+make deploy-appengine-queue-production
 ```
