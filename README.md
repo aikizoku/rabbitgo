@@ -33,6 +33,7 @@ go version
 vi .bash_profile
 
 export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 
 source .bash_profile
 ```
