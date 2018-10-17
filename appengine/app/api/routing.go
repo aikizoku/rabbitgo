@@ -18,15 +18,15 @@ func Routing(r *chi.Mux, d *Dependency) {
 
 	// 認証なし
 	r.Route("/internal/v1", func(r chi.Router) {
-		r.Use(d.FirebaseAuth.DummyAuth)
-		r.Use(middleware.GetDummyHeaderParams)
+		r.Use(d.DummyFirebaseAuth.Handle)
+		r.Use(d.DummyHeaderParams.Handle)
 		subRouting(r, d)
 	})
 
 	// 認証あり
 	r.Route("/v1", func(r chi.Router) {
-		r.Use(d.FirebaseAuth.Auth)
-		r.Use(middleware.GetHeaderParams)
+		r.Use(d.FirebaseAuth.Handle)
+		r.Use(d.HeaderParams.Handle)
 		subRouting(r, d)
 	})
 
@@ -39,7 +39,7 @@ func subRouting(r chi.Router, d *Dependency) {
 
 	// API(JSONRPC2)
 	r.Route("/rpc", func(r chi.Router) {
+		r.Use(d.JSONRPC2.Handle)
 		r.Post("/", handler.Empty)
 	})
-
 }

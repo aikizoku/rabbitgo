@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/go-chi/chi"
-
+	"github.com/aikizoku/beego/src/handler"
 	"github.com/aikizoku/beego/src/lib/firebaseauth"
-	"github.com/aikizoku/beego/src/middleware"
+	"github.com/aikizoku/beego/src/lib/headerparams"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
+	"github.com/go-chi/chi"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -24,7 +24,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 
 	// HTTPHeaderの値を取得
-	headerParams := r.Context().Value(middleware.HeaderParamsContextKey).(model.HeaderParams)
+	headerParams := r.Context().Value(headerparams.HeaderParamsContextKey).(headerparams.HeaderParams)
 	log.Debugf(ctx, "HeaderParams: %v", headerParams)
 
 	// URLParamの値を取得
@@ -48,7 +48,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	log.Debugf(ctx, "UserID: %s", userID)
 
 	// FirebaseAuthのJWTClaimsの値を取得
-	claims := r.Context().Value(firebaseauth.ClaimsContextKey).(model.Claims)
+	claims := r.Context().Value(firebaseauth.ClaimsContextKey).(firebaseauth.Claims)
 	log.Debugf(ctx, "Claims: %v", claims)
 
 	// Serviceを実行する
@@ -58,7 +58,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	middleware.RenderJSON(w, http.StatusOK, struct {
+	handler.RenderJSON(w, http.StatusOK, struct {
 		Sample model.Sample `json:"sample"`
 		Hoge   string       `json:"hoge,omitempty"`
 	}{
@@ -77,7 +77,7 @@ func (h *SampleHandler) TestDataStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	middleware.RenderSuccess(w)
+	handler.RenderSuccess(w)
 }
 
 // TestCloudSQL ... CloudSQLテスト
@@ -90,7 +90,7 @@ func (h *SampleHandler) TestCloudSQL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	middleware.RenderSuccess(w)
+	handler.RenderSuccess(w)
 }
 
 // TestHTTP ... HTTPテスト
@@ -103,10 +103,17 @@ func (h *SampleHandler) TestHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	middleware.RenderSuccess(w)
+	handler.RenderSuccess(w)
 }
 
 func (h *SampleHandler) handleError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
 	log.Errorf(ctx, msg)
-	middleware.RenderError(w, status, msg)
+	handler.RenderError(w, status, msg)
+}
+
+// NewSampleHandler ... SampleHandlerを作成する
+func NewSampleHandler(svc service.Sample) *SampleHandler {
+	return &SampleHandler{
+		Svc: svc,
+	}
 }

@@ -1,4 +1,4 @@
-package model
+package headerparams
 
 // HeaderParams ... リクエストヘッダーで受け取る値
 type HeaderParams struct {

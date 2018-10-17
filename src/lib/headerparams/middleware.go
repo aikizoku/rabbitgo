@@ -1,4 +1,4 @@
-package firebaseauth
+package headerparams
 
 import (
 	"context"
@@ -13,35 +13,26 @@ import (
 // ContextKey ... ContextKeyの型定義
 type ContextKey string
 
-// UserIDContextKey ... UserIDのContextKey
-const UserIDContextKey ContextKey = "user_id"
+// HeaderParamsContextKey ... HeaderParamsのContextKey
+const HeaderParamsContextKey ContextKey = "header_params"
 
-// ClaimsContextKey ... ClaimsのContextKey
-const ClaimsContextKey ContextKey = "claims"
-
-// Middleware ... JSONRPC2に準拠したミドルウェア
+// Middleware ... Headerに関する機能を提供する
 type Middleware struct {
 	Svc Service
 }
 
-// Handle ... Firebase認証をする
+// Handle ... リクエストヘッダーのパラメータを取得する
 func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := appengine.NewContext(r)
 
-		userID, claims, err := m.Svc.Authentication(ctx, r)
+		h, err := m.Svc.Get(ctx, r)
 		if err != nil {
-			m.renderError(ctx, w, http.StatusForbidden, "authentication: "+err.Error())
+			m.renderError(ctx, w, http.StatusBadRequest, "headerparams.Service.Get: "+err.Error())
 			return
 		}
-
 		rctx := r.Context()
-		rctx = context.WithValue(rctx, UserIDContextKey, userID)
-		rctx = context.WithValue(rctx, ClaimsContextKey, claims)
-
-		log.Debugf(ctx, "UserID: %s", userID)
-		log.Debugf(ctx, "Claims: %v", claims)
-
+		rctx = context.WithValue(rctx, HeaderParamsContextKey, h)
 		next.ServeHTTP(w, r.WithContext(rctx))
 	})
 }

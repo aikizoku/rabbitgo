@@ -3,7 +3,7 @@ package worker
 import (
 	"net/http"
 
-	"github.com/aikizoku/beego/src/middleware"
+	"github.com/aikizoku/beego/src/handler"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
@@ -19,7 +19,7 @@ func (h *AdminHandler) MigrateMasterData(w http.ResponseWriter, r *http.Request)
 	// ここでマスターデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate master data handler")
 
-	middleware.RenderSuccess(w)
+	handler.RenderSuccess(w)
 }
 
 // MigrateTestData ... テストデータを作成する
@@ -29,5 +29,10 @@ func (h *AdminHandler) MigrateTestData(w http.ResponseWriter, r *http.Request) {
 	// ここでテストデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate test data handler")
 
-	middleware.RenderSuccess(w)
+	handler.RenderSuccess(w)
+}
+
+// NewAdminHandler ... AdminHandlerを作成する
+func NewAdminHandler() *AdminHandler {
+	return &AdminHandler{}
 }

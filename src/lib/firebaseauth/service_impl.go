@@ -8,13 +8,15 @@ import (
 
 	"firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/aikizoku/beego/src/model"
 	"google.golang.org/appengine/log"
 )
 
+type service struct {
+}
+
 // SetCustomClaims ... カスタムClaimsを設定
-func SetCustomClaims(ctx context.Context, userID string, claims model.Claims) error {
-	c, err := getAuthClient(ctx)
+func (s *service) SetCustomClaims(ctx context.Context, userID string, claims Claims) error {
+	c, err := s.getAuthClient(ctx)
 	if err != nil {
 		log.Errorf(ctx, "faild to get auth client")
 		return err
@@ -29,17 +31,18 @@ func SetCustomClaims(ctx context.Context, userID string, claims model.Claims) er
 	return nil
 }
 
-func authentication(ctx context.Context, r *http.Request) (string, model.Claims, error) {
+// Authentication ... 認証を行う
+func (s *service) Authentication(ctx context.Context, r *http.Request) (string, Claims, error) {
 	var userID string
-	claims := model.Claims{}
+	claims := Claims{}
 
-	c, err := getAuthClient(ctx)
+	c, err := s.getAuthClient(ctx)
 	if err != nil {
 		log.Warningf(ctx, "faild to get auth client")
 		return userID, claims, err
 	}
 
-	idToken := getAuthorizationHeader(r)
+	idToken := s.getAuthorizationHeader(r)
 	if idToken == "" {
 		err = fmt.Errorf("no auth token error")
 		return userID, claims, err
@@ -57,7 +60,7 @@ func authentication(ctx context.Context, r *http.Request) (string, model.Claims,
 	return userID, claims, nil
 }
 
-func getAuthClient(ctx context.Context) (*auth.Client, error) {
+func (s *service) getAuthClient(ctx context.Context) (*auth.Client, error) {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
 		log.Warningf(ctx, "create firebase app error: %s", err.Error())
@@ -71,11 +74,16 @@ func getAuthClient(ctx context.Context) (*auth.Client, error) {
 	return c, nil
 }
 
-func getAuthorizationHeader(r *http.Request) string {
+func (s *service) getAuthorizationHeader(r *http.Request) string {
 	if ah := r.Header.Get("Authorization"); ah != "" {
 		if len(ah) > 6 && strings.ToUpper(ah[0:6]) == "BEARER" {
 			return ah[7:]
 		}
 	}
 	return ""
+}
+
+// NewService ... Serviceを作成する
+func NewService() Service {
+	return &service{}
 }

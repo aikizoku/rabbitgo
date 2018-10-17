@@ -45,3 +45,10 @@ func (h *SampleJSONRPC2Handler) Exec(ctx context.Context, method string, params 
 		Foobar: "",
 	}, nil
 }
+
+// NewSampleJSONRPC2Handler ... SampleJSONRPC2Handlerを作成する
+func NewSampleJSONRPC2Handler(svc service.Sample) *SampleJSONRPC2Handler {
+	return &SampleJSONRPC2Handler{
+		Svc: svc,
+	}
+}
