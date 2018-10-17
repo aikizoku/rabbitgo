@@ -2,6 +2,8 @@ GOPHER = 'ʕ◔ϖ◔ʔ'
 STAGING_PROJECT_ID = 'beego-staging-thehero-jp'
 PRODUCTION_PROJECT_ID = 'beego-thehero-jp'
 
+.PHONY: hello init run deploy
+
 hello:
 	@echo Hello go project ${GOPHER}
 
