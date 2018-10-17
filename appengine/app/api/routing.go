@@ -14,7 +14,7 @@ func Routing(r *chi.Mux, d *Dependency) {
 	r.Use(middleware.AccessControl)
 
 	// Ping
-	r.Get("/ping", handler.PingHandler)
+	r.Get("/ping", handler.Ping)
 
 	// 認証なし
 	r.Route("/internal/v1", func(r chi.Router) {
@@ -39,7 +39,7 @@ func subRouting(r chi.Router, d *Dependency) {
 
 	// API(JSONRPC2)
 	r.Route("/rpc", func(r chi.Router) {
-		r.Post("/", handler.EmptyHandler)
+		r.Post("/", handler.Empty)
 	})
 
 }

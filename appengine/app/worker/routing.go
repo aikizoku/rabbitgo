@@ -9,7 +9,7 @@ import (
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
-	r.Get("/ping", handler.PingHandler)
+	r.Get("/ping", handler.Ping)
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Route("/migration", func(r chi.Router) {
@@ -20,8 +20,8 @@ func Routing(r *chi.Mux, d *Dependency) {
 
 	r.Route("/task", func(r chi.Router) {
 		r.Route("/sample", func(r chi.Router) {
-			r.Get("/cron", d.SampleHandler.CronHandler)
-			r.Post("/taskqueue", d.SampleHandler.TaskQueueHandler)
+			r.Get("/cron", d.SampleHandler.Cron)
+			r.Post("/taskqueue", d.SampleHandler.TaskQueue)
 		})
 	})
 

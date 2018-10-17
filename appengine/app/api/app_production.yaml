@@ -1,7 +1,5 @@
-runtime: go
-api_version: go1.9
+runtime: go111
 env: standard
-threadsafe: true
 instance_class: F1
 
 automatic_scaling:

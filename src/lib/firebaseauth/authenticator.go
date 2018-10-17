@@ -8,7 +8,7 @@ import (
 
 	"firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/filmapp/livelive-shop/src/model"
+	"github.com/aikizoku/beego/src/model"
 	"google.golang.org/appengine/log"
 )
 

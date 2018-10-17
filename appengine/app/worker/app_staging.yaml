@@ -1,7 +1,5 @@
-runtime: go
-api_version: go1.9
+runtime: go111
 env: standard
-threadsafe: true
 instance_class: F1
 
 automatic_scaling:
@@ -17,10 +15,8 @@ handlers:
   script: _go_app
 - url: /admin.*
   script: _go_app
-  login: admin
 - url: /task.*
   script: _go_app
-  login: admin
 
 includes:
 - env_variables.yaml
