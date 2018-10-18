@@ -11,7 +11,7 @@ import (
 	"github.com/aikizoku/beego/src/lib/httpclient"
 	"github.com/aikizoku/beego/src/lib/util"
 	"github.com/aikizoku/beego/src/model"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 )
 
 type sample struct {
@@ -195,7 +195,7 @@ func (r *sample) CloudSQLDelete(ctx context.Context, id int64) error {
 
 // HTTP
 func (r *sample) HTTPGet(ctx context.Context) error {
-	status, res, err := httpclient.Get(ctx, "https://www.google.co.jp/", nil)
+	status, body, err := httpclient.Get(ctx, "https://www.google.co.jp/", nil)
 	if err != nil {
 		log.Errorf(ctx, "HTTPGet: "+err.Error())
 		return err
@@ -204,7 +204,8 @@ func (r *sample) HTTPGet(ctx context.Context) error {
 		err := fmt.Errorf("http status: %d", status)
 		return err
 	}
-	log.Debugf(ctx, string(res))
+	str := util.BytesToStr(body)
+	log.Debugf(ctx, "body length: %d", len(str))
 	return nil
 }
 

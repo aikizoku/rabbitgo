@@ -5,19 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/unrolled/render"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
 )
-
-// ContextKey ... ContextKeyの型定義
-type ContextKey string
-
-// UserIDContextKey ... UserIDのContextKey
-const UserIDContextKey ContextKey = "user_id"
-
-// ClaimsContextKey ... ClaimsのContextKey
-const ClaimsContextKey ContextKey = "claims"
 
 // Middleware ... JSONRPC2に準拠したミドルウェア
 type Middleware struct {
@@ -35,14 +26,13 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 			return
 		}
 
-		rctx := r.Context()
-		rctx = context.WithValue(rctx, UserIDContextKey, userID)
-		rctx = context.WithValue(rctx, ClaimsContextKey, claims)
-
+		ctx = setUserID(ctx, userID)
 		log.Debugf(ctx, "UserID: %s", userID)
+
+		ctx = setClaims(ctx, claims)
 		log.Debugf(ctx, "Claims: %v", claims)
 
-		next.ServeHTTP(w, r.WithContext(rctx))
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 

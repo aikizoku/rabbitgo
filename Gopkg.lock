@@ -177,11 +177,11 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "49bb7cea24b1df9410e1712aa6433dae904ff66a"
+  revision = "04a2e542c03f1d053ab3e4d6e5abcd4b66e2be8e"
 
 [[projects]]
   branch = "master"
-  digest = "1:39273b3e6c96fed52bd8f7793fc463c40b1a27a7caa51302b81d45306b9646b4"
+  digest = "1:faa25cb78cf9c8cec9345d4ed07322cdef6a8c968b3d0a6b6c3609067c7386eb"
   name = "golang.org/x/oauth2"
   packages = [
     ".",
@@ -191,7 +191,7 @@
     "jwt",
   ]
   pruneopts = "UT"
-  revision = "c57b0facaced709681d9f90397429b9430a74754"
+  revision = "9dcd33a902f40452422c2367fefcb95b54f9f8f8"
 
 [[projects]]
   branch = "master"
@@ -251,7 +251,7 @@
   revision = "3f6e8463aa1d824abe11b439d178c02220079da5"
 
 [[projects]]
-  digest = "1:168449922f3d9775ec529436a4f4b859f91054cdc348413f9298ae8aff98a0d9"
+  digest = "1:d2cfb607095cee410f25a3c04eed77f76c4721d1bb0cbc894f5d8624b33394c8"
   name = "google.golang.org/appengine"
   packages = [
     ".",
@@ -265,7 +265,6 @@
     "internal/remote_api",
     "internal/socket",
     "internal/urlfetch",
-    "log",
     "socket",
     "urlfetch",
   ]
@@ -346,8 +345,6 @@
     "golang.org/x/text/encoding/japanese",
     "golang.org/x/text/transform",
     "google.golang.org/appengine",
-    "google.golang.org/appengine/log",
-    "google.golang.org/appengine/urlfetch",
     "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"

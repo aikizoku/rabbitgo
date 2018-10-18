@@ -8,7 +8,7 @@ import (
 
 	"firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 )
 
 type service struct {

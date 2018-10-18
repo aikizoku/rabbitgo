@@ -1,6 +1,8 @@
 package handler
 
-import "net/http"
+import (
+	"net/http"
+)
 
 // Ping ... 生存確認
 func Ping(w http.ResponseWriter, r *http.Request) {

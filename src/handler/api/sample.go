@@ -6,12 +6,12 @@ import (
 
 	"github.com/aikizoku/beego/src/handler"
 	"github.com/aikizoku/beego/src/lib/firebaseauth"
-	"github.com/aikizoku/beego/src/lib/headerparams"
+	"github.com/aikizoku/beego/src/lib/httpheader"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
 	"github.com/go-chi/chi"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 )
 
 // SampleHandler ... 記事のハンドラ
@@ -24,7 +24,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 
 	// HTTPHeaderの値を取得
-	headerParams := r.Context().Value(headerparams.HeaderParamsContextKey).(headerparams.HeaderParams)
+	headerParams := httpheader.GetParams(ctx)
 	log.Debugf(ctx, "HeaderParams: %v", headerParams)
 
 	// URLParamの値を取得
@@ -44,11 +44,11 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	log.Debugf(ctx, "FormParams: %s", formParam)
 
 	// FirebaseAuthのユーザーIDを取得
-	userID := r.Context().Value(firebaseauth.UserIDContextKey).(string)
+	userID := firebaseauth.GetUserID(ctx)
 	log.Debugf(ctx, "UserID: %s", userID)
 
 	// FirebaseAuthのJWTClaimsの値を取得
-	claims := r.Context().Value(firebaseauth.ClaimsContextKey).(firebaseauth.Claims)
+	claims := firebaseauth.GetClaims(ctx)
 	log.Debugf(ctx, "Claims: %v", claims)
 
 	// Serviceを実行する

@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"unsafe"
 )
 
 // StrToMD5 ... 文字列のハッシュ(MD5)を取得する
@@ -19,4 +20,9 @@ func StrToMD5(str string) string {
 func StrToSHA256(str string) string {
 	c := sha256.Sum256([]byte(str))
 	return hex.EncodeToString(c[:])
+}
+
+// StrToBytes ... 文字列をバイト列に変換する
+func StrToBytes(str string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&str))
 }

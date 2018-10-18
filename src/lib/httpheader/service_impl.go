@@ -1,10 +1,10 @@
-package headerparams
+package httpheader
 
 import (
 	"context"
 	"net/http"
 
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -15,8 +15,8 @@ const (
 type service struct {
 }
 
-func (s *service) Get(ctx context.Context, r *http.Request) (HeaderParams, error) {
-	h := HeaderParams{
+func (s *service) Get(ctx context.Context, r *http.Request) (Params, error) {
+	h := Params{
 		// EDIT: ここに任意のヘッダーを入れる
 		Sample: r.Header.Get(headerKeySample),
 	}

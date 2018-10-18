@@ -81,7 +81,7 @@ gcloud config set project <your-project-id>
 
 ## 依存パッケージのインストール
 ```bash
-# インストール
+# バージョン管理ツールのインストール
 brew install dep
 
 # 依存パッケージのインストール
@@ -89,6 +89,14 @@ dep ensure
 
 # 依存パッケージのアップデート
 dep ensure update
+
+# 依存パッケージの追加
+dep ensure -add <package-name>
+```
+
+# 初期化
+```bash
+make init
 ```
 
 # 動かす

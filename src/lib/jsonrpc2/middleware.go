@@ -10,7 +10,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 )
 
 const (

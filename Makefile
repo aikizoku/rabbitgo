@@ -77,7 +77,7 @@ define init
 	@ln -s ../../../../appengine/config/index.yaml deploy/appengine/$1/$2/index.yaml
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
 	@ln -s ../../../../appengine/secret/env_variables_$1.yaml deploy/appengine/$1/$2/env_variables.yaml
-	@ln -s ../../../../appengine/secret/firebase_credentials_$1.json deploy/appengine/$1/$2/firebase_credentials.json
+	@ln -s ../../../../appengine/secret/google_application_credentials_$1.json deploy/appengine/$1/$2/google_application_credentials.json
 endef
 
 define run

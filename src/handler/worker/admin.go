@@ -5,7 +5,7 @@ import (
 
 	"github.com/aikizoku/beego/src/handler"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
+	"github.com/aikizoku/beego/src/lib/log"
 )
 
 // AdminHandler ... 管理用のハンドラ

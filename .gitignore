@@ -67,10 +67,8 @@ Session.vim
 # GCP
 env_variables_staging.yaml
 env_variables_production.yaml
-
-# Firebase
-firebase_credentials_staging.json
-firebase_credentials_production.json
+google_application_credentials_staging.json
+google_application_credentials_production.json
 
 # Beego
 /deploy/

@@ -1,4 +1,4 @@
-package headerparams
+package httpheader
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 type dummyService struct {
 }
 
-func (s *dummyService) Get(ctx context.Context, r *http.Request) (HeaderParams, error) {
-	h := HeaderParams{
+func (s *dummyService) Get(ctx context.Context, r *http.Request) (Params, error) {
+	h := Params{
 		// EDIT: ここに任意のダミーヘッダーを入れる
 		Sample: "sample",
 	}

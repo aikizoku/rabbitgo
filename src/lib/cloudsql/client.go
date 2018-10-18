@@ -6,13 +6,12 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/aikizoku/beego/src/config"
+	"github.com/aikizoku/beego/src/lib/log"
 	_ "github.com/go-sql-driver/mysql" // Driverの読み込み
-	"google.golang.org/appengine/log"
 )
 
 // NewCSQLClient ... CloudSQLのクライアントを取得する
-func NewCSQLClient(cfg *config.CSQLConfig) *sql.DB {
+func NewCSQLClient(cfg *CSQLConfig) *sql.DB {
 	ds := fmt.Sprintf("%s:%s@cloudsql(%s)/",
 		cfg.User,
 		cfg.Password,
@@ -67,9 +66,6 @@ func DumpDeleteQuery(ctx context.Context, query sq.DeleteBuilder) {
 }
 
 func dumpQuery(ctx context.Context, queryString string, args []interface{}) {
-	msg := ""
-	msg += "--- SQL Dump ---\n"
-	msg += fmt.Sprintf("%s\n", queryString)
-	msg += fmt.Sprintf("%v\n", args)
+	msg := fmt.Sprintf("[SQL Dump] %s, %s", queryString, args)
 	log.Debugf(ctx, msg)
 }

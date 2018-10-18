@@ -1,14 +1,12 @@
-package middleware
+package basicauth
 
 import (
 	"net/http"
-
-	"github.com/aikizoku/beego/src/config"
 )
 
 // BasicAuth ... ベーシック認証機能を提供するミドルウェア
 type BasicAuth struct {
-	Config config.BasicAuthConfig
+	Config BasicAuthConfig
 }
 
 // Handle ... ハンドラ
@@ -30,7 +28,7 @@ func (a *BasicAuth) Handle(next http.Handler) http.Handler {
 }
 
 // NewBasicAuth ... BasicAuthを作成する
-func NewBasicAuth(cfg config.BasicAuthConfig) *BasicAuth {
+func NewBasicAuth(cfg BasicAuthConfig) *BasicAuth {
 	return &BasicAuth{
 		Config: cfg,
 	}

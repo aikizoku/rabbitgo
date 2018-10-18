@@ -10,12 +10,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/urlfetch"
 )
 
-const defaultTimeout time.Duration = 15
+const defaultTimeout time.Duration = 15 * time.Second
 
 // HTTPOption ... HTTP通信モジュールの追加設定
 type HTTPOption struct {
@@ -31,11 +30,13 @@ func Get(ctx context.Context, u string, opt *HTTPOption) (int, []byte, error) {
 		return 0, nil, err
 	}
 
-	for key, value := range opt.Headers {
-		req.Header.Set(key, value)
+	if opt != nil {
+		for key, value := range opt.Headers {
+			req.Header.Set(key, value)
+		}
 	}
 
-	return send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt)
 }
 
 // GetForm ... Getリクエスト(URL, Params)
@@ -46,8 +47,10 @@ func GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPO
 		return 0, nil, err
 	}
 
-	for key, value := range opt.Headers {
-		req.Header.Set(key, value)
+	if opt != nil {
+		for key, value := range opt.Headers {
+			req.Header.Set(key, value)
+		}
 	}
 
 	query := req.URL.Query()
@@ -56,7 +59,7 @@ func GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPO
 	}
 
 	req.URL.RawQuery = query.Encode()
-	return send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt)
 }
 
 // GetQueryString ... Getリクエスト(URL, QueryString)
@@ -66,10 +69,14 @@ func GetQueryString(ctx context.Context, u string, qs string, opt *HTTPOption) (
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return 0, nil, err
 	}
-	for key, value := range opt.Headers {
-		req.Header.Set(key, value)
+
+	if opt != nil {
+		for key, value := range opt.Headers {
+			req.Header.Set(key, value)
+		}
 	}
-	return send(ctx, req, opt.Timeout)
+
+	return send(ctx, req, opt)
 }
 
 // PostForm ... Postリクエスト(URL, Params)
@@ -78,49 +85,59 @@ func PostForm(ctx context.Context, u string, params map[string]string, opt *HTTP
 	for key, value := range params {
 		values.Add(key, value)
 	}
+
 	req, err := http.NewRequest("POST", u, strings.NewReader(values.Encode()))
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return 0, nil, err
 	}
-	for key, value := range opt.Headers {
-		req.Header.Set(key, value)
+
+	if opt != nil {
+		for key, value := range opt.Headers {
+			req.Header.Set(key, value)
+		}
 	}
-	return send(ctx, req, opt.Timeout)
+
+	return send(ctx, req, opt)
 }
 
 // PostJSON ... Postリクエスト(URL, JSON)
-func PostJSON(ctx context.Context, u string, json []byte, opt *HTTPOption) (int, []byte, error) {
-	req, err := http.NewRequest("POST", u, bytes.NewBuffer(json))
+func PostJSON(ctx context.Context, url string, json []byte, opt *HTTPOption) (int, []byte, error) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return 0, nil, err
 	}
 
+	if opt == nil {
+		opt = &HTTPOption{}
+	}
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
 	opt.Headers["Content-Type"] = "application/json"
 
-	return send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt)
 }
 
 // PostBody ... Postリクエスト(URL, Body)
-func PostBody(ctx context.Context, u string, body []byte, opt *HTTPOption) (int, []byte, error) {
-	req, err := http.NewRequest("POST", u, bytes.NewBuffer(body))
+func PostBody(ctx context.Context, url string, body []byte, opt *HTTPOption) (int, []byte, error) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		log.Warningf(ctx, "create request error: %s", err.Error())
 		return 0, nil, err
 	}
 
-	for key, value := range opt.Headers {
-		req.Header.Set(key, value)
+	if opt != nil {
+		for key, value := range opt.Headers {
+			req.Header.Set(key, value)
+		}
 	}
 
-	return send(ctx, req, opt.Timeout)
+	return send(ctx, req, opt)
 }
 
-func send(ctx context.Context, req *http.Request, timeout time.Duration) (int, []byte, error) {
+func send(ctx context.Context, req *http.Request, opt *HTTPOption) (int, []byte, error) {
 	dump, err := httputil.DumpRequestOut(req, true)
 	if err == nil {
 		log.Debugf(ctx, "send http request: %s", dump)
@@ -128,9 +145,9 @@ func send(ctx context.Context, req *http.Request, timeout time.Duration) (int, [
 		log.Warningf(ctx, "dumb http request error: %s, error=%s", spew.Sdump(req), err.Error())
 	}
 
-	client := urlfetch.Client(ctx)
-	if timeout > 0 {
-		client.Timeout = timeout
+	client := http.Client{}
+	if opt != nil && opt.Timeout > 0 {
+		client.Timeout = opt.Timeout
 	} else {
 		client.Timeout = defaultTimeout
 	}
