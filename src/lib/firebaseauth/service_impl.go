@@ -50,7 +50,7 @@ func (s *service) Authentication(ctx context.Context, r *http.Request) (string, 
 
 	t, err := c.VerifyIDToken(ctx, idToken)
 	if err != nil {
-		log.Warningf(ctx, "c.VerifyIDToken: "+err.Error())
+		log.Warningf(ctx, "c.VerifyIDToken: %s", err.Error())
 		return userID, claims, err
 	}
 

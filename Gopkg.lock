@@ -133,6 +133,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:e97a6f4c77f71471b34dbc72bf9ffe4f87d083993afebd8e71e758a60b6104ff"
+  name = "github.com/mjibson/goon"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0c01b4bc4f4970fa6f91409bf7f134a10809219c"
+
+[[projects]]
+  branch = "master"
   digest = "1:a79dc80dd3154f4fe8d924d19d48d63c22f25fa9e66da497d9ebb037805d7eb1"
   name = "github.com/unrolled/render"
   packages = ["."]
@@ -251,20 +259,24 @@
   revision = "3f6e8463aa1d824abe11b439d178c02220079da5"
 
 [[projects]]
-  digest = "1:d2cfb607095cee410f25a3c04eed77f76c4721d1bb0cbc894f5d8624b33394c8"
+  digest = "1:78f330873fe9bfdcad2d6fd23b874f070e4d096e70431fb63ecc8b0e1f725f32"
   name = "google.golang.org/appengine"
   packages = [
     ".",
     "cloudsql",
+    "datastore",
     "internal",
     "internal/app_identity",
     "internal/base",
     "internal/datastore",
     "internal/log",
+    "internal/memcache",
     "internal/modules",
     "internal/remote_api",
     "internal/socket",
     "internal/urlfetch",
+    "log",
+    "memcache",
     "socket",
     "urlfetch",
   ]
@@ -341,6 +353,7 @@
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",
+    "github.com/mjibson/goon",
     "github.com/unrolled/render",
     "golang.org/x/text/encoding/japanese",
     "golang.org/x/text/transform",

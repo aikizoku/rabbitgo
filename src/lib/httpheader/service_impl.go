@@ -23,7 +23,7 @@ func (s *service) Get(ctx context.Context, r *http.Request) (Params, error) {
 
 	v := validator.New()
 	if err := v.Struct(h); err != nil {
-		log.Warningf(ctx, "Header param validation error: "+err.Error())
+		log.Warningf(ctx, "Header param validation error: %s", err.Error())
 		return h, err
 	}
 

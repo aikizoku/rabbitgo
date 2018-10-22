@@ -32,7 +32,7 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 
 func (m *Middleware) renderError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
 	log.Warningf(ctx, msg)
-	render.New().Text(w, status, fmt.Sprintf("%d %s", status, msg))
+	render.New().Text(w, status, fmt.Sprintf("%d invalid header params", status))
 }
 
 // NewMiddleware ... Middlewareを作成する

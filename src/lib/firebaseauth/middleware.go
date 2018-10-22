@@ -22,7 +22,7 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 
 		userID, claims, err := m.Svc.Authentication(ctx, r)
 		if err != nil {
-			m.renderError(ctx, w, http.StatusForbidden, "authentication: "+err.Error())
+			m.renderError(ctx, w, http.StatusForbidden, err.Error())
 			return
 		}
 
@@ -38,7 +38,7 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 
 func (m *Middleware) renderError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
 	log.Warningf(ctx, msg)
-	render.New().Text(w, status, fmt.Sprintf("%d %s", status, msg))
+	render.New().Text(w, status, fmt.Sprintf("%d authentication failed", status))
 }
 
 // NewMiddleware ... Middlewareを作成する
