@@ -133,14 +133,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e97a6f4c77f71471b34dbc72bf9ffe4f87d083993afebd8e71e758a60b6104ff"
-  name = "github.com/mjibson/goon"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "0c01b4bc4f4970fa6f91409bf7f134a10809219c"
-
-[[projects]]
-  branch = "master"
   digest = "1:a79dc80dd3154f4fe8d924d19d48d63c22f25fa9e66da497d9ebb037805d7eb1"
   name = "github.com/unrolled/render"
   packages = ["."]
@@ -148,10 +140,27 @@
   revision = "b9786414de4d903830df7ac38eea68a0e3267a35"
 
 [[projects]]
-  digest = "1:8e7fcf54cc7c0c3aba7801812ae70343585b3cb663f6cb11ad50c0c28552f359"
+  digest = "1:e583fc00497ee3eaf30bde9edf05601f60d5a8668f7fe4c657b3f935ddca03f7"
+  name = "go.mercari.io/datastore"
+  packages = [
+    ".",
+    "aedatastore",
+    "boom",
+    "internal",
+    "internal/c/atomiccache",
+    "internal/c/fields",
+    "internal/shared",
+  ]
+  pruneopts = "UT"
+  revision = "7a323a3747d39b6c9cdf825697d09cb36907d4cb"
+  version = "v1.3.0"
+
+[[projects]]
+  digest = "1:381ccafa5e013a0e3f9b54604ae522a73b9533a375a6a714b483c634d5e927ab"
   name = "go.opencensus.io"
   packages = [
     ".",
+    "exemplar",
     "internal",
     "internal/tagencoding",
     "plugin/ocgrpc",
@@ -167,8 +176,8 @@
     "trace/tracestate",
   ]
   pruneopts = "UT"
-  revision = "79993219becaa7e29e3b60cb67f5b8e82dee11d6"
-  version = "v0.17.0"
+  revision = "b7bf3cdb64150a8c8c53b769fdeb2ba581bd4d4b"
+  version = "v0.18.0"
 
 [[projects]]
   branch = "master"
@@ -203,11 +212,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0a40b0bdd57a93e741d8557465be3a2edeec408e9b6399586ad65bbe8e355796"
+  digest = "1:c5791551cb1ebd8cd399edad5bc32805661a5c0340515110dd7d5ab0b0508efc"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "fa43e7bc11baaae89f3f902b2b4d832b68234844"
+  revision = "8a28ead16f52c8aaeffbf79239b251dfdf6c4f96"
 
 [[projects]]
   digest = "1:df8ea9d0bfb9d8caec6f3890804c12b7c2f35a71e25ce8f6076d86ba636b1c46"
@@ -238,7 +247,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ddb6d60399eb0da2472096d4dc4f329c2ec75ac37b58cdf85cef08ffd6e4e40b"
+  digest = "1:5fe82eeaf3105c90e9cda8fb5f8d5b71f13a471bce4fa67873884f21e8eb9569"
   name = "google.golang.org/api"
   packages = [
     "gensupport",
@@ -256,10 +265,10 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "3f6e8463aa1d824abe11b439d178c02220079da5"
+  revision = "a2651947f503a1793446d4058bb073a6fdf99e53"
 
 [[projects]]
-  digest = "1:78f330873fe9bfdcad2d6fd23b874f070e4d096e70431fb63ecc8b0e1f725f32"
+  digest = "1:494ae30b75126072c0b4c1b8ad2dca27c0bf1accbaf3c40f63a158f880fb728e"
   name = "google.golang.org/appengine"
   packages = [
     ".",
@@ -270,13 +279,10 @@
     "internal/base",
     "internal/datastore",
     "internal/log",
-    "internal/memcache",
     "internal/modules",
     "internal/remote_api",
     "internal/socket",
     "internal/urlfetch",
-    "log",
-    "memcache",
     "socket",
     "urlfetch",
   ]
@@ -353,11 +359,13 @@
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",
-    "github.com/mjibson/goon",
     "github.com/unrolled/render",
+    "go.mercari.io/datastore/aedatastore",
+    "go.mercari.io/datastore/boom",
     "golang.org/x/text/encoding/japanese",
     "golang.org/x/text/transform",
     "google.golang.org/appengine",
+    "google.golang.org/appengine/datastore",
     "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"

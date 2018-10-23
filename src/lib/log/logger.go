@@ -69,7 +69,6 @@ func writeLog(ctx context.Context, level Level, format string, args ...interface
 	entry.Level = level
 	entry.Message = fmt.Sprintf(format, args...)
 	if _, file, line, ok := runtime.Caller(2); ok {
-		println(line)
 		parts := strings.Split(file, "/")
 		length := len(parts)
 		entry.File = fmt.Sprintf("%s/%s", parts[length-2], parts[length-1])

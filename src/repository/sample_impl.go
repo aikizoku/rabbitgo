@@ -12,9 +12,9 @@ import (
 	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/lib/util"
 	"github.com/aikizoku/beego/src/model"
-	"github.com/mjibson/goon"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/datastore"
+	"go.mercari.io/datastore"
+	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
+	"go.mercari.io/datastore/boom"
 )
 
 type sample struct {
@@ -22,106 +22,115 @@ type sample struct {
 }
 
 // DataStore
-func (r *sample) DataStoreGet(ctx context.Context, id int64) (model.Sample, error) {
-	dst := model.Sample{
+func (r *sample) DataStoreGet(ctx context.Context, id int64) (*model.Sample, error) {
+	dst := &model.Sample{
 		ID: id,
 	}
-	g := goon.FromContext(ctx)
-	if err := g.Get(&dst); err != nil {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return dst, err
+	}
+	if err := b.Get(dst); err != nil {
 		if err == datastore.ErrNoSuchEntity {
-			return model.Sample{}, err
+			return nil, err
 		}
-		log.Errorf(ctx, "sample get error: %s", err.Error())
-		return model.Sample{}, err
+		log.Errorf(ctx, "get error: %s", err.Error())
+		return nil, err
 	}
 	return dst, nil
 }
 
-func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
-	ret := []model.Sample{}
-	g := goon.FromContext(ctx)
-	dsts := []model.Sample{}
+func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]*model.Sample, error) {
+	ret := []*model.Sample{}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return ret, err
+	}
+	bt := b.Batch()
 	for _, id := range ids {
-		dsts = append(dsts, model.Sample{
+		dst := &model.Sample{
 			ID: id,
+		}
+		bt.Get(dst, func(err error) error {
+			if err != nil {
+				if err == datastore.ErrNoSuchEntity {
+					return nil
+				}
+				log.Errorf(ctx, "get multi error: %s, id: %d", err.Error(), dst.ID)
+				return err
+			}
+			ret = append(ret, dst)
+			return nil
 		})
 	}
-	if err := g.GetMulti(&dsts); err != nil {
-		mErr, ok := err.(appengine.MultiError)
-		if !ok {
-			log.Errorf(ctx, "sample get multi error: %s", err.Error())
-			return ret, err
-		}
-		for i, err := range mErr {
-			if err == nil {
-				ret = append(ret, dsts[i])
-				continue
-			}
-			if err == datastore.ErrNoSuchEntity {
-				continue
-			}
-			log.Errorf(ctx, "sample get multi error: %s, id: %d", err.Error(), ids[i])
-			return ret, err
-		}
-	} else {
-		ret = dsts
+	err = bt.Exec()
+	if err != nil {
+		log.Errorf(ctx, "get multi error: %s", err.Error())
+		return nil, err
 	}
 	return ret, nil
 }
 
-func (r *sample) DataStoreGetByQuery(ctx context.Context, category string) ([]model.Sample, error) {
-	return []model.Sample{}, nil
+func (r *sample) DataStoreGetByQuery(ctx context.Context, category string) ([]*model.Sample, error) {
+	return []*model.Sample{}, nil
 }
 
-func (r *sample) DataStoreInsert(ctx context.Context, obj model.Sample) (int64, error) {
+func (r *sample) DataStoreInsert(ctx context.Context, obj *model.Sample) (int64, error) {
 	return 0, nil
 }
 
-func (r *sample) DataStoreInsertMulti(ctx context.Context, objs []model.Sample) ([]int64, error) {
+func (r *sample) DataStoreInsertMulti(ctx context.Context, objs []*model.Sample) ([]int64, error) {
 	return []int64{}, nil
 }
 
-func (r *sample) DataStoreUpdate(ctx context.Context, obj model.Sample) (int64, error) {
+func (r *sample) DataStoreUpdate(ctx context.Context, obj *model.Sample) (int64, error) {
 	return 0, nil
 }
 
-func (r *sample) DataStoreUpdateMulti(ctx context.Context, objs []model.Sample) ([]int64, error) {
+func (r *sample) DataStoreUpdateMulti(ctx context.Context, objs []*model.Sample) ([]int64, error) {
 	return []int64{}, nil
 }
 
-func (r *sample) DataStoreUpsert(ctx context.Context, src model.Sample) (int64, error) {
+func (r *sample) DataStoreUpsert(ctx context.Context, src *model.Sample) (int64, error) {
 	var id int64
-	g := goon.FromContext(ctx)
-	key, err := g.Put(&src)
+	b, err := boom.FromContext(ctx)
 	if err != nil {
-		log.Errorf(ctx, "sample upsert datastore error: %s", err.Error())
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
 		return id, err
 	}
-	id = key.IntID()
+	key, err := b.Put(src)
+	if err != nil {
+		log.Errorf(ctx, "upsert error: %s", err.Error())
+		return id, err
+	}
+	id = key.ID()
 	return id, nil
 }
 
-func (r *sample) DataStoreUpsertMulti(ctx context.Context, srcs []model.Sample) ([]int64, error) {
+func (r *sample) DataStoreUpsertMulti(ctx context.Context, srcs []*model.Sample) ([]int64, error) {
 	ids := []int64{}
-	g := goon.FromContext(ctx)
-	keys, err := g.PutMulti(srcs)
+	b, err := boom.FromContext(ctx)
 	if err != nil {
-		mErr, ok := err.(appengine.MultiError)
-		if !ok {
-			log.Errorf(ctx, "sample upsert multi error: %s", err.Error())
-			return ids, err
-		}
-		for i, err := range mErr {
-			if err == nil {
-				ids = append(ids, keys[i].IntID())
-				continue
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return ids, err
+	}
+	bt := b.Batch()
+	for _, src := range srcs {
+		bt.Put(src, func(key datastore.Key, err error) error {
+			if err != nil {
+				log.Errorf(ctx, "upsert error: %s, id: %d", err.Error(), key.ID())
+				return err
 			}
-			log.Errorf(ctx, "sample upsert multi error: %s, src: %v", err.Error(), srcs[i])
-		}
-	} else {
-		for _, key := range keys {
-			ids = append(ids, key.IntID())
-		}
+			ids = append(ids, key.ID())
+			return nil
+		})
+	}
+	err = bt.Exec()
+	if err != nil {
+		log.Errorf(ctx, "upsert error: %s", err.Error())
+		return ids, err
 	}
 	return ids, nil
 }
@@ -135,8 +144,8 @@ func (r *sample) DataStoreDeleteMulti(ctx context.Context, id int64) ([]int64, e
 }
 
 // CloudSQL
-func (r *sample) CloudSQLGet(ctx context.Context, id int64) (model.Sample, error) {
-	var ret model.Sample
+func (r *sample) CloudSQLGet(ctx context.Context, id int64) (*model.Sample, error) {
+	var ret *model.Sample
 
 	q := sq.Select(
 		"id",
@@ -167,8 +176,8 @@ func (r *sample) CloudSQLGet(ctx context.Context, id int64) (model.Sample, error
 	return ret, nil
 }
 
-func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sample, error) {
-	var rets []model.Sample
+func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]*model.Sample, error) {
+	var rets []*model.Sample
 
 	q := sq.Select(
 		"id",
@@ -191,7 +200,7 @@ func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sam
 	}
 
 	for rows.Next() {
-		var ret model.Sample
+		var ret *model.Sample
 		err := rows.Scan(
 			&ret.ID,
 			&ret.Name,
@@ -209,7 +218,7 @@ func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]model.Sam
 	return rets, nil
 }
 
-func (r *sample) CloudSQLInsert(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLInsert(ctx context.Context, obj *model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
@@ -227,7 +236,7 @@ func (r *sample) CloudSQLInsert(ctx context.Context, obj model.Sample) error {
 	return nil
 }
 
-func (r *sample) CloudSQLUpdate(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLUpdate(ctx context.Context, obj *model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Update("sample").
@@ -253,7 +262,7 @@ func (r *sample) CloudSQLUpdate(ctx context.Context, obj model.Sample) error {
 	return nil
 }
 
-func (r *sample) CloudSQLUpsert(ctx context.Context, obj model.Sample) error {
+func (r *sample) CloudSQLUpsert(ctx context.Context, obj *model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
