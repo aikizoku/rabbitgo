@@ -74,10 +74,23 @@ func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]*model.S
 }
 
 func (r *sample) DataStoreGetByQuery(ctx context.Context, category string) ([]*model.Sample, error) {
-	return []*model.Sample{}, nil
+	ret := []*model.Sample{}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return ret, err
+	}
+	q := b.NewQuery("Sample").Filter("Category =", category).Filter("Enabled =", true).Order("-CreatedAt")
+	_, err = b.GetAll(q, &ret)
+	if err != nil {
+		log.Errorf(ctx, "get by query error: "+err.Error())
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (r *sample) DataStoreInsert(ctx context.Context, obj *model.Sample) (int64, error) {
+
 	return 0, nil
 }
 
@@ -149,6 +162,7 @@ func (r *sample) CloudSQLGet(ctx context.Context, id int64) (*model.Sample, erro
 
 	q := sq.Select(
 		"id",
+		"category",
 		"name",
 		"enabled",
 		"created_at",
@@ -164,6 +178,7 @@ func (r *sample) CloudSQLGet(ctx context.Context, id int64) (*model.Sample, erro
 	row := q.RunWith(r.csql).QueryRowContext(ctx)
 	err := row.Scan(
 		&ret.ID,
+		&ret.Category,
 		&ret.Name,
 		&ret.Enabled,
 		&ret.CreatedAt,
@@ -182,6 +197,7 @@ func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]*model.Sa
 	q := sq.Select(
 		"id",
 		"name",
+		"category",
 		"enabled",
 		"created_at",
 		"updated_at").
@@ -204,6 +220,7 @@ func (r *sample) CloudSQLGetMulti(ctx context.Context, ids []int64) ([]*model.Sa
 		err := rows.Scan(
 			&ret.ID,
 			&ret.Name,
+			&ret.Category,
 			&ret.Enabled,
 			&ret.CreatedAt,
 			&ret.UpdatedAt)
@@ -222,8 +239,8 @@ func (r *sample) CloudSQLInsert(ctx context.Context, obj *model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
-		Columns("id", "name", "enabled", "created_at", "updated_at").
-		Values(obj.ID, obj.Name, 1, now, now)
+		Columns("id", "category", "name", "enabled", "created_at", "updated_at").
+		Values(obj.ID, obj.Category, obj.Name, 1, now, now)
 
 	cloudsql.DumpInsertQuery(ctx, q)
 
@@ -241,6 +258,7 @@ func (r *sample) CloudSQLUpdate(ctx context.Context, obj *model.Sample) error {
 
 	q := sq.Update("sample").
 		Set("name", obj.Name).
+		Set("category", obj.Category).
 		Set("enabled", obj.Enabled).
 		Set("updated_at", now).
 		Where(sq.Eq{"id": obj.ID})
@@ -266,8 +284,8 @@ func (r *sample) CloudSQLUpsert(ctx context.Context, obj *model.Sample) error {
 	now := util.TimeNow()
 
 	q := sq.Insert("sample").
-		Columns("id", "name", "enabled", "created_at", "updated_at").
-		Values(obj.ID, obj.Name, 1, now, now).
+		Columns("id", "name", "category", "enabled", "created_at", "updated_at").
+		Values(obj.ID, obj.Category, obj.Name, 1, now, now).
 		Suffix("ON DUPLICATE KEY UPDATE name = VALUES(name), updated_at = VALUES(updated_at)")
 
 	cloudsql.DumpInsertQuery(ctx, q)

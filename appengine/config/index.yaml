@@ -2,5 +2,7 @@ indexes:
 
 - kind: Sample
   properties:
-  - name: ID
+  - name: Category
   - name: Enabled
+  - name: CreatedAt
+    direction: desc
