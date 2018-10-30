@@ -2,6 +2,14 @@ package jsonrpc2
 
 import "encoding/json"
 
+// ClientRequest ... JSONRPC2実行のリクエスト
+type ClientRequest struct {
+	Version string           `json:"jsonrpc"`
+	ID      string           `json:"id"`
+	Method  string           `json:"method"`
+	Params  *json.RawMessage `json:"params"`
+}
+
 type request struct {
 	Version string           `json:"jsonrpc"`
 	ID      string           `json:"id"`

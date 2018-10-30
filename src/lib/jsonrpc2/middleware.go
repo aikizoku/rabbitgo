@@ -7,28 +7,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
 	"google.golang.org/appengine"
-	"github.com/aikizoku/beego/src/lib/log"
-)
-
-const (
-	// ErrInvalidRequest ... 不正なリクエスト
-	ErrInvalidRequest = 40001
-	// ErrInvalidJSON ... 不正なJSON形式
-	ErrInvalidJSON = 40002
-	// ErrInvalidJsonrpc2 ... JSONがJSONRPC2の形式ではない
-	ErrInvalidJsonrpc2 = 40003
-	// ErrInvalidParams ... 不正なパラメータ
-	ErrInvalidParams = 40004
-	// ErrMehodNotFaund ... 存在しないMethod
-	ErrMehodNotFaund = 40401
-	// ErrInternal ... 内部エラー
-	ErrInternal = 50001
-
-	contentType = "application/json"
-	version     = "2.0"
 )
 
 // Middleware ... JSONRPC2に準拠したミドルウェア
@@ -138,13 +120,13 @@ func (m *Middleware) handleRequest(ctx context.Context, r *http.Request, req req
 }
 
 func (m *Middleware) renderError(ctx context.Context, w http.ResponseWriter, status int, format string, a ...interface{}) {
-	msg := fmt.Sprintf(format, a)
+	msg := fmt.Sprintf(format, a...)
 	log.Errorf(ctx, msg)
 	render.New().Text(w, status, fmt.Sprintf("%d %s", status, msg))
 }
 
 func (m *Middleware) renderErrorJSON(ctx context.Context, rpcID string, rpcStatus int, format string, a ...interface{}) response {
-	msg := fmt.Sprintf(format, a)
+	msg := fmt.Sprintf(format, a...)
 	log.Errorf(ctx, msg)
 	return newErrorResponse(rpcID, rpcStatus, msg)
 }

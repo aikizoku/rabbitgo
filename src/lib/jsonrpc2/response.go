@@ -1,5 +1,15 @@
 package jsonrpc2
 
+import "encoding/json"
+
+// ClientResponse ... JSONRPC2実行のレスポンス
+type ClientResponse struct {
+	Version string           `json:"jsonrpc"`
+	ID      string           `json:"id"`
+	Result  *json.RawMessage `json:"result,omitempty"`
+	Error   *json.RawMessage `json:"error,omitempty"`
+}
+
 type response struct {
 	Version string      `json:"jsonrpc"`
 	ID      string      `json:"id"`
