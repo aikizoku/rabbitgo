@@ -14,17 +14,14 @@ GAE/Go環境で動作するサーバー開発のテンプレート
 # goenv(Goのバージョン管理)のインストール
 brew install goenv
 
-# goenv(Goのバージョン管理)のアップデート
-brew upgrade goenv
-
 # インストール可能なバージョンを確認
 goenv install -l
 
-# バージョンを指定してインストール
-goenv install 1.11.1
+# バージョンを指定してインストール(Go1.11.x系の最新選択)
+goenv install 1.11.x
 
 # バージョン切り替え
-goenv global 1.11.1
+goenv global 1.11.x
 
 # バージョン確認
 go version
@@ -48,8 +45,8 @@ brew install ghq
 # 設定
 git config --global ghq.root $GOPATH/src
 
-# Goプロジェクトを取得
-ghq get xxxxxxxxx
+# Goプロジェクトを取得(例:beegoの場合)
+ghq get git@github.com:aikizoku/beego.git
 ```
 
 ## Google Cloud SDKのセットアップ
@@ -66,15 +63,6 @@ gcloud init
 # 新しいアカウントでログイン
 gcloud auth login
 
-# アカウントリスト
-$ gcloud auth list
-
-# アカウントの切り替え
-$ gcloud config set account <your-account>
-
-# 自分のプロジェクトリスト
-gcloud projects list
-
 # プロジェクトの切り替え
 gcloud config set project <your-project-id>
 ```
@@ -86,12 +74,6 @@ brew install dep
 
 # 依存パッケージのインストール
 dep ensure
-
-# 依存パッケージのアップデート
-dep ensure update
-
-# 依存パッケージの追加
-dep ensure -add <package-name>
 ```
 
 # 初期化
@@ -111,8 +93,12 @@ make run app=worker
 make run-production app=worker
 ```
 
-## 各種データを確認
+## ローカルで確認
 ```
+// アプリを確認
+http://localhost:8080/ping
+
+// 各種データの確認
 http://localhost:8000/instances
 ```
 
@@ -141,4 +127,56 @@ make deploy-index-production
 # Queue
 make deploy-queue
 make deploy-queue-production
+```
+
+# 便利なコマンド集
+```bash
+### Go ###
+# goenv(Goのバージョン管理)のインストール
+brew install goenv
+
+# goenv(Goのバージョン管理)のアップデート
+brew upgrade goenv
+
+# インストール可能なバージョンを確認
+goenv install -l
+
+# バージョンを指定してインストール
+goenv install 1.11.1
+
+# バージョン切り替え
+goenv global 1.11.1
+
+# バージョン確認
+go version
+
+### ghq ###
+# Goプロジェクトを取得(例:beegoの場合)
+ghq get git@github.com:aikizoku/beego.git
+
+### Google Cloud SDK ###
+# 新しいアカウントでログイン
+gcloud auth login
+
+# アカウントリスト
+$ gcloud auth list
+
+# アカウントの切り替え
+$ gcloud config set account <your-account>
+
+# 自分のプロジェクトリスト
+gcloud projects list
+
+# プロジェクトの切り替え
+gcloud config set project <your-project-id>
+
+### dep ###
+# 依存パッケージのインストール
+dep ensure
+
+# 依存パッケージのアップデート
+dep ensure update
+
+# 依存パッケージの追加
+dep ensure -add <package-name>
 ```
