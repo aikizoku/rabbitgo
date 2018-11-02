@@ -10,10 +10,5 @@ automatic_scaling:
 
 service: api
 
-handlers:
-- url: /.*
-  script: _go_app
-  secure: always
-
 includes:
 - env_variables.yaml

@@ -10,13 +10,5 @@ automatic_scaling:
 
 service: worker
 
-handlers:
-- url: /.*
-  script: _go_app
-- url: /admin.*
-  script: _go_app
-- url: /task.*
-  script: _go_app
-
 includes:
 - env_variables.yaml
