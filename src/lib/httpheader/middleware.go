@@ -7,7 +7,6 @@ import (
 
 	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/unrolled/render"
-	"google.golang.org/appengine"
 )
 
 // Middleware ... Headerに関する機能を提供する
@@ -18,7 +17,7 @@ type Middleware struct {
 // Handle ... リクエストヘッダーのパラメータを取得する
 func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := appengine.NewContext(r)
+		ctx := r.Context()
 
 		p, err := m.Svc.Get(ctx, r)
 		if err != nil {

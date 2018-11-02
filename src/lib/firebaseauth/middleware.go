@@ -7,7 +7,6 @@ import (
 
 	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/unrolled/render"
-	"google.golang.org/appengine"
 )
 
 // Middleware ... JSONRPC2に準拠したミドルウェア
@@ -18,7 +17,7 @@ type Middleware struct {
 // Handle ... Firebase認証をする
 func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := appengine.NewContext(r)
+		ctx := r.Context()
 
 		userID, claims, err := m.Svc.Authentication(ctx, r)
 		if err != nil {

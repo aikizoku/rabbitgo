@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/beego/src/handler"
-	"google.golang.org/appengine"
 	"github.com/aikizoku/beego/src/lib/log"
 )
 
@@ -14,7 +13,7 @@ type AdminHandler struct {
 
 // MigrateMasterData ... マスターデータを作成する
 func (h *AdminHandler) MigrateMasterData(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 
 	// ここでマスターデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate master data handler")
@@ -24,8 +23,7 @@ func (h *AdminHandler) MigrateMasterData(w http.ResponseWriter, r *http.Request)
 
 // MigrateTestData ... テストデータを作成する
 func (h *AdminHandler) MigrateTestData(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
-
+	ctx := r.Context()
 	// ここでテストデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate test data handler")
 

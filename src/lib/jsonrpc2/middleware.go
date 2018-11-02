@@ -10,7 +10,6 @@ import (
 	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
-	"google.golang.org/appengine"
 )
 
 // Middleware ... JSONRPC2に準拠したミドルウェア
@@ -29,7 +28,7 @@ func (m *Middleware) Register(method string, handler Handler) {
 // Handle ... JSONRPC2のリクエストをハンドルする
 func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := appengine.NewContext(r)
+		ctx := r.Context()
 		w.Header().Set("Content-Type", contentType)
 
 		// POSTで送信されていること

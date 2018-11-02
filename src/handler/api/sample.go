@@ -11,7 +11,6 @@ import (
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
 	"github.com/go-chi/chi"
-	"google.golang.org/appengine"
 )
 
 // SampleHandler ... 記事のハンドラ
@@ -21,7 +20,7 @@ type SampleHandler struct {
 
 // Sample ... サンプルハンドラ
 func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 
 	// HTTPHeaderの値を取得
 	headerParams := httpheader.GetParams(ctx)
@@ -69,7 +68,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 
 // TestDataStore ... DataStoreテスト
 func (h *SampleHandler) TestDataStore(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 
 	err := h.Svc.TestDataStore(ctx)
 	if err != nil {
@@ -82,7 +81,7 @@ func (h *SampleHandler) TestDataStore(w http.ResponseWriter, r *http.Request) {
 
 // TestCloudSQL ... CloudSQLテスト
 func (h *SampleHandler) TestCloudSQL(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 
 	err := h.Svc.TestCloudSQL(ctx)
 	if err != nil {
@@ -95,7 +94,7 @@ func (h *SampleHandler) TestCloudSQL(w http.ResponseWriter, r *http.Request) {
 
 // TestHTTP ... HTTPテスト
 func (h *SampleHandler) TestHTTP(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 
 	err := h.Svc.TestHTTP(ctx)
 	if err != nil {
