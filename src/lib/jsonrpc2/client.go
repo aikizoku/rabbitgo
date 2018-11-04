@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/beego/src/lib/httpclient"
-	"github.com/aikizoku/beego/src/lib/log"
+	"google.golang.org/appengine/log"
 )
 
 // Client ... JSONRPC2のリクエストを行う

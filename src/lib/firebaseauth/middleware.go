@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/unrolled/render"
+	"google.golang.org/appengine/log"
 )
 
 // Middleware ... JSONRPC2に準拠したミドルウェア

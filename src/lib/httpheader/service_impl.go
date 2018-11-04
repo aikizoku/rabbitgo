@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aikizoku/beego/src/lib/log"
+	"google.golang.org/appengine/log"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 

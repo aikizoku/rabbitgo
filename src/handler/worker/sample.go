@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/beego/src/handler"
-	"github.com/aikizoku/beego/src/lib/log"
+	"google.golang.org/appengine/log"
 )
 
 // SampleHandler ... サンプルのハンドラ定義

@@ -4,15 +4,12 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/beego/src/handler"
-	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/middleware"
 	"github.com/go-chi/chi"
 )
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
-	// ログ
-	r.Use(log.Handle)
 	// アクセスコントロール
 	r.Use(middleware.AccessControl)
 

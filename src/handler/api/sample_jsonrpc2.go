@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
+	"google.golang.org/appengine/log"
 )
 
 // SampleJSONRPC2Handler ... JSONRPC2のハンドラ

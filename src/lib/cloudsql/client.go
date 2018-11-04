@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/aikizoku/beego/src/lib/log"
 	_ "github.com/go-sql-driver/mysql" // MySQL Driverの読み込み
+	"google.golang.org/appengine/log"
 )
 
 // NewCSQLClient ... CloudSQLのクライアントを取得する
