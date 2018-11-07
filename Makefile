@@ -1,5 +1,5 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
-STAGING_PROJECT_ID = 'beego-staging-thehero-jp'
+STAGING_PROJECT_ID = 'staging-beego-thehero-jp'
 PRODUCTION_PROJECT_ID = 'beego-thehero-jp'
 
 .PHONY: hello init run deploy
