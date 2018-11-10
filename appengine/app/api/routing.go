@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/aikizoku/beego/src/config"
 	"github.com/aikizoku/beego/src/handler"
 	"github.com/aikizoku/beego/src/middleware"
 	"github.com/go-chi/chi"
@@ -13,12 +14,14 @@ func Routing(r *chi.Mux, d *Dependency) {
 	// アクセスコントロール
 	r.Use(middleware.AccessControl)
 
-	// 認証なし
-	r.Route("/internal/v1", func(r chi.Router) {
-		r.Use(d.DummyFirebaseAuth.Handle)
-		r.Use(d.DummyHTTPHeader.Handle)
-		subRouting(r, d)
-	})
+	// 認証なし(Stagingのみ)
+	if config.IsEnvStaging() {
+		r.Route("/noauth/v1", func(r chi.Router) {
+			r.Use(d.DummyFirebaseAuth.Handle)
+			r.Use(d.DummyHTTPHeader.Handle)
+			subRouting(r, d)
+		})
+	}
 
 	// 認証あり
 	r.Route("/v1", func(r chi.Router) {
