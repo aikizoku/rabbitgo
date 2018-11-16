@@ -9,12 +9,12 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/aikizoku/beego/src/lib/cloudsql"
 	"github.com/aikizoku/beego/src/lib/httpclient"
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/lib/util"
 	"github.com/aikizoku/beego/src/model"
 	"go.mercari.io/datastore"
 	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
 	"go.mercari.io/datastore/boom"
-	"google.golang.org/appengine/log"
 )
 
 type sample struct {

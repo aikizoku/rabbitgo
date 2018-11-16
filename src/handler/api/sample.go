@@ -7,10 +7,9 @@ import (
 	"github.com/aikizoku/beego/src/handler"
 	"github.com/aikizoku/beego/src/lib/firebaseauth"
 	"github.com/aikizoku/beego/src/lib/httpheader"
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/service"
-	"github.com/go-chi/chi"
-	"google.golang.org/appengine/log"
 )
 
 // SampleHandler ... 記事のハンドラ
@@ -27,7 +26,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	log.Debugf(ctx, "HeaderParams: %v", headerParams)
 
 	// URLParamの値を取得
-	urlParam := chi.URLParam(r, "sample")
+	urlParam := handler.GetURLParam(r, "sample")
 	if urlParam == "" {
 		h.handleError(ctx, w, http.StatusBadRequest, "invalid url param is empty")
 		return
@@ -35,7 +34,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	log.Debugf(ctx, "URLParam: %s", urlParam)
 
 	// フォームの値を取得
-	formParam := r.FormValue("sample")
+	formParam := handler.GetFormValue(r, "sample")
 	if formParam == "" {
 		h.handleError(ctx, w, http.StatusBadRequest, "invalid form param is empty")
 		return

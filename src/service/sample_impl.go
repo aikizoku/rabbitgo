@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/lib/util"
 	"github.com/aikizoku/beego/src/model"
 	"github.com/aikizoku/beego/src/repository"
-	"google.golang.org/appengine/log"
 )
 
 type sample struct {

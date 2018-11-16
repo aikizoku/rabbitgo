@@ -1,14 +1,23 @@
 package handler
 
 import (
+	"context"
 	"encoding/csv"
 	"fmt"
 	"net/http"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/unrolled/render"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
+
+// HandleError ... 一番典型的なエラーハンドリング
+func HandleError(ctx context.Context, w http.ResponseWriter, status int, format string, args ...interface{}) {
+	msg := fmt.Sprintf(format, args...)
+	log.Errorf(ctx, msg)
+	RenderError(w, status, msg)
+}
 
 // RenderSuccess ... 成功レスポンスをレンダリングする
 func RenderSuccess(w http.ResponseWriter) {

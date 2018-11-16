@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
-	"google.golang.org/appengine/log"
 )
 
 const defaultTimeout time.Duration = 15 * time.Second
