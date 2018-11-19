@@ -4,13 +4,13 @@ import (
 	"net/http"
 )
 
-// BasicAuth ... ベーシック認証機能を提供するミドルウェア
-type BasicAuth struct {
-	Config BasicAuthConfig
+// Middleware ... ベーシック認証機能を提供するミドルウェア
+type Middleware struct {
+	Account *Account
 }
 
 // Handle ... ハンドラ
-func (a *BasicAuth) Handle(next http.Handler) http.Handler {
+func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, password, ok := r.BasicAuth()
 		if !ok {
@@ -19,7 +19,7 @@ func (a *BasicAuth) Handle(next http.Handler) http.Handler {
 			http.Error(w, "basic auth required.", http.StatusUnauthorized)
 			return
 		}
-		if a.Config.Accounts[user] != password {
+		if m.Account.User == user && m.Account.Password == password {
 			http.Error(w, "basic auth error.", http.StatusUnauthorized)
 			return
 		}
@@ -27,9 +27,9 @@ func (a *BasicAuth) Handle(next http.Handler) http.Handler {
 	})
 }
 
-// NewBasicAuth ... BasicAuthを作成する
-func NewBasicAuth(cfg BasicAuthConfig) *BasicAuth {
-	return &BasicAuth{
-		Config: cfg,
+// NewMiddleware ... Middlewareを作成する
+func NewMiddleware(account *Account) *Middleware {
+	return &Middleware{
+		Account: account,
 	}
 }
