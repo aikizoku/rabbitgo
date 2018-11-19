@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	authKey = "INTERNAL_AUTH"
+	tokenKey = "INTERNAL_AUTH_TOKEN"
 )
 
-// GetAuthKey ... 内部認証のKeyを取得する
-func GetAuthKey() string {
-	k := os.Getenv(authKey)
+// GetToken ... 内部認証のTokenを取得する
+func GetToken() string {
+	k := os.Getenv(tokenKey)
 	if k == "" {
-		panic(fmt.Errorf("no auth key internal auth: %s", authKey))
+		panic(fmt.Errorf("no token internal auth: %s", tokenKey))
 	}
 	return k
 }
