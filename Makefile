@@ -39,31 +39,31 @@ deploy-production:
 
 # [GAE] ディスパッチ設定をデプロイ
 deploy-dispatch:
-	${call deploy-config,dispatch_staging.yaml,${STAGING_PROJECT_ID}}
+	${call deploy-config,staging,dispatch.yaml,${STAGING_PROJECT_ID}}
 
 deploy-dispatch-production:
-	${call deploy-config,dispatch_production.yaml,${PRODUCTION_PROJECT_ID}}
+	${call deploy-config,production,dispatch.yaml,${PRODUCTION_PROJECT_ID}}
 
 # [GAE] Cron設定をデプロイ
 deploy-cron:
-	${call deploy-config,cron.yaml,${STAGING_PROJECT_ID}}
+	${call deploy-config,staging,cron.yaml,${STAGING_PROJECT_ID}}
 
 deploy-cron-production:
-	${call deploy-config,cron.yaml,${PRODUCTION_PROJECT_ID}}
+	${call deploy-config,production,cron.yaml,${PRODUCTION_PROJECT_ID}}
 
 # [GAE] Queue設定をデプロイ
 deploy-queue:
-	${call deploy-config,queue.yaml,${STAGING_PROJECT_ID}}
+	${call deploy-config,staging,queue.yaml,${STAGING_PROJECT_ID}}
 
 deploy-queue-production:
-	${call deploy-config,queue.yaml,${PRODUCTION_PROJECT_ID}}
+	${call deploy-config,production,queue.yaml,${PRODUCTION_PROJECT_ID}}
 
 # [GAE] Datastoreの複合インデックス定義をデプロイ
 deploy-index:
-	${call deploy-config,index.yaml,${STAGING_PROJECT_ID}}
+	${call deploy-config,staging,index.yaml,${STAGING_PROJECT_ID}}
 
 deploy-index-production:
-	${call deploy-config,index.yaml,${PRODUCTION_PROJECT_ID}}
+	${call deploy-config,production,index.yaml,${PRODUCTION_PROJECT_ID}}
 
 # マクロ
 define init
@@ -90,5 +90,5 @@ define deploy
 endef
 
 define deploy-config
-	@gcloud app deploy -q appengine/config/$1 --project $2
+	@gcloud app deploy -q deploy/appengine/$1/api/$2 --project $3
 endef

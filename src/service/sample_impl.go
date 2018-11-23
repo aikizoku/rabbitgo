@@ -45,9 +45,19 @@ func (s *sample) TestDataStore(ctx context.Context) error {
 			CreatedAt: util.TimeNow(),
 		},
 		&model.Sample{
-			Category:  "fuga",
-			Name:      "sample忠生",
-			Enabled:   false,
+			Category: "fuga",
+			Name:     "sample忠生",
+			Enabled:  false,
+			Details: []*model.SampleDetail{
+				&model.SampleDetail{
+					Name:   "ほげほげねーむ",
+					Detail: "ほげほげでたいる",
+				},
+				&model.SampleDetail{
+					Name:   "ふがふがねーむ",
+					Detail: "ふがふがでたいる",
+				},
+			},
 			CreatedAt: util.TimeNow(),
 		},
 	})

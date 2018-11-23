@@ -47,6 +47,17 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:f2bb40f0eca35256d088cfd7d0999523cd137fe8eba22276797467c7c9e43fda"
+  name = "github.com/aikizoku/push"
+  packages = [
+    "src/lib/internalauth",
+    "src/lib/log",
+  ]
+  pruneopts = "UT"
+  revision = "f770aaff80c67e85877b8c15eabf2b0a563ed37c"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -268,7 +279,7 @@
   revision = "04bb50b6b83d0e72253821af8cf3252d8e866517"
 
 [[projects]]
-  digest = "1:3181e46824161e146afa86ed4bf502f99372be91e8a2f04275b73defd8042132"
+  digest = "1:1f9021ad43d4fd39c47e05cd7e8cf4c06ee7c3954492c263f7af8dad125d54ee"
   name = "google.golang.org/appengine"
   packages = [
     ".",
@@ -282,9 +293,11 @@
     "internal/modules",
     "internal/remote_api",
     "internal/socket",
+    "internal/taskqueue",
     "internal/urlfetch",
     "log",
     "socket",
+    "taskqueue",
     "urlfetch",
   ]
   pruneopts = "UT"
@@ -354,9 +367,12 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "cloud.google.com/go/firestore",
     "firebase.google.com/go",
     "firebase.google.com/go/auth",
     "github.com/Masterminds/squirrel",
+    "github.com/aikizoku/push/src/lib/internalauth",
+    "github.com/aikizoku/push/src/lib/log",
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",
@@ -368,6 +384,7 @@
     "golang.org/x/text/transform",
     "google.golang.org/appengine",
     "google.golang.org/appengine/log",
+    "google.golang.org/appengine/taskqueue",
     "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"
