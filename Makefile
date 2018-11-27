@@ -32,10 +32,10 @@ run-production:
 
 # [GAE] アプリのデプロイ
 deploy:
-	${call deploy,staging,${app}}
+	${call deploy,staging,${app},${STAGING_PROJECT_ID}}
 
 deploy-production:
-	${call deploy,production,${app}}
+	${call deploy,production,${app},${PRODUCTION_PROJECT_ID}}
 
 # [GAE] ディスパッチ設定をデプロイ
 deploy-dispatch:
@@ -86,7 +86,7 @@ define run
 endef
 
 define deploy
-	@gcloud app deploy -q deploy/appengine/$1/$2/app.yaml
+	@gcloud app deploy -q deploy/appengine/$1/$2/app.yaml --project=$3
 endef
 
 define deploy-config
