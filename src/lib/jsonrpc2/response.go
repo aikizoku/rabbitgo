@@ -7,17 +7,18 @@ type ClientResponse struct {
 	Version string           `json:"jsonrpc"`
 	ID      string           `json:"id"`
 	Result  *json.RawMessage `json:"result,omitempty"`
-	Error   *json.RawMessage `json:"error,omitempty"`
+	Error   *ErrorResponse   `json:"error,omitempty"`
 }
 
 type response struct {
-	Version string      `json:"jsonrpc"`
-	ID      string      `json:"id"`
-	Result  interface{} `json:"result,omitempty"`
-	Error   interface{} `json:"error,omitempty"`
+	Version string         `json:"jsonrpc"`
+	ID      string         `json:"id"`
+	Result  interface{}    `json:"result,omitempty"`
+	Error   *ErrorResponse `json:"error,omitempty"`
 }
 
-type errorResponse struct {
+// ErrorResponse ... JSONRPC2のエラーレスポンス
+type ErrorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
@@ -34,7 +35,7 @@ func newErrorResponse(id string, code int, message string) response {
 	return response{
 		Version: version,
 		ID:      id,
-		Error: errorResponse{
+		Error: &ErrorResponse{
 			Code:    code,
 			Message: message,
 		},

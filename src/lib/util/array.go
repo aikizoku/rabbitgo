@@ -149,7 +149,7 @@ func ArrayIntUniq(arr []int) []int {
 	return uniq
 }
 
-// ArrayInt64Uniq ... int配列の重複を排除する
+// ArrayInt64Uniq ... int64配列の重複を排除する
 func ArrayInt64Uniq(arr []int64) []int64 {
 	m := make(map[int64]bool)
 	uniq := []int64{}
@@ -190,4 +190,46 @@ func ArrayInt64Contains(arr []int64, e int64) bool {
 		}
 	}
 	return false
+}
+
+// ArrayStringChunk ... string配列の分割
+func ArrayStringChunk(arr []string, size int) [][]string {
+	var chunks [][]string
+	arrSize := len(arr)
+	for i := 0; i < arrSize; i += size {
+		end := i + size
+		if arrSize < end {
+			end = arrSize
+		}
+		chunks = append(chunks, arr[i:end])
+	}
+	return chunks
+}
+
+// ArrayIntChunk ... int配列の分割
+func ArrayIntChunk(arr []int, size int) [][]int {
+	var chunks [][]int
+	arrSize := len(arr)
+	for i := 0; i < arrSize; i += size {
+		end := i + size
+		if arrSize < end {
+			end = arrSize
+		}
+		chunks = append(chunks, arr[i:end])
+	}
+	return chunks
+}
+
+// ArrayInt64Chunk ... int64配列の分割
+func ArrayInt64Chunk(arr []int64, size int) [][]int64 {
+	var chunks [][]int64
+	arrSize := len(arr)
+	for i := 0; i < arrSize; i += size {
+		end := i + size
+		if arrSize < end {
+			end = arrSize
+		}
+		chunks = append(chunks, arr[i:end])
+	}
+	return chunks
 }

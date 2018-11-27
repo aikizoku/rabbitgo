@@ -28,7 +28,7 @@ func (c *Client) AddRequest(id string, method string, params *json.RawMessage) {
 }
 
 // DoSingle ... JSONRPC2のシングルリクエストを行う
-func (c *Client) DoSingle(ctx context.Context, method string, params interface{}) (*json.RawMessage, *json.RawMessage, error) {
+func (c *Client) DoSingle(ctx context.Context, method string, params interface{}) (*json.RawMessage, *ErrorResponse, error) {
 	p, err := json.Marshal(params)
 	if err != nil {
 		log.Errorf(ctx, "json.Marchal error: %s", err.Error())

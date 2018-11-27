@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"mime/multipart"
 	"net/http"
 
 	"github.com/aikizoku/beego/src/lib/log"
@@ -28,4 +29,9 @@ func GetJSON(r *http.Request, dst interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// GetFormFile ... リクエストからファイルを取得する
+func GetFormFile(r *http.Request, key string) (multipart.File, *multipart.FileHeader, error) {
+	return r.FormFile(key)
 }

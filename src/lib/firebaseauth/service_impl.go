@@ -11,6 +11,10 @@ import (
 	"github.com/aikizoku/beego/src/lib/log"
 )
 
+const (
+	headerPrefix string = "BEARER"
+)
+
 type service struct {
 }
 
@@ -76,8 +80,9 @@ func (s *service) getAuthClient(ctx context.Context) (*auth.Client, error) {
 
 func (s *service) getAuthorizationHeader(r *http.Request) string {
 	if ah := r.Header.Get("Authorization"); ah != "" {
-		if len(ah) > 6 && strings.ToUpper(ah[0:6]) == "BEARER" {
-			return ah[7:]
+		pLen := len(headerPrefix)
+		if len(ah) > pLen && strings.ToUpper(ah[0:pLen]) == headerPrefix {
+			return ah[pLen+1:]
 		}
 	}
 	return ""
