@@ -26,8 +26,8 @@ func AddTask(ctx context.Context, queue string, path string, params url.Values) 
 	return Add(ctx, queue, task)
 }
 
-// AddTaskToJSON ... JSONのリクエストをEnqueueする
-func AddTaskToJSON(ctx context.Context, queue string, path string, src interface{}) error {
+// AddTaskByJSON ... JSONのリクエストをEnqueueする
+func AddTaskByJSON(ctx context.Context, queue string, path string, src interface{}) error {
 	h := make(http.Header)
 	h.Set("Content-Type", "application/json")
 	h.Set(internalauth.GetHeader())

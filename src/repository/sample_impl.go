@@ -35,7 +35,7 @@ func (r *sample) DataStoreGet(ctx context.Context, id int64) (*model.Sample, err
 		if err == datastore.ErrNoSuchEntity {
 			return nil, err
 		}
-		log.Errorf(ctx, "get error: %s", err.Error())
+		log.Errorf(ctx, "b.Get error: %s", err.Error())
 		return nil, err
 	}
 	return dst, nil
@@ -58,7 +58,7 @@ func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]*model.S
 				if err == datastore.ErrNoSuchEntity {
 					return nil
 				}
-				log.Errorf(ctx, "get multi error: %s, id: %d", err.Error(), dst.ID)
+				log.Errorf(ctx, "bt.Get error: %s, id: %d", err.Error(), dst.ID)
 				return err
 			}
 			ret = append(ret, dst)
@@ -67,7 +67,7 @@ func (r *sample) DataStoreGetMulti(ctx context.Context, ids []int64) ([]*model.S
 	}
 	err = bt.Exec()
 	if err != nil {
-		log.Errorf(ctx, "get multi error: %s", err.Error())
+		log.Errorf(ctx, "bt.Exec error: %s", err.Error())
 		return nil, err
 	}
 	return ret, nil
@@ -83,14 +83,13 @@ func (r *sample) DataStoreGetByQuery(ctx context.Context, category string) ([]*m
 	q := b.NewQuery("Sample").Filter("Category =", category).Filter("Enabled =", true).Order("-CreatedAt")
 	_, err = b.GetAll(q, &ret)
 	if err != nil {
-		log.Errorf(ctx, "get by query error: "+err.Error())
+		log.Errorf(ctx, "b.GetAll error: "+err.Error())
 		return ret, err
 	}
 	return ret, nil
 }
 
 func (r *sample) DataStoreInsert(ctx context.Context, obj *model.Sample) (int64, error) {
-
 	return 0, nil
 }
 
@@ -115,7 +114,7 @@ func (r *sample) DataStoreUpsert(ctx context.Context, src *model.Sample) (int64,
 	}
 	key, err := b.Put(src)
 	if err != nil {
-		log.Errorf(ctx, "upsert error: %s", err.Error())
+		log.Errorf(ctx, "bt.Put error: %s", err.Error())
 		return id, err
 	}
 	id = key.ID()
@@ -133,7 +132,7 @@ func (r *sample) DataStoreUpsertMulti(ctx context.Context, srcs []*model.Sample)
 	for _, src := range srcs {
 		bt.Put(src, func(key datastore.Key, err error) error {
 			if err != nil {
-				log.Errorf(ctx, "upsert error: %s, id: %d", err.Error(), key.ID())
+				log.Errorf(ctx, "bt.Put error: %s, id: %d", err.Error(), key.ID())
 				return err
 			}
 			ids = append(ids, key.ID())
@@ -142,18 +141,51 @@ func (r *sample) DataStoreUpsertMulti(ctx context.Context, srcs []*model.Sample)
 	}
 	err = bt.Exec()
 	if err != nil {
-		log.Errorf(ctx, "upsert error: %s", err.Error())
+		log.Errorf(ctx, "bt.Exec error: %s", err.Error())
 		return ids, err
 	}
 	return ids, nil
 }
 
-func (r *sample) DataStoreDelete(ctx context.Context, id int64) (int64, error) {
-	return 0, nil
+func (r *sample) DataStoreDelete(ctx context.Context, id int64) error {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return err
+	}
+	err = b.Delete(&model.Sample{ID: id})
+	if err != nil {
+		log.Errorf(ctx, "bt.Delete error: %s", err.Error())
+		return err
+	}
+	return nil
 }
 
-func (r *sample) DataStoreDeleteMulti(ctx context.Context, id int64) ([]int64, error) {
-	return nil, nil
+func (r *sample) DataStoreDeleteMulti(ctx context.Context, ids []int64) error {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorf(ctx, "boom from context error: %s", err.Error())
+		return err
+	}
+	bt := b.Batch()
+	for _, id := range ids {
+		bt.Delete(&model.Sample{ID: id}, func(err error) error {
+			if err != nil {
+				if err == datastore.ErrNoSuchEntity {
+					return nil
+				}
+				log.Errorf(ctx, "bt.Delete error: %s, id: %d", err.Error(), id)
+				return err
+			}
+			return nil
+		})
+	}
+	err = bt.Exec()
+	if err != nil {
+		log.Errorf(ctx, "bt.Exec error: %s", err.Error())
+		return err
+	}
+	return nil
 }
 
 // CloudSQL

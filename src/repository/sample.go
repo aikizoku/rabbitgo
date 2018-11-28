@@ -18,8 +18,8 @@ type Sample interface {
 	DataStoreUpdateMulti(ctx context.Context, objs []*model.Sample) ([]int64, error)
 	DataStoreUpsert(ctx context.Context, obj *model.Sample) (int64, error)
 	DataStoreUpsertMulti(ctx context.Context, objs []*model.Sample) ([]int64, error)
-	DataStoreDelete(ctx context.Context, id int64) (int64, error)
-	DataStoreDeleteMulti(ctx context.Context, id int64) ([]int64, error)
+	DataStoreDelete(ctx context.Context, id int64) error
+	DataStoreDeleteMulti(ctx context.Context, ids []int64) error
 
 	// CloudSQL
 	CloudSQLGet(ctx context.Context, id int64) (*model.Sample, error)
