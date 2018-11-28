@@ -46,15 +46,15 @@ func (s *service) Authentication(ctx context.Context, r *http.Request) (string, 
 		return userID, claims, err
 	}
 
-	idToken := s.getAuthorizationHeader(r)
-	if idToken == "" {
+	token := s.getTokenToRequest(r)
+	if token == "" {
 		err = fmt.Errorf("no auth token error")
 		return userID, claims, err
 	}
 
-	t, err := c.VerifyIDToken(ctx, idToken)
+	t, err := c.VerifyIDToken(ctx, token)
 	if err != nil {
-		log.Warningf(ctx, "c.VerifyIDToken: %s", err.Error())
+		log.Warningf(ctx, "c.VerifyIDToken: %s, token: %s", err.Error(), token)
 		return userID, claims, err
 	}
 
@@ -78,7 +78,7 @@ func (s *service) getAuthClient(ctx context.Context) (*auth.Client, error) {
 	return c, nil
 }
 
-func (s *service) getAuthorizationHeader(r *http.Request) string {
+func (s *service) getTokenToRequest(r *http.Request) string {
 	if ah := r.Header.Get("Authorization"); ah != "" {
 		pLen := len(headerPrefix)
 		if len(ah) > pLen && strings.ToUpper(ah[0:pLen]) == headerPrefix {
