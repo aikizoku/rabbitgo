@@ -9,9 +9,9 @@ func TimeNow() time.Time {
 	return time.Now().In(timeZoneJST())
 }
 
-// TimeJST ... TimeからJSTのTimeを取得する
-func TimeJST(t time.Time) time.Time {
-	return t.In(timeZoneJST())
+// TimeNowUnix ... 現在時刻をJSTのUnixTimeStamp(ミリ秒)で取得する
+func TimeNowUnix() int64 {
+	return time.Now().In(timeZoneJST()).UnixNano() / int64(time.Millisecond)
 }
 
 // TimeUnix ... UnixTimestampからJSTのTimeを取得する
