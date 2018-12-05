@@ -35,7 +35,7 @@ func (c *Client) DoSingle(ctx context.Context, method string, params interface{}
 		return nil, nil, err
 	}
 
-	status, body, err := httpclient.PostJSON(ctx, c.URL, p, nil)
+	status, body, err := httpclient.PostJSON(ctx, c.URL, p, &httpclient.HTTPOption{Headers: c.Headers})
 	if err != nil {
 		log.Errorf(ctx, "httpclient.PostJSON error: %s", err.Error())
 		return nil, nil, err

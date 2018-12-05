@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/phi-jp/salontia-backend/src/lib/log"
 )
 
 const defaultTimeout time.Duration = 15 * time.Second
@@ -110,7 +110,9 @@ func PostJSON(ctx context.Context, url string, json []byte, opt *HTTPOption) (in
 	}
 
 	if opt == nil {
-		opt = &HTTPOption{}
+		opt = &HTTPOption{
+			Headers: map[string]string{},
+		}
 	}
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
