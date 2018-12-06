@@ -5,6 +5,7 @@ import (
 
 	"github.com/aikizoku/beego/src/config"
 	"github.com/aikizoku/beego/src/handler"
+	"github.com/aikizoku/beego/src/lib/log"
 	"github.com/aikizoku/beego/src/middleware"
 	"github.com/go-chi/chi"
 )
@@ -13,6 +14,9 @@ import (
 func Routing(r *chi.Mux, d *Dependency) {
 	// アクセスコントロール
 	r.Use(middleware.AccessControl)
+
+	// ログ
+	r.Use(log.Handle)
 
 	// 認証なし(Stagingのみ)
 	if config.IsEnvStaging() {
