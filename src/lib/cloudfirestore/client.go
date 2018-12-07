@@ -12,12 +12,12 @@ import (
 func NewClient(ctx context.Context) (*firestore.Client, error) {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
-		log.Errorf(ctx, "firebase.NewApp error: %s", err.Error())
+		log.Errorm(ctx, "firebase.NewApp", err)
 		return nil, err
 	}
 	client, err := app.Firestore(ctx)
 	if err != nil {
-		log.Errorf(ctx, "app.Firestore error: %s", err.Error())
+		log.Errorm(ctx, "app.Firestore", err)
 		return nil, err
 	}
 	return client, nil

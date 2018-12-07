@@ -47,17 +47,6 @@
   version = "v1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:f2bb40f0eca35256d088cfd7d0999523cd137fe8eba22276797467c7c9e43fda"
-  name = "github.com/aikizoku/push"
-  packages = [
-    "src/lib/internalauth",
-    "src/lib/log",
-  ]
-  pruneopts = "UT"
-  revision = "f770aaff80c67e85877b8c15eabf2b0a563ed37c"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -371,8 +360,6 @@
     "firebase.google.com/go",
     "firebase.google.com/go/auth",
     "github.com/Masterminds/squirrel",
-    "github.com/aikizoku/push/src/lib/internalauth",
-    "github.com/aikizoku/push/src/lib/log",
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",

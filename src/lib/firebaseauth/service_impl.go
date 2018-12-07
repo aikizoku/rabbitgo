@@ -22,13 +22,13 @@ type service struct {
 func (s *service) SetCustomClaims(ctx context.Context, userID string, claims Claims) error {
 	c, err := s.getAuthClient(ctx)
 	if err != nil {
-		log.Errorf(ctx, "faild to get auth client")
+		log.Errorm(ctx, "s.getAuthClient", err)
 		return err
 	}
 
 	err = c.SetCustomUserClaims(ctx, userID, claims.ToMap())
 	if err != nil {
-		log.Errorf(ctx, err.Error())
+		log.Errorm(ctx, "c.SetCustomUserClaims", err)
 		return err
 	}
 
@@ -42,19 +42,21 @@ func (s *service) Authentication(ctx context.Context, r *http.Request) (string, 
 
 	c, err := s.getAuthClient(ctx)
 	if err != nil {
-		log.Warningf(ctx, "faild to get auth client")
+		log.Warningm(ctx, "s.getAuthClient", err)
 		return userID, claims, err
 	}
 
 	token := s.getTokenByRequest(r)
 	if token == "" {
-		err = fmt.Errorf("no auth token error")
+		err = fmt.Errorf("token empty error")
+		log.Errorf(ctx, err.Error())
 		return userID, claims, err
 	}
 
 	t, err := c.VerifyIDToken(ctx, token)
 	if err != nil {
-		log.Warningf(ctx, "c.VerifyIDToken: %s, token: %s", err.Error(), token)
+		msg := fmt.Sprintf("c.VerifyIDToken: %s", token)
+		log.Warningm(ctx, msg, err)
 		return userID, claims, err
 	}
 
@@ -67,12 +69,12 @@ func (s *service) Authentication(ctx context.Context, r *http.Request) (string, 
 func (s *service) getAuthClient(ctx context.Context) (*auth.Client, error) {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
-		log.Warningf(ctx, "create firebase app error: %s", err.Error())
+		log.Errorm(ctx, "firebase.NewApp", err)
 		return nil, err
 	}
 	c, err := app.Auth(ctx)
 	if err != nil {
-		log.Warningf(ctx, "create auth client error: %s", err.Error())
+		log.Errorm(ctx, "app.Auth", err)
 		return nil, err
 	}
 	return c, nil

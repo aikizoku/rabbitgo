@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/aikizoku/push/src/lib/internalauth"
-
-	"github.com/aikizoku/push/src/lib/log"
+	"github.com/aikizoku/beego/src/lib/internalauth"
+	"github.com/aikizoku/beego/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )
 
@@ -33,7 +32,7 @@ func AddTaskByJSON(ctx context.Context, queue string, path string, src interface
 	h.Set(internalauth.GetHeader())
 	data, err := json.Marshal(src)
 	if err != nil {
-		log.Errorf(ctx, "json.Marshal error: %s", err.Error())
+		log.Errorm(ctx, "json.Marshal", err)
 		return err
 	}
 	task := &taskqueue.Task{
@@ -49,7 +48,7 @@ func AddTaskByJSON(ctx context.Context, queue string, path string, src interface
 func Add(ctx context.Context, queue string, task *taskqueue.Task) error {
 	_, err := taskqueue.Add(ctx, task, queue)
 	if err != nil {
-		log.Errorf(ctx, "taskqueue.Add error: %s", err.Error())
+		log.Errorm(ctx, "taskqueue.Add", err)
 		return err
 	}
 	return nil

@@ -25,7 +25,7 @@ func GetJSON(r *http.Request, dst interface{}) error {
 	err := dec.Decode(dst)
 	if err != nil {
 		ctx := r.Context()
-		log.Errorf(ctx, "dec.Decode error: %s", err.Error())
+		log.Errorm(ctx, "dec.Decode", err)
 		return err
 	}
 	return nil

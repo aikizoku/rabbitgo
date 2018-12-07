@@ -29,7 +29,7 @@ func NewCSQLClient(cfg *CSQLConfig) *sql.DB {
 func DumpSelectQuery(ctx context.Context, query sq.SelectBuilder) {
 	qs, args, err := query.ToSql()
 	if err != nil {
-		log.Errorf(ctx, "DumpSelectQuery error: %s", err.Error())
+		log.Errorm(ctx, "query.ToSql", err)
 		return
 	}
 	dumpQuery(ctx, qs, args)
@@ -39,7 +39,7 @@ func DumpSelectQuery(ctx context.Context, query sq.SelectBuilder) {
 func DumpInsertQuery(ctx context.Context, query sq.InsertBuilder) {
 	qs, args, err := query.ToSql()
 	if err != nil {
-		log.Errorf(ctx, "DumpInsertQuery error: %s", err.Error())
+		log.Errorm(ctx, "query.ToSql", err)
 		return
 	}
 	dumpQuery(ctx, qs, args)
@@ -49,7 +49,7 @@ func DumpInsertQuery(ctx context.Context, query sq.InsertBuilder) {
 func DumpUpdateQuery(ctx context.Context, query sq.UpdateBuilder) {
 	qs, args, err := query.ToSql()
 	if err != nil {
-		log.Errorf(ctx, "DumpUpdateQuery error: %s", err.Error())
+		log.Errorm(ctx, "query.ToSql", err)
 		return
 	}
 	dumpQuery(ctx, qs, args)
@@ -59,7 +59,7 @@ func DumpUpdateQuery(ctx context.Context, query sq.UpdateBuilder) {
 func DumpDeleteQuery(ctx context.Context, query sq.DeleteBuilder) {
 	qs, args, err := query.ToSql()
 	if err != nil {
-		log.Errorf(ctx, "DumpDeleteQuery error: %s", err.Error())
+		log.Errorm(ctx, "query.ToSql", err)
 		return
 	}
 	dumpQuery(ctx, qs, args)
