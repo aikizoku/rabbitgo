@@ -129,7 +129,7 @@ make deploy-queue
 make deploy-queue-production
 ```
 
-# 便利なコマンド集
+# 開発で使う便利なコマンド集
 ```bash
 ### Go ###
 # goenv(Goのバージョン管理)のインストール
@@ -179,4 +179,141 @@ dep ensure update
 
 # 依存パッケージの追加
 dep ensure -add <package-name>
+```
+
+# よく使うコード
+```golang
+/* REST Handler テンプレ */
+
+// XXXXHandler ... XXXXのハンドラ
+type XXXXHandler struct {
+}
+
+// TestHTTP ... HTTPテスト
+func (h *XXXXHandler) Hoge(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	handler.RenderSuccess(w)
+}
+
+func (h *XXXXHandler) handleError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
+	log.Errorf(ctx, msg)
+	handler.RenderError(w, status, msg)
+}
+
+// NewXXXXHandler ... XXXXHandlerを作成する
+func NewXXXXHandler() *XXXXHandler {
+	return &XXXXHandler{}
+}
+
+/* JSONRPC2 Handler テンプレ */
+
+// dependency.go
+d.JSONRPC2 = jsonrpc2.NewMiddleware()
+d.JSONRPC2.Register("sample", api.NewSampleJSONRPC2Handler(svc))
+
+// XXXXHandler ... XXXXのハンドラ
+type XXXXHandler struct {
+}
+
+type xxxxParams struct {
+	Hoge string `json:"hoge"`
+}
+
+type xxxxResponse struct {
+  Fuga string `json:"fuga"`
+}
+
+// DecodeParams ... 受け取ったJSONパラメータをデコードする
+func (h *XXXXHandler) DecodeParams(ctx context.Context, msg *json.RawMessage) (interface{}, error) {
+	var params xxxxParams
+	err := json.Unmarshal(*msg, &params)
+	return params, err
+}
+
+// Exec ... 処理をする
+func (h *XXXXHandler) Exec(ctx context.Context, method string, params interface{}) (interface{}, error) {
+	// パラメータを取得
+	hoge := params.(xxxxParams).Hoge
+	log.Debugf(ctx, hoge)
+
+	return xxxxResponse{
+		Fuga: "",
+	}, nil
+}
+
+// NewXXXXHandler ... XXXXHandlerを作成する
+func NewXXXXHandler() *XXXXHandler {
+	return &XXXXHandler{}
+}
+
+/* Service テンプレ */
+
+//// interfaces
+// XXXX ... XXXXのサービス
+type XXXX interface {
+}
+
+//// implementation
+type xxxx struct {
+}
+
+// NewXXXX ... XXXXを取得する
+func NewXXXX() XXXX {
+	return &xxxx{}
+}
+
+/* Repository テンプレ */
+
+//// interfaces
+// XXXX ... XXXXのリポジトリ
+type XXXX interface {
+}
+
+//// implementation
+type xxxx struct {
+}
+
+// NewXXXX ... XXXXを取得する
+func NewXXXX() XXXX {
+	return &xxxx{}
+}
+
+/* Middleware テンプレ */
+
+// XXXX ... XXXXのミドルウェア
+func XXXX(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		next.ServeHTTP(w, r)
+	})
+}
+
+/* リクエストの値を取得 */
+
+// HTTPHeaderの値を取得
+headerParams := httpheader.GetParams(ctx)
+log.Debugf(ctx, "HeaderParams: %v", headerParams)
+
+// URLParamの値を取得
+urlParam := handler.GetURLParam(r, "sample")
+if urlParam == "" {
+  h.handleError(ctx, w, http.StatusBadRequest, "invalid url param is empty")
+  return
+}
+log.Debugf(ctx, "URLParam: %s", urlParam)
+
+// フォームの値を取得
+formParam := handler.GetFormValue(r, "sample")
+if formParam == "" {
+  h.handleError(ctx, w, http.StatusBadRequest, "invalid form param is empty")
+  return
+}
+log.Debugf(ctx, "FormParams: %s", formParam)
+
+// FirebaseAuthのユーザーIDを取得
+userID := firebaseauth.GetUserID(ctx)
+log.Debugf(ctx, "UserID: %s", userID)
+
+// FirebaseAuthのJWTClaimsの値を取得
+claims := firebaseauth.GetClaims(ctx)
+log.Debugf(ctx, "Claims: %v", claims)
 ```
