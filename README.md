@@ -316,4 +316,180 @@ log.Debugf(ctx, "UserID: %s", userID)
 // FirebaseAuthのJWTClaimsの値を取得
 claims := firebaseauth.GetClaims(ctx)
 log.Debugf(ctx, "Claims: %v", claims)
+
+/* Datastore */
+func Get(ctx context.Context, id int64) (*model.Xxxx, error) {
+	dst := &model.Xxxx{
+		ID: id,
+	}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return dst, err
+	}
+	if err := b.Get(dst); err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			return nil, err
+		}
+		log.Errorm(ctx, "b.Get", err)
+		return nil, err
+	}
+	return dst, nil
+}
+
+func GetMulti(ctx context.Context, ids []int64) ([]*model.Xxxx, error) {
+	dsts := []*model.Xxxx{}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return dsts, err
+	}
+	bt := b.Batch()
+	for _, id := range ids {
+		dst := &model.Xxxx{
+			ID: id,
+		}
+		bt.Get(dst, func(err error) error {
+			if err != nil {
+				if err == datastore.ErrNoSuchEntity {
+					return nil
+				}
+				log.Errorm(ctx, "bt.Get", err)
+				return err
+			}
+			ret = append(ret, dst)
+			return nil
+		})
+	}
+	err = bt.Exec()
+	if err != nil {
+		log.Errorm(ctx, "bt.Exec", err)
+		return dsts, err
+	}
+	return dsts, nil
+}
+
+func GetByQuery(ctx context.Context, userID string) ([]*model.Xxxx, error) {
+	dsts := []*model.Xxxx{}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return dsts, err
+	}
+	q := b.NewQuery("Xxxx").
+		Filter("UserID =", userID).
+		Filter("Enabled =", true).
+		Order("-CreatedAt").
+		KeysOnly()
+	keys, err := b.GetAll(q, nil)
+	if err != nil {
+		log.Errorm(ctx, "b.GetAll", err)
+		return dsts, err
+	}
+	ids := []int64{}
+	for _, key := range keys {
+		ids = append(ids, key.ID())
+	}
+	dsts, err = GetMulti(ctx, ids)
+	if err != nil {
+		log.Errorm(ctx, "GetMulti", err)
+		return dsts, err
+	}
+	return dsts, nil
+}
+
+func Upsert(ctx context.Context, src *model.Xxxx) (int64, error) {
+	var id int64
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return id, err
+	}
+	key, err := b.Put(src)
+	if err != nil {
+		log.Errorm(ctx, "bt.Put", err)
+		return id, err
+	}
+	id = key.ID()
+	return id, nil
+}
+
+func UpsertMulti(ctx context.Context, srcs []*model.Xxxx) ([]int64, error) {
+	ids := []int64{}
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return ids, err
+	}
+	bt := b.Batch()
+	for _, src := range srcs {
+		bt.Put(src, func(key datastore.Key, err error) error {
+			if err != nil {
+				log.Errorm(ctx, "bt.Put", err)
+				return err
+			}
+			ids = append(ids, key.ID())
+			return nil
+		})
+	}
+	err = bt.Exec()
+	if err != nil {
+		log.Errorm(ctx, "bt.Exec", err)
+		return ids, err
+	}
+	return ids, nil
+}
+
+func Delete(ctx context.Context, id int64) error {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return ret, err
+	}
+	src := &model.Xxxx{
+		ID: id,
+	}
+	err = b.Delete(src)
+	if err != nil {
+		log.Errorm(ctx, "bt.Delete", err)
+		return err
+	}
+	return nil
+}
+
+func DeleteMulti(ctx context.Context, ids []int64) error {
+	b, err := boom.FromContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "boom.FromContext", err)
+		return ret, err
+	}
+	bt := b.Batch()
+	for _, id := range ids {
+		src := &model.Xxxx{
+			ID: id,
+		}
+		bt.Delete(src, func(err error) error {
+			if err != nil {
+				if err == datastore.ErrNoSuchEntity {
+					return nil
+				}
+				log.Errorm(ctx, "bt.Delete", err)
+				return err
+			}
+			return nil
+		})
+	}
+	err = bt.Exec()
+	if err != nil {
+		log.Errorm(ctx, "bt.Exec", err)
+		return err
+	}
+	return nil
+}
+
+/* Firestore */
+
+
+/* CloudSQL */
+
 ```
