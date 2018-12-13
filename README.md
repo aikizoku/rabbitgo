@@ -131,7 +131,8 @@ make deploy-queue-production
 
 # 開発で使う便利なコマンド集
 ```bash
-### Go ###
+###### Go ######
+
 # goenv(Goのバージョン管理)のインストール
 brew install goenv
 
@@ -150,11 +151,13 @@ goenv global 1.11.1
 # バージョン確認
 go version
 
-### ghq ###
+###### ghq ######
+
 # Goプロジェクトを取得(例:beegoの場合)
 ghq get git@github.com:aikizoku/beego.git
 
-### Google Cloud SDK ###
+###### Google Cloud SDK ######
+
 # 新しいアカウントでログイン
 gcloud auth login
 
@@ -183,7 +186,7 @@ dep ensure -add <package-name>
 
 # よく使うコード
 ```golang
-/* REST Handler テンプレ */
+/****** REST Handler ******/
 
 // XXXXHandler ... XXXXのハンドラ
 type XXXXHandler struct {
@@ -205,7 +208,7 @@ func NewXXXXHandler() *XXXXHandler {
 	return &XXXXHandler{}
 }
 
-/* JSONRPC2 Handler テンプレ */
+/****** JSONRPC2 Handler ******/
 
 // dependency.go
 d.JSONRPC2 = jsonrpc2.NewMiddleware()
@@ -246,7 +249,7 @@ func NewXXXXHandler() *XXXXHandler {
 	return &XXXXHandler{}
 }
 
-/* Service テンプレ */
+/****** Service ******/
 
 //// interfaces
 // XXXX ... XXXXのサービス
@@ -278,7 +281,7 @@ func NewXXXX() XXXX {
 	return &xxxx{}
 }
 
-/* Middleware テンプレ */
+/****** Middleware ******/
 
 // XXXX ... XXXXのミドルウェア
 func XXXX(next http.Handler) http.Handler {
@@ -287,7 +290,7 @@ func XXXX(next http.Handler) http.Handler {
 	})
 }
 
-/* リクエストの値を取得 */
+/****** リクエストの値を取得 ******/
 
 // HTTPHeaderの値を取得
 headerParams := httpheader.GetParams(ctx)
@@ -317,7 +320,12 @@ log.Debugf(ctx, "UserID: %s", userID)
 claims := firebaseauth.GetClaims(ctx)
 log.Debugf(ctx, "Claims: %v", claims)
 
-/* Datastore */
+/****** Datastore ******/
+
+import (
+	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
+)
+
 func Get(ctx context.Context, id int64) (*model.Xxxx, error) {
 	dst := &model.Xxxx{
 		ID: id,
@@ -487,9 +495,163 @@ func DeleteMulti(ctx context.Context, ids []int64) error {
 	return nil
 }
 
-/* Firestore */
+/****** Firestore ******/
 
 
-/* CloudSQL */
 
+/****** CloudSQL ******/
+
+func Get(ctx context.Context, id int64) (*model.Xxxx, error) {
+	var dst *model.Xxxx
+	q := sq.Select(
+		"id",
+		"category",
+		"name",
+		"enabled",
+		"created_at",
+		"updated_at").
+		From("xxxx").
+		Where(sq.Eq{
+			"id":      id,
+			"enabled": 1,
+		})
+	cloudsql.DumpSelectQuery(ctx, q)
+
+	row := q.RunWith(r.csql).QueryRowContext(ctx)
+	err := row.Scan(
+		&ret.ID,
+		&ret.Category,
+		&ret.Name,
+		&ret.Enabled,
+		&ret.CreatedAt,
+		&ret.UpdatedAt)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.QueryRowContext", err)
+		return dst, err
+	}
+
+	return dst, nil
+}
+
+func GetMulti(ctx context.Context, ids []int64) ([]*model.Xxxx, error) {
+	var dsts []*model.Xxxx
+	q := sq.Select(
+		"id",
+		"name",
+		"category",
+		"enabled",
+		"created_at",
+		"updated_at").
+		From("sample").
+		Where(sq.Eq{
+			"id":      ids,
+			"enabled": 1,
+		})
+	cloudsql.DumpSelectQuery(ctx, q)
+
+	rows, err := q.RunWith(r.csql).QueryContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.QueryContext", err)
+		return dsts, err
+	}
+
+	for rows.Next() {
+		var dst *model.Xxxx
+		err := rows.Scan(
+			&ret.ID,
+			&ret.Name,
+			&ret.Category,
+			&ret.Enabled,
+			&ret.CreatedAt,
+			&ret.UpdatedAt)
+		if err != nil {
+			log.Errorm(ctx, "rows.Scan", err)
+			rows.Close()
+			return dsts, err
+		}
+		dsts = append(dsts, dst)
+	}
+
+	return dsts, nil
+}
+
+func Insert(ctx context.Context, src *model.Xxxx) error {
+	now := util.TimeNowUnix()
+
+	q := sq.Insert("xxxx").
+		Columns("id", "category", "name", "enabled", "created_at", "updated_at").
+		Values(src.ID, src.Category, src.Name, 1, now, now)
+	cloudsql.DumpInsertQuery(ctx, q)
+
+	_, err := q.RunWith(r.csql).ExecContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.ExecContext", err)
+		return err
+	}
+
+	return nil
+}
+
+func Update(ctx context.Context, src *model.Xxxx) error {
+	now := util.TimeNowUnix()
+
+	q := sq.Update("xxxx").
+		Set("name", src.Name).
+		Set("category", src.Category).
+		Set("enabled", src.Enabled).
+		Set("updated_at", now).
+		Where(sq.Eq{"id": src.ID})
+	cloudsql.DumpUpdateQuery(ctx, q)
+
+	res, err := q.RunWith(r.csql).ExecContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.ExecContext", err)
+		return err
+	}
+
+	if affected, _ := res.RowsAffected(); affected == 0 {
+		err = fmt.Errorf("no affected id = %d", obj.ID)
+		log.Errorf(ctx, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func Upsert(ctx context.Context, src *model.Xxxx) error {
+	now := util.TimeNowUnix()
+
+	q := sq.Insert("xxxx").
+		Columns("id", "name", "category", "enabled", "created_at", "updated_at").
+		Values(src.ID, src.Category, src.Name, 1, now, now).
+		Suffix("ON DUPLICATE KEY UPDATE name = VALUES(name), updated_at = VALUES(updated_at)")
+	cloudsql.DumpInsertQuery(ctx, q)
+
+	_, err := q.RunWith(r.csql).ExecContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.ExecContext", err)
+		return err
+	}
+
+	return nil
+}
+
+func Delete(ctx context.Context, id int64) error {
+	q := sq.Delete("xxxx").Where(sq.Eq{"id": id})
+	cloudsql.DumpDeleteQuery(ctx, q)
+
+	res, err := q.RunWith(r.csql).ExecContext(ctx)
+	if err != nil {
+		log.Errorm(ctx, "q.RunWith.ExecContext", err)
+		return err
+	}
+
+	if affected, _ := res.RowsAffected(); affected == 0 {
+		err = fmt.Errorf("no affected id = %d", id)
+		log.Errorf(ctx, err.Error())
+		return err
+	}
+
+	return nil
+}
 ```
