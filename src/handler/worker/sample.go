@@ -14,14 +14,18 @@ type SampleHandler struct {
 // Cron ... Cronから実行されるハンドラ
 func (h *SampleHandler) Cron(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	log.Debugf(ctx, "call cron handler")
+
+	log.Debugf(ctx, "Cronから実行される")
+
 	handler.RenderSuccess(w)
 }
 
 // TaskQueue ... TaskQueueで実行されるハンドラ
 func (h *SampleHandler) TaskQueue(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	log.Debugf(ctx, "call task queue handler")
+
+	log.Debugf(ctx, "TaskQueueから実行される")
+
 	handler.RenderSuccess(w)
 }
 

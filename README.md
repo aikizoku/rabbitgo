@@ -212,7 +212,13 @@ func NewXXXXHandler() *XXXXHandler {
 
 // dependency.go
 d.JSONRPC2 = jsonrpc2.NewMiddleware()
-d.JSONRPC2.Register("sample", api.NewSampleJSONRPC2Handler(svc))
+d.JSONRPC2.Register("sample", api.NewXxxx())
+
+// routing.go
+r.Route("/rpc", func(r chi.Router) {
+	r.Use(d.JSONRPC2.Handle)
+	r.Post("/", handler.Empty)
+})
 
 // XXXXHandler ... XXXXのハンドラ
 type XXXXHandler struct {
@@ -497,9 +503,38 @@ func DeleteMulti(ctx context.Context, ids []int64) error {
 
 /****** Firestore ******/
 
-
+func Get(ctx context.Context, id string) (*model.Xxxx, error) {
+	client, err := cloudfirestore.NewClient(ctx)
+	if err != nil {
+		log.Errorm(ctx, "cloudfirestore.NewClient", err)
+		return nil, err
+	}
+	if grpc.Code(err) == codes.NotFound {
+		return nil, nil
+	}
+	dsnp, err := client.Collection("Xxxx").Doc(id).Get(ctx)
+	if err != nil {
+		if grpc.Code(err) == codes.NotFound {
+			return nil, nil
+		}
+		log.Errorm(ctx, "client.Get", err)
+		return nil, err
+	}
+	dst := &model.Xxxx{}
+	err = dsnp.DataTo(dst)
+	if err != nil {
+		log.Errorm(ctx, "dsnp.DataTo", err)
+		return nil, err
+	}
+	dst.ID = id
+	return dst, nil
+}
 
 /****** CloudSQL ******/
+
+import (
+	sq "github.com/Masterminds/squirrel"
+)
 
 func Get(ctx context.Context, id int64) (*model.Xxxx, error) {
 	var dst *model.Xxxx
@@ -619,14 +654,19 @@ func Update(ctx context.Context, src *model.Xxxx) error {
 }
 
 func Upsert(ctx context.Context, src *model.Xxxx) error {
+	// 現在時刻を取得
 	now := util.TimeNowUnix()
 
+	// クエリを作成
 	q := sq.Insert("xxxx").
 		Columns("id", "name", "category", "enabled", "created_at", "updated_at").
 		Values(src.ID, src.Category, src.Name, 1, now, now).
 		Suffix("ON DUPLICATE KEY UPDATE name = VALUES(name), updated_at = VALUES(updated_at)")
+
+	// デバッグ用にクエリを出力
 	cloudsql.DumpInsertQuery(ctx, q)
 
+	// クエリを実行
 	_, err := q.RunWith(r.csql).ExecContext(ctx)
 	if err != nil {
 		log.Errorm(ctx, "q.RunWith.ExecContext", err)

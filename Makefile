@@ -65,6 +65,10 @@ deploy-index:
 deploy-index-production:
 	${call deploy-config,production,index.yaml,${PRODUCTION_PROJECT_ID}}
 
+# [Firestore] データ削除
+firestore-delete:
+	${call firestore-delete,${STAGING_PROJECT_ID}}
+
 # マクロ
 define init
 	@mkdir -p deploy/appengine/$1/$2
@@ -91,4 +95,8 @@ endef
 
 define deploy-config
 	@gcloud app deploy -q deploy/appengine/$1/api/$2 --project $3
+endef
+
+define firestore-delete
+	firebase firestore:delete --all-collections --project $1
 endef

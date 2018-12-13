@@ -55,6 +55,14 @@
   version = "v1.1.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:665c8850f673be8d358fe61ab00412049e685202aa7466ae5c72ad50d89c84f7"
+  name = "github.com/dyatlov/go-opengraph"
+  packages = ["opengraph"]
+  pruneopts = "UT"
+  revision = "816b6608b3c8c1e871bc9cf777f390e2532081fe"
+
+[[projects]]
   digest = "1:b9914f85d95a0968bafd1be1908ba29e2eafafd88d6fd13696be42bf5368c380"
   name = "github.com/go-chi/chi"
   packages = ["."]
@@ -140,22 +148,6 @@
   revision = "b9786414de4d903830df7ac38eea68a0e3267a35"
 
 [[projects]]
-  digest = "1:e583fc00497ee3eaf30bde9edf05601f60d5a8668f7fe4c657b3f935ddca03f7"
-  name = "go.mercari.io/datastore"
-  packages = [
-    ".",
-    "aedatastore",
-    "boom",
-    "internal",
-    "internal/c/atomiccache",
-    "internal/c/fields",
-    "internal/shared",
-  ]
-  pruneopts = "UT"
-  revision = "7a323a3747d39b6c9cdf825697d09cb36907d4cb"
-  version = "v1.3.0"
-
-[[projects]]
   digest = "1:381ccafa5e013a0e3f9b54604ae522a73b9533a375a6a714b483c634d5e927ab"
   name = "go.opencensus.io"
   packages = [
@@ -181,11 +173,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:cb50171ec1782317a86709fce896e4f564a35ceece954561288afa5948cf5856"
+  digest = "1:f7b0360ba8447afdff6d5496d15f444055310f59e637f01472a07a89bff24a2a"
   name = "golang.org/x/net"
   packages = [
     "context",
     "context/ctxhttp",
+    "html",
+    "html/atom",
     "http/httpguts",
     "http2",
     "http2/hpack",
@@ -209,6 +203,14 @@
   ]
   pruneopts = "UT"
   revision = "232e45548389bd9357411a6922a07c5fd4068bda"
+
+[[projects]]
+  branch = "master"
+  digest = "1:b521f10a2d8fa85c04a8ef4e62f2d1e14d303599a55d64dabf9f5a02f84d35eb"
+  name = "golang.org/x/sync"
+  packages = ["errgroup"]
+  pruneopts = "UT"
+  revision = "42b317875d0fa942474b76e1b46a6060d720ae6e"
 
 [[projects]]
   branch = "master"
@@ -268,12 +270,11 @@
   revision = "04bb50b6b83d0e72253821af8cf3252d8e866517"
 
 [[projects]]
-  digest = "1:1f9021ad43d4fd39c47e05cd7e8cf4c06ee7c3954492c263f7af8dad125d54ee"
+  digest = "1:bce2df62f70ab177104d6171287f8edf175d00e7727b0600a02d1d2e5c9ca9af"
   name = "google.golang.org/appengine"
   packages = [
     ".",
     "cloudsql",
-    "datastore",
     "internal",
     "internal/app_identity",
     "internal/base",
@@ -361,12 +362,11 @@
     "firebase.google.com/go/auth",
     "github.com/Masterminds/squirrel",
     "github.com/davecgh/go-spew/spew",
+    "github.com/dyatlov/go-opengraph/opengraph",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",
     "github.com/unrolled/render",
-    "go.mercari.io/datastore",
-    "go.mercari.io/datastore/aedatastore",
-    "go.mercari.io/datastore/boom",
+    "golang.org/x/sync/errgroup",
     "golang.org/x/text/encoding/japanese",
     "golang.org/x/text/transform",
     "google.golang.org/appengine",

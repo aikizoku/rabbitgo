@@ -22,13 +22,9 @@ type Dependency struct {
 // Inject ... 依存性を注入する
 func (d *Dependency) Inject() {
 	// Config
-	// dbCfg := config.GetCSQLConfig("sample")
-
-	// Lib
-	// dbConn := cloudsql.NewCSQLClient(dbCfg)
 
 	// Repository
-	repo := repository.NewSample(nil)
+	repo := repository.NewSample()
 
 	// Service
 	dfaSvc := firebaseauth.NewDummyService()
@@ -42,10 +38,6 @@ func (d *Dependency) Inject() {
 	d.FirebaseAuth = firebaseauth.NewMiddleware(faSvc)
 	d.DummyHTTPHeader = httpheader.NewMiddleware(dhhSvc)
 	d.HTTPHeader = httpheader.NewMiddleware(hhSvc)
-
-	// JSONRPC2
-	d.JSONRPC2 = jsonrpc2.NewMiddleware()
-	d.JSONRPC2.Register("sample", api.NewSampleJSONRPC2Handler(svc))
 
 	// Handler
 	d.SampleHandler = api.NewSampleHandler(svc)
