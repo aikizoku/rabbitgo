@@ -636,22 +636,48 @@ func Upsert(ctx context.Context, src *model.Xxxx) error {
 	return nil
 }
 
+// 指定のレコードを削除する
 func Delete(ctx context.Context, id int64) error {
+	// クエリを作成
 	q := sq.Delete("xxxx").Where(sq.Eq{"id": id})
+	
+	// デバッグ用にクエリを出力
 	cloudsql.DumpDeleteQuery(ctx, q)
 
+	// クエリを実行
 	res, err := q.RunWith(r.csql).ExecContext(ctx)
 	if err != nil {
 		log.Errorm(ctx, "q.RunWith.ExecContext", err)
 		return err
 	}
-
+	
+	// 削除する対象が存在しなかった場合のハンドリング
 	if affected, _ := res.RowsAffected(); affected == 0 {
 		err = fmt.Errorf("no affected id = %d", id)
 		log.Errorf(ctx, err.Error())
 		return err
 	}
 
+	return nil
+}
+
+/****** HTTP ******/
+
+func Get(ctx context.Context) error {
+	// リクエストを送信
+	status, body, err := httpclient.Get(ctx, "https://www.google.co.jp/", nil)
+	if err != nil {
+		log.Errorm(ctx, "httpclient.Get", err)
+		return err
+	}
+	// HTTPステータスを確認
+	if status != http.StatusOK {
+		err := fmt.Errorf("http status: %d", status)
+		return err
+	}
+	// Bodyをごにょごにょする
+	str := util.BytesToStr(body)
+	log.Debugf(ctx, "body length: %d", len(str))
 	return nil
 }
 ```
