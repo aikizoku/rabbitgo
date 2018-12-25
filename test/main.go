@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-
-	"github.com/aikizoku/beego/test/config"
 )
 
 func main() {
@@ -14,7 +12,7 @@ func main() {
 	flag.Parse()
 
 	// Dependency
-	d := &config.Dependency{}
+	d := &Dependency{}
 	d.Inject(*snro, *url, *auth)
 
 	// Execute

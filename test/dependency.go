@@ -1,8 +1,9 @@
-package config
+package main
 
 import (
 	"fmt"
 
+	"github.com/aikizoku/beego/test/config"
 	"github.com/aikizoku/beego/test/repository"
 	"github.com/aikizoku/beego/test/scenario"
 	"github.com/aikizoku/beego/test/service"
@@ -16,7 +17,7 @@ type Dependency struct {
 // Inject ... 依存性を注入する
 func (d *Dependency) Inject(snro string, apiURL string, authToken string) {
 	// Repository
-	fRepo := repository.NewFile(DocumentDirPath)
+	fRepo := repository.NewFile(config.DocumentDirPath)
 	hRepo := repository.NewHTTPClient()
 	tRepo := repository.NewTemplateClient()
 
@@ -26,10 +27,10 @@ func (d *Dependency) Inject(snro string, apiURL string, authToken string) {
 		hRepo,
 		apiURL,
 		map[string]string{
-			"Authorization": authToken,
+			"Authorization": fmt.Sprintf("%s%s", config.AuthorizationPrefix, authToken),
 		},
-		StagingURL,
-		ProductionURL)
+		config.StagingURL,
+		config.ProductionURL)
 	jSvc := service.NewJSONRPC2()
 
 	// Scenario

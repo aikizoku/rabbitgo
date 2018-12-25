@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/aikizoku/beego/test/config"
 	"github.com/aikizoku/beego/test/model"
 	"github.com/aikizoku/beego/test/repository"
 )
@@ -199,6 +200,9 @@ func (s *rest) margeParams(uri string, params map[string]interface{}) (string, m
 }
 
 func (s *rest) createQueryString(params map[string]interface{}) string {
+	if len(params) == 0 {
+		return ""
+	}
 	qs := "?"
 	qsList := []string{}
 	for key, value := range params {
@@ -211,7 +215,12 @@ func (s *rest) createQueryString(params map[string]interface{}) string {
 func (s *rest) createHeadersString(headers map[string]string) string {
 	hs := ""
 	for key, value := range headers {
-		hs += fmt.Sprintf("%s: %s\n", key, value)
+		if key == "Authorization" {
+			// AuthorizationHeaderの値を隠蔽
+			hs += fmt.Sprintf("%s: %s%s\n", key, config.AuthorizationPrefix, "XXXXXXXXXX")
+		} else {
+			hs += fmt.Sprintf("%s: %s%s\n", key, config.AuthorizationPrefix, value)
+		}
 	}
 	return hs
 }
