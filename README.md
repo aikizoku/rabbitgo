@@ -186,6 +186,13 @@ dep ensure -add <package-name>
 
 # よく使うコード
 ```golang
+/****** Logging ******/
+// time [ERROR] foo/bar.go:21 hoge 123
+log.Errorf(ctx, "hoge %d", 123)
+
+// time [ERROR] foo/bar.go:21 h.svc.Sample error: invalid params
+log.Errorm(ctx, "h.svc.Sample", err)
+
 /****** REST Handler ******/
 
 // XXXXHandler ... XXXXのハンドラ
@@ -628,22 +635,28 @@ func Insert(ctx context.Context, src *model.Xxxx) error {
 }
 
 func Update(ctx context.Context, src *model.Xxxx) error {
+	// 現在時刻を取得
 	now := util.TimeNowUnix()
 
+	// クエリを作成
 	q := sq.Update("xxxx").
 		Set("name", src.Name).
 		Set("category", src.Category).
 		Set("enabled", src.Enabled).
 		Set("updated_at", now).
 		Where(sq.Eq{"id": src.ID})
+
+	// デバッグ用にクエリを出力
 	cloudsql.DumpUpdateQuery(ctx, q)
 
+	// クエリを実行
 	res, err := q.RunWith(r.csql).ExecContext(ctx)
 	if err != nil {
 		log.Errorm(ctx, "q.RunWith.ExecContext", err)
 		return err
 	}
 
+	// 更新する対象が存在しなかった場合のハンドリング
 	if affected, _ := res.RowsAffected(); affected == 0 {
 		err = fmt.Errorf("no affected id = %d", obj.ID)
 		log.Errorf(ctx, err.Error())
