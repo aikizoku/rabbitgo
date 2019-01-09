@@ -47,6 +47,17 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:315c5f2f60c76d89b871c73f9bd5fe689cad96597afd50fb9992228ef80bdd34"
+  name = "github.com/alecthomas/template"
+  packages = [
+    ".",
+    "parse",
+  ]
+  pruneopts = "UT"
+  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -361,6 +372,7 @@
     "firebase.google.com/go",
     "firebase.google.com/go/auth",
     "github.com/Masterminds/squirrel",
+    "github.com/alecthomas/template",
     "github.com/davecgh/go-spew/spew",
     "github.com/dyatlov/go-opengraph/opengraph",
     "github.com/go-chi/chi",
