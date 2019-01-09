@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/aikizoku/beego/src/repository"
+	"github.com/aikizoku/gocci/src/repository"
 )
 
 type sample struct {

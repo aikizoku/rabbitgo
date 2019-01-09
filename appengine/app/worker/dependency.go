@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/aikizoku/beego/src/handler/worker"
+	"github.com/aikizoku/gocci/src/handler/worker"
 )
 
 // Dependency ... 依存性

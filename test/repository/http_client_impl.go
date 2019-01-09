@@ -9,7 +9,7 @@ import (
 	"net/http/httputil"
 	"time"
 
-	"github.com/aikizoku/beego/src/lib/util"
+	"github.com/aikizoku/gocci/src/lib/util"
 )
 
 const timeout time.Duration = 15 * time.Second

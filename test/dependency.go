@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/aikizoku/beego/test/config"
-	"github.com/aikizoku/beego/test/repository"
-	"github.com/aikizoku/beego/test/scenario"
-	"github.com/aikizoku/beego/test/service"
+	"github.com/aikizoku/gocci/test/config"
+	"github.com/aikizoku/gocci/test/repository"
+	"github.com/aikizoku/gocci/test/scenario"
+	"github.com/aikizoku/gocci/test/service"
 )
 
 // Dependency ... 依存性

@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aikizoku/beego/src/handler"
-	"github.com/aikizoku/beego/src/lib/log"
-	"github.com/aikizoku/beego/src/service"
+	"github.com/aikizoku/gocci/src/handler"
+	"github.com/aikizoku/gocci/src/lib/log"
+	"github.com/aikizoku/gocci/src/service"
 )
 
 // SampleHandler ... サンプルのハンドラ

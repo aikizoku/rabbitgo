@@ -1,6 +1,6 @@
 package service
 
-import "github.com/aikizoku/beego/test/model"
+import "github.com/aikizoku/gocci/test/model"
 
 // Document ... ドキュメントを操作する
 type Document interface {

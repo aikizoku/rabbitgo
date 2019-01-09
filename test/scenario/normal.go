@@ -1,6 +1,6 @@
 package scenario
 
-import "github.com/aikizoku/beego/test/service"
+import "github.com/aikizoku/gocci/test/service"
 
 type normal struct {
 	dSvc service.Document

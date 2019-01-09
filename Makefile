@@ -1,6 +1,6 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
-STAGING_PROJECT_ID = 'staging-beego-thehero-jp'
-PRODUCTION_PROJECT_ID = 'beego-thehero-jp'
+STAGING_PROJECT_ID = 'staging-gocci-thehero-jp'
+PRODUCTION_PROJECT_ID = 'gocci-thehero-jp'
 
 .PHONY: hello init run deploy
 
@@ -15,11 +15,9 @@ init:
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
 
-	# API
 	$(call init,staging,api)
 	$(call init,production,api)
 
-	# Worker
 	$(call init,staging,worker)
 	$(call init,production,worker)
 
@@ -82,7 +80,6 @@ define init
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
 	@ln -s ../../../../appengine/secret/env_variables_$1.yaml deploy/appengine/$1/$2/env_variables.yaml
 	@ln -s ../../../../appengine/secret/google_application_credentials_$1.json deploy/appengine/$1/$2/google_application_credentials.json
-	@ln -s ../../../../src deploy/appengine/$1/$2/src
 endef
 
 define run

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aikizoku/beego/src/handler/api"
-	"github.com/aikizoku/beego/src/lib/firebaseauth"
-	"github.com/aikizoku/beego/src/lib/httpheader"
-	"github.com/aikizoku/beego/src/lib/jsonrpc2"
-	"github.com/aikizoku/beego/src/repository"
-	"github.com/aikizoku/beego/src/service"
+	"github.com/aikizoku/gocci/src/handler/api"
+	"github.com/aikizoku/gocci/src/lib/firebaseauth"
+	"github.com/aikizoku/gocci/src/lib/httpheader"
+	"github.com/aikizoku/gocci/src/lib/jsonrpc2"
+	"github.com/aikizoku/gocci/src/repository"
+	"github.com/aikizoku/gocci/src/service"
 )
 
 // Dependency ... 依存性

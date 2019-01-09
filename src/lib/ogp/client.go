@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aikizoku/beego/src/lib/httpclient"
-	"github.com/aikizoku/beego/src/lib/log"
-	"github.com/aikizoku/beego/src/lib/util"
+	"github.com/aikizoku/gocci/src/lib/httpclient"
+	"github.com/aikizoku/gocci/src/lib/log"
+	"github.com/aikizoku/gocci/src/lib/util"
 	"github.com/dyatlov/go-opengraph/opengraph"
 	"golang.org/x/sync/errgroup"
 )

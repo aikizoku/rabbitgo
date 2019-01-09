@@ -70,5 +70,5 @@ env_variables_production.yaml
 google_application_credentials_staging.json
 google_application_credentials_production.json
 
-# Beego
+# gocci
 /deploy/
