@@ -1,6 +1,7 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
-STAGING_PROJECT_ID = 'staging-gocci-thehero-jp'
-PRODUCTION_PROJECT_ID = 'gocci-thehero-jp'
+LOCAL_PROJECT_ID = 'develop-xxxxx-rabee-jp'
+STAGING_PROJECT_ID = 'staging-skgo-rabee-jp'
+PRODUCTION_PROJECT_ID = 'skgo-rabee-jp'
 
 .PHONY: hello init run deploy
 
@@ -12,21 +13,21 @@ init:
 	@rm -rf deploy
 	@mkdir -p deploy
 	@mkdir -p deploy/appengine
+	@mkdir -p deploy/appengine/local
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
 
+	$(call init,local,api)
 	$(call init,staging,api)
 	$(call init,production,api)
 
+	$(call init,local,worker)
 	$(call init,staging,worker)
 	$(call init,production,worker)
 
 # [GAE] アプリの実行
 run:
-	${call run,staging,${app}}
-
-run-production:
-	${call run,production,${app}}
+	${call run,local,${app}}
 
 # [GAE] アプリのデプロイ
 deploy:
@@ -63,8 +64,11 @@ deploy-index:
 deploy-index-production:
 	${call deploy-config,production,index.yaml,${PRODUCTION_PROJECT_ID}}
 
-# [Firestore] データ削除
+# [Firestore] 全データ削除
 firestore-delete:
+	${call firestore-delete,${LOCAL_PROJECT_ID}}
+
+firestore-delete-staging:
 	${call firestore-delete,${STAGING_PROJECT_ID}}
 
 # マクロ
@@ -78,8 +82,8 @@ define init
 	@ln -s ../../../../appengine/config/dispatch_$1.yaml deploy/appengine/$1/$2/dispatch.yaml
 	@ln -s ../../../../appengine/config/index.yaml deploy/appengine/$1/$2/index.yaml
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
-	@ln -s ../../../../appengine/secret/env_variables_$1.yaml deploy/appengine/$1/$2/env_variables.yaml
-	@ln -s ../../../../appengine/secret/google_application_credentials_$1.json deploy/appengine/$1/$2/google_application_credentials.json
+	@ln -s ../../../../appengine/env/values_$1.yaml deploy/appengine/$1/$2/values.yaml
+	@ln -s ../../../../appengine/env/google_application_credentials.json deploy/appengine/$1/$2/google_application_credentials.json
 endef
 
 define run

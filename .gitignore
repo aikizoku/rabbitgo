@@ -65,10 +65,10 @@ Session.vim
 #####=== Project specific settings ===#####
 
 # GCP
-env_variables_staging.yaml
-env_variables_production.yaml
-google_application_credentials_staging.json
-google_application_credentials_production.json
+values_local.yaml
+values_staging.yaml
+values_production.yaml
+google_application_credentials.json
 
-# gocci
+# skgo
 /deploy/

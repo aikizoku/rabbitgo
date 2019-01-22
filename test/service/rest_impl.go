@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aikizoku/gocci/test/config"
-	"github.com/aikizoku/gocci/test/model"
-	"github.com/aikizoku/gocci/test/repository"
+	"github.com/aikizoku/skgo/test/config"
+	"github.com/aikizoku/skgo/test/model"
+	"github.com/aikizoku/skgo/test/repository"
 )
 
 const (

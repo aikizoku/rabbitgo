@@ -3,10 +3,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/aikizoku/gocci/src/config"
-	"github.com/aikizoku/gocci/src/handler"
-	"github.com/aikizoku/gocci/src/lib/log"
-	"github.com/aikizoku/gocci/src/middleware"
+	"github.com/aikizoku/skgo/src/config"
+	"github.com/aikizoku/skgo/src/handler"
+	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/skgo/src/middleware"
 	"github.com/go-chi/chi"
 )
 

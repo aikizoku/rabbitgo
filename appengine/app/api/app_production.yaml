@@ -12,4 +12,4 @@ automatic_scaling:
 service: api
 
 includes:
-- env_variables.yaml
+- values.yaml

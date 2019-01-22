@@ -1,13 +1,10 @@
 env_variables:
   # 環境
-  ENV: "production"
+  ENV: "staging"
   
-  # GCPサービス接続の資格情報
-  GOOGLE_APPLICATION_CREDENTIALS: "./google_application_credentials.json"
-
   # 最小ログレベル
-  MIN_LOG_LEVEL: "INFO"
-    
+  MIN_LOG_LEVEL: "DEBUG"
+
   # 内部認証
   INTERNAL_AUTH_TOKEN: "token"
 

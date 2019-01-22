@@ -1,6 +1,6 @@
 package service
 
-import "github.com/aikizoku/gocci/test/model"
+import "github.com/aikizoku/skgo/test/model"
 
 // Rest ... REST形式のAPI通信を行う
 type Rest interface {

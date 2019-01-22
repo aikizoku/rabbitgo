@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/aikizoku/gocci/src/handler"
+	"github.com/aikizoku/skgo/src/handler"
 	"github.com/go-chi/chi"
 )
 

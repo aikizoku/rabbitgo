@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aikizoku/gocci/src/lib/log"
+	"github.com/aikizoku/skgo/src/lib/log"
 	"github.com/unrolled/render"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aikizoku/gocci/test/model"
-	"github.com/aikizoku/gocci/test/repository"
+	"github.com/aikizoku/skgo/test/model"
+	"github.com/aikizoku/skgo/test/repository"
 )
 
 type document struct {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/aikizoku/gocci/src/handler/worker"
+	"github.com/aikizoku/skgo/src/handler/worker"
 )
 
 // Dependency ... 依存性

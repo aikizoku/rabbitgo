@@ -8,7 +8,7 @@ import (
 
 	"firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/aikizoku/gocci/src/lib/log"
+	"github.com/aikizoku/skgo/src/lib/log"
 )
 
 const (

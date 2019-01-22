@@ -1,0 +1,19 @@
+env_variables:
+  # 環境
+  ENV: "production"
+
+  # 最小ログレベル
+  MIN_LOG_LEVEL: "INFO"
+    
+  # 内部認証
+  INTERNAL_AUTH_TOKEN: "token"
+
+  # ベーシック認証
+  BASIC_AUTH_USER: "sample_user"
+  BASIC_AUTH_PASSWORD: "sample_password"
+
+  # CloudSQL接続情報
+  CLOUDSQL_SAMPLE_CONNECTION_NAME: ""
+  CLOUDSQL_SAMPLE_USER: ""
+  CLOUDSQL_SAMPLE_PASSWORD: ""
+  CLOUDSQL_SAMPLE_DATABASE: ""

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aikizoku/gocci/src/handler/api"
-	"github.com/aikizoku/gocci/src/lib/firebaseauth"
-	"github.com/aikizoku/gocci/src/lib/httpheader"
-	"github.com/aikizoku/gocci/src/lib/jsonrpc2"
-	"github.com/aikizoku/gocci/src/repository"
-	"github.com/aikizoku/gocci/src/service"
+	"github.com/aikizoku/skgo/src/handler/api"
+	"github.com/aikizoku/skgo/src/lib/firebaseauth"
+	"github.com/aikizoku/skgo/src/lib/httpheader"
+	"github.com/aikizoku/skgo/src/lib/jsonrpc2"
+	"github.com/aikizoku/skgo/src/repository"
+	"github.com/aikizoku/skgo/src/service"
 )
 
 // Dependency ... 依存性

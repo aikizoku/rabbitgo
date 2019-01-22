@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aikizoku/gocci/src/handler"
-	"github.com/aikizoku/gocci/src/lib/log"
-	"github.com/aikizoku/gocci/src/service"
+	"github.com/aikizoku/skgo/src/handler"
+	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/skgo/src/service"
 )
 
 // SampleHandler ... サンプルのハンドラ
