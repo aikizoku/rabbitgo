@@ -1,7 +1,4 @@
 GOPHER = 'ʕ◔ϖ◔ʔ'
-LOCAL_PROJECT_ID = 'develop-xxxxx-rabee-jp'
-STAGING_PROJECT_ID = 'staging-skgo-rabee-jp'
-PRODUCTION_PROJECT_ID = 'skgo-rabee-jp'
 
 .PHONY: hello init run deploy
 
@@ -16,14 +13,7 @@ init:
 	@mkdir -p deploy/appengine/local
 	@mkdir -p deploy/appengine/staging
 	@mkdir -p deploy/appengine/production
-
-	$(call init,local,api)
-	$(call init,staging,api)
-	$(call init,production,api)
-
-	$(call init,local,worker)
-	$(call init,staging,worker)
-	$(call init,production,worker)
+	${call apps}
 
 # [GAE] アプリの実行
 run:
@@ -83,7 +73,7 @@ define init
 	@ln -s ../../../../appengine/config/index.yaml deploy/appengine/$1/$2/index.yaml
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
 	@ln -s ../../../../appengine/env/values_$1.yaml deploy/appengine/$1/$2/values.yaml
-	@ln -s ../../../../appengine/env/google_application_credentials.json deploy/appengine/$1/$2/google_application_credentials.json
+	@ln -s ../../../../appengine/env/credentials_$1.json deploy/appengine/$1/$2/credentials.json
 endef
 
 define run
@@ -101,3 +91,5 @@ endef
 define firestore-delete
 	firebase firestore:delete --all-collections --project $1
 endef
+
+include env.mk

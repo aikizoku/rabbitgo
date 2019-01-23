@@ -64,11 +64,10 @@ Session.vim
 
 #####=== Project specific settings ===#####
 
-# GCP
+# SKGO
 values_local.yaml
 values_staging.yaml
 values_production.yaml
-google_application_credentials.json
-
-# skgo
+credentials_local.json
+env.mk
 /deploy/
