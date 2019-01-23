@@ -19,7 +19,7 @@ func Routing(r *chi.Mux, d *Dependency) {
 	r.Use(log.Handle)
 
 	// 認証なし(Stagingのみ)
-	if config.IsEnvStaging() {
+	if !config.IsEnvProduction() {
 		r.Route("/noauth/v1", func(r chi.Router) {
 			r.Use(d.DummyFirebaseAuth.Handle)
 			r.Use(d.DummyHTTPHeader.Handle)
