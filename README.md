@@ -336,7 +336,10 @@ log.Debugf(ctx, "Claims: %v", claims)
 /****** Datastore ******/
 
 import (
+	"go.mercari.io/datastore"
 	_ "go.mercari.io/datastore/aedatastore" // mercari/datastoreの初期化
+	"go.mercari.io/datastore/boom"
+	"google.golang.org/api/iterator"
 )
 
 func Get(ctx context.Context, id int64) (*model.Xxxx, error) {
@@ -378,7 +381,7 @@ func GetMulti(ctx context.Context, ids []int64) ([]*model.Xxxx, error) {
 				log.Errorm(ctx, "bt.Get", err)
 				return err
 			}
-			ret = append(ret, dst)
+			dsts = append(dsts, dst)
 			return nil
 		})
 	}
@@ -411,9 +414,9 @@ func GetByQuery(ctx context.Context, userID string) ([]*model.Xxxx, error) {
 	for _, key := range keys {
 		ids = append(ids, key.ID())
 	}
-	dsts, err = GetMulti(ctx, ids)
+	dsts, err = r.GetMulti(ctx, ids)
 	if err != nil {
-		log.Errorm(ctx, "GetMulti", err)
+		log.Errorm(ctx, "r.GetMulti", err)
 		return dsts, err
 	}
 	return dsts, nil
@@ -428,7 +431,7 @@ func Upsert(ctx context.Context, src *model.Xxxx) (int64, error) {
 	}
 	key, err := b.Put(src)
 	if err != nil {
-		log.Errorm(ctx, "bt.Put", err)
+		log.Errorm(ctx, "b.Put", err)
 		return id, err
 	}
 	id = key.ID()
@@ -465,14 +468,14 @@ func Delete(ctx context.Context, id int64) error {
 	b, err := boom.FromContext(ctx)
 	if err != nil {
 		log.Errorm(ctx, "boom.FromContext", err)
-		return ret, err
+		return err
 	}
 	src := &model.Xxxx{
-		ID: id,
+		ID: model.GenerateArticleLaterID(app, userID, articleID),
 	}
 	err = b.Delete(src)
 	if err != nil {
-		log.Errorm(ctx, "bt.Delete", err)
+		log.Errorm(ctx, "b.Delete", err)
 		return err
 	}
 	return nil
@@ -482,7 +485,7 @@ func DeleteMulti(ctx context.Context, ids []int64) error {
 	b, err := boom.FromContext(ctx)
 	if err != nil {
 		log.Errorm(ctx, "boom.FromContext", err)
-		return ret, err
+		return err
 	}
 	bt := b.Batch()
 	for _, id := range ids {
