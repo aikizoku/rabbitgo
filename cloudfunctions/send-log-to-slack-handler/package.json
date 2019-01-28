@@ -1,8 +1,0 @@
-{
-  "name": "send-error-log-to-slack",
-  "version": "0.0.1",
-  "dependencies": {
-    "@slack/client": "^3.15.0",
-    "moment": "2.22.2"
-  }
-}
