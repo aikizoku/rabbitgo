@@ -69,5 +69,7 @@ values_local.yaml
 values_staging.yaml
 values_production.yaml
 credentials_local.json
+credentials_staging.json
+credentials_production.json
 env.mk
 /deploy/

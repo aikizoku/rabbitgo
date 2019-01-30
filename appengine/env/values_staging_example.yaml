@@ -1,7 +1,10 @@
 env_variables:
   # 環境
   ENV: "staging"
-  
+
+  # GCPサービス接続の資格情報
+  GOOGLE_APPLICATION_CREDENTIALS: "./credentials.json"
+
   # 最小ログレベル
   MIN_LOG_LEVEL: "DEBUG"
 
