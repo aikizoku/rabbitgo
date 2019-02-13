@@ -4,9 +4,9 @@ const (
 	// AuthorizationPrefix ... 認証ヘッダーのPrefix
 	AuthorizationPrefix = "Bearer "
 	// StagingURL ... ステージングのURL
-	StagingURL = "https://shop-api-dot-livelive-dev2.appspot.com"
+	StagingURL = ""
 	// ProductionURL ... 本番のURL
-	ProductionURL = "https://shop-api-dot-livelive.appspot.com"
+	ProductionURL = ""
 	// DocumentDirPath ... ドキュメントを格納するディレクトリの相対パス
 	DocumentDirPath = "../doc"
 )
