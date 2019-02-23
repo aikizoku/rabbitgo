@@ -74,6 +74,8 @@ define init
 	@ln -s ../../../../appengine/config/queue.yaml deploy/appengine/$1/$2/queue.yaml
 	@ln -s ../../../../appengine/env/values_$1.yaml deploy/appengine/$1/$2/values.yaml
 	@ln -s ../../../../appengine/env/credentials_$1.json deploy/appengine/$1/$2/credentials.json
+	@ln -s ../../../../src deploy/appengine/$1/$2/src
+	@ln -s ../../../../.gcloudignore deploy/appengine/$1/$2/.gcloudignore
 endef
 
 define run
