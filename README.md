@@ -514,20 +514,12 @@ func DeleteMulti(ctx context.Context, ids []int64) error {
 /****** Firestore ******/
 
 func Get(ctx context.Context, id string) (*model.Xxxx, error) {
-	client, err := cloudfirestore.NewClient(ctx)
-	if err != nil {
-		log.Errorm(ctx, "cloudfirestore.NewClient", err)
-		return nil, err
-	}
-	if grpc.Code(err) == codes.NotFound {
-		return nil, nil
-	}
-	dsnp, err := client.Collection("Xxxx").Doc(id).Get(ctx)
+	dsnp, err := r.client.Collection("Xxxx").Doc(id).Get(ctx)
 	if err != nil {
 		if grpc.Code(err) == codes.NotFound {
 			return nil, nil
 		}
-		log.Errorm(ctx, "client.Get", err)
+		log.Errorm(ctx, "r.client.Get", err)
 		return nil, err
 	}
 	dst := &model.Xxxx{}

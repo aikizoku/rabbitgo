@@ -1,7 +1,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/aikizoku/skgo/src/handler/api"
+	"github.com/aikizoku/skgo/src/lib/cloudfirestore"
 	"github.com/aikizoku/skgo/src/lib/firebaseauth"
 	"github.com/aikizoku/skgo/src/lib/httpheader"
 	"github.com/aikizoku/skgo/src/lib/jsonrpc2"
@@ -22,9 +25,19 @@ type Dependency struct {
 // Inject ... 依存性を注入する
 func (d *Dependency) Inject() {
 	// Config
+	crePath := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+	if crePath == "" {
+		panic("no config error: GOOGLE_APPLICATION_CREDENTIALS")
+	}
+
+	// Client
+	fCli, err := cloudfirestore.NewClient(crePath)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	// Repository
-	repo := repository.NewSample()
+	repo := repository.NewSample(fCli)
 
 	// Service
 	dfaSvc := firebaseauth.NewDummyService()
