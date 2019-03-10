@@ -2,59 +2,38 @@ package ogp
 
 import (
 	"context"
-	"net/http"
-	"strings"
 
-	"github.com/aikizoku/skgo/src/lib/httpclient"
 	"github.com/aikizoku/skgo/src/lib/log"
-	"github.com/aikizoku/skgo/src/lib/util"
-	"github.com/dyatlov/go-opengraph/opengraph"
+	"github.com/otiai10/opengraph"
 	"golang.org/x/sync/errgroup"
 )
 
 // Get ... OG情報を取得する
 func Get(ctx context.Context, url string) (*OpenGraph, error) {
-	// 対象のHTMLを取得
-	status, body, err := httpclient.Get(ctx, url, nil)
-	if err != nil {
-		log.Warningm(ctx, "httpclient.Get", err)
-		return nil, err
-	}
-	if status != http.StatusOK {
-		log.Warningf(ctx, "httpclient.Get error: status=%s, url=%s", status, url)
-		return nil, err
-	}
-	html := util.BytesToStr(body)
+	var dst *OpenGraph
 
-	// 解析
-	obj := opengraph.NewOpenGraph()
-	err = obj.ProcessHTML(strings.NewReader(html))
+	// OGP取得
+	og, err := opengraph.Fetch(url)
 	if err != nil {
-		log.Warningm(ctx, "client.ProcessHTML", err)
+		log.Debugm(ctx, "opengraph.Fetch", err)
 		return nil, err
 	}
 
 	// 必要な情報のみを取得
-	ogImgs := []*OpenGraphImage{}
-	for _, image := range obj.Images {
-		ogImg := &OpenGraphImage{
-			URL:       image.URL,
-			SecureURL: image.SecureURL,
-			Type:      image.Type,
-			Width:     image.Width,
-			Height:    image.Height,
-		}
-		ogImgs = append(ogImgs, ogImg)
+	var imageURL string
+	if len(og.Image) > 0 {
+		imageURL = og.Image[0].URL
+	} else {
+		imageURL = ""
 	}
-	og := &OpenGraph{
-		Type:        obj.URL,
-		URL:         obj.URL,
-		Title:       obj.Title,
-		Description: obj.Description,
-		SiteName:    obj.SiteName,
-		Images:      ogImgs,
+	dst = &OpenGraph{
+		URL:         og.URL.Source,
+		Title:       og.Title,
+		Description: og.Description,
+		ImageURL:    imageURL,
+		FaviconURL:  og.Favicon,
 	}
-	return og, nil
+	return dst, nil
 }
 
 // GetMulti ... OG情報を複数取得する
@@ -66,13 +45,16 @@ func GetMulti(ctx context.Context, urls []string) ([]*OpenGraph, error) {
 		eg.Go(func() error {
 			og, err := Get(ctx, url)
 			if err != nil {
-				log.Errorm(ctx, "Get", err)
+				log.Debugm(ctx, "Get", err)
 				return err
 			}
 			ogs = append(ogs, og)
 			return nil
 		})
 	}
-	_ = eg.Wait()
+	if err := eg.Wait(); err != nil {
+		log.Debugm(ctx, "eg.Wait", err)
+		return ogs, err
+	}
 	return ogs, nil
 }

@@ -86,10 +86,12 @@ make init
 ```bash
 # API
 make run app=api
+make run-staging app=api
 make run-production app=api
 
 # Worker
 make run app=worker
+make run-staging app=worker
 make run-production app=worker
 ```
 

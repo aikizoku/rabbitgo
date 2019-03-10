@@ -9,7 +9,7 @@ import (
 	"github.com/unrolled/render"
 )
 
-// Middleware ... JSONRPC2に準拠したミドルウェア
+// Middleware ... Firebase認証のミドルウェア
 type Middleware struct {
 	Svc Service
 }

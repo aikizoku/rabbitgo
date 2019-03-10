@@ -3,7 +3,6 @@ package jsonrpc2
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/aikizoku/skgo/src/lib/httpclient"
@@ -59,8 +58,7 @@ func (c *Client) DoSingle(ctx context.Context, method string, params interface{}
 		return nil, nil, err
 	}
 	if status != http.StatusOK {
-		err = fmt.Errorf("httpclient.PostJSON status: %d", status)
-		log.Errorf(ctx, err.Error())
+		err := log.Errore(ctx, "httpclient.PostJSON status: %d", status)
 		return nil, nil, err
 	}
 
@@ -88,8 +86,7 @@ func (c *Client) DoBatch(ctx context.Context) ([]*ClientResponse, error) {
 		return nil, err
 	}
 	if status != http.StatusOK {
-		err = fmt.Errorf("httpclient.PostJSON status: %d", status)
-		log.Errorf(ctx, err.Error())
+		err := log.Errore(ctx, "httpclient.PostJSON status: %d", status)
 		return nil, err
 	}
 

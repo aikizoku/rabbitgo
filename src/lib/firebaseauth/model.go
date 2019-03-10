@@ -13,3 +13,8 @@ func (m *Claims) ToMap() map[string]interface{} {
 	cmap := map[string]interface{}{}
 	return cmap
 }
+
+// NewDummyClaims ... ダミーのClaimsを設定する
+func NewDummyClaims() Claims {
+	return Claims{}
+}

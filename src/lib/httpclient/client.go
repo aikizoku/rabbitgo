@@ -58,7 +58,6 @@ func GetForm(ctx context.Context, u string, params map[string]string, opt *HTTPO
 		query.Add(key, value)
 	}
 
-	req.URL.RawQuery = query.Encode()
 	return send(ctx, req, opt)
 }
 
