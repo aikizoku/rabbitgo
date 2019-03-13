@@ -1,0 +1,12 @@
+{
+    "description": "サンプルAPIの詳細",
+    "path": "/v1/sample",
+    "method": "post",
+    "headers": {
+        "X-OS": "iOS"
+    },
+    "params": {
+        "fuga": "xxxxx",
+        "hoge": "aaaaa"
+    }
+}
