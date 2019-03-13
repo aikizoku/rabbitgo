@@ -45,8 +45,8 @@ brew install ghq
 # 設定
 git config --global ghq.root $GOPATH/src
 
-# Goプロジェクトを取得(例:skgoの場合)
-ghq get git@github.com:aikizoku/skgo.git
+# Goプロジェクトを取得(例:merlinの場合)
+ghq get git@github.com:aikizoku/merlin.git
 ```
 
 ## Google Cloud SDKのセットアップ
@@ -155,8 +155,8 @@ go version
 
 ###### ghq ######
 
-# Goプロジェクトを取得(例:skgoの場合)
-ghq get git@github.com:aikizoku/skgo.git
+# Goプロジェクトを取得(例:merlinの場合)
+ghq get git@github.com:aikizoku/merlin.git
 
 ###### Google Cloud SDK ######
 

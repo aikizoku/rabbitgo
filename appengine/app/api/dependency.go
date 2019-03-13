@@ -3,13 +3,13 @@ package main
 import (
 	"os"
 
-	"github.com/aikizoku/skgo/src/handler/api"
-	"github.com/aikizoku/skgo/src/lib/cloudfirestore"
-	"github.com/aikizoku/skgo/src/lib/firebaseauth"
-	"github.com/aikizoku/skgo/src/lib/httpheader"
-	"github.com/aikizoku/skgo/src/lib/jsonrpc2"
-	"github.com/aikizoku/skgo/src/repository"
-	"github.com/aikizoku/skgo/src/service"
+	"github.com/aikizoku/merlin/src/handler/api"
+	"github.com/aikizoku/merlin/src/lib/cloudfirestore"
+	"github.com/aikizoku/merlin/src/lib/firebaseauth"
+	"github.com/aikizoku/merlin/src/lib/httpheader"
+	"github.com/aikizoku/merlin/src/lib/jsonrpc2"
+	"github.com/aikizoku/merlin/src/repository"
+	"github.com/aikizoku/merlin/src/service"
 )
 
 // Dependency ... 依存性

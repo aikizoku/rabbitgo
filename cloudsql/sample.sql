@@ -11,7 +11,7 @@ CREATE TABLE sample (
 COMMENT 'sample';
 
 -- 参考
--- CREATE TABLE skgo (
+-- CREATE TABLE merlin (
 --   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 --   `fuga` varchar(1024) NOT NULL COMMENT 'fugafuga',
 --   `aaaa` varchar(255) NOT NULL DEFAULT 'bbb',
@@ -23,4 +23,4 @@ COMMENT 'sample';
 --   PRIMARY KEY (`id`),
 --   KEY idx_fuga_and_enabled (`fuga`, `enabled`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
--- COMMENT 'skgo';
+-- COMMENT 'merlin';

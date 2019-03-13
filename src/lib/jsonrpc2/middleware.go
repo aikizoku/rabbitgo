@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
 )

@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/aikizoku/skgo/src/lib/internalauth"
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/internalauth"
+	"github.com/aikizoku/merlin/src/lib/log"
 	"google.golang.org/appengine/taskqueue"
 )
 

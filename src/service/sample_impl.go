@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/aikizoku/skgo/src/repository"
+	"github.com/aikizoku/merlin/src/repository"
 )
 
 type sample struct {

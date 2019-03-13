@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/aikizoku/skgo/src/lib/httpclient"
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/httpclient"
+	"github.com/aikizoku/merlin/src/lib/log"
 )
 
 // Client ... JSONRPC2のリクエストを行う

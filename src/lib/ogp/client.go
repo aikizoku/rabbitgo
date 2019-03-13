@@ -3,7 +3,7 @@ package ogp
 import (
 	"context"
 
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/otiai10/opengraph"
 	"golang.org/x/sync/errgroup"
 )

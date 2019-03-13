@@ -3,8 +3,8 @@ package worker
 import (
 	"net/http"
 
-	"github.com/aikizoku/skgo/src/handler"
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/handler"
+	"github.com/aikizoku/merlin/src/lib/log"
 )
 
 // SampleHandler ... サンプルのハンドラ定義

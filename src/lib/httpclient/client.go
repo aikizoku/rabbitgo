@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 )
 

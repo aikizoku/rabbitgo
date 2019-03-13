@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/log"
 	_ "github.com/go-sql-driver/mysql" // MySQL Driverの読み込み
 )
 

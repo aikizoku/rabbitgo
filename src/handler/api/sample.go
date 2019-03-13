@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aikizoku/skgo/src/handler"
-	"github.com/aikizoku/skgo/src/lib/log"
-	"github.com/aikizoku/skgo/src/service"
+	"github.com/aikizoku/merlin/src/handler"
+	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/service"
 )
 
 // SampleHandler ... サンプルのハンドラ

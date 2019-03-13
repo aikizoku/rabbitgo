@@ -5,7 +5,7 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	"github.com/aikizoku/skgo/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/go-chi/chi"
 )
 
