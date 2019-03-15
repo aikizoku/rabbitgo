@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/model"
 	"github.com/unrolled/render"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -22,13 +23,13 @@ func HandleError(ctx context.Context, w http.ResponseWriter, status int, format 
 // RenderSuccess ... 成功レスポンスをレンダリングする
 func RenderSuccess(w http.ResponseWriter) {
 	r := render.New()
-	r.Text(w, http.StatusOK, "success")
+	r.JSON(w, http.StatusOK, model.NewResponseOK(http.StatusOK))
 }
 
 // RenderError ... エラーレスポンスをレンダリングする
 func RenderError(w http.ResponseWriter, status int, msg string) {
 	r := render.New()
-	r.Text(w, status, fmt.Sprintf("%d %s", status, msg))
+	r.JSON(w, status, model.NewResponseError(status, msg))
 }
 
 // RenderJSON ... JSONをレンダリングする
