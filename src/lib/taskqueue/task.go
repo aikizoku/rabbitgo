@@ -32,7 +32,7 @@ func AddTaskByJSON(ctx context.Context, queue string, path string, src interface
 	h.Set(internalauth.GetHeader())
 	data, err := json.Marshal(src)
 	if err != nil {
-		log.Errorm(ctx, "json.Marshal", err)
+		log.Errorf(ctx, "json.Marshal error: %s", err.Error())
 		return err
 	}
 	task := &taskqueue.Task{
@@ -48,7 +48,7 @@ func AddTaskByJSON(ctx context.Context, queue string, path string, src interface
 func Add(ctx context.Context, queue string, task *taskqueue.Task) error {
 	_, err := taskqueue.Add(ctx, task, queue)
 	if err != nil {
-		log.Errorm(ctx, "taskqueue.Add", err)
+		log.Errorf(ctx, "taskqueue.Add error: %s", err.Error())
 		return err
 	}
 	return nil

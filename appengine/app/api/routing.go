@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 
-	"github.com/aikizoku/merlin/src/config"
 	"github.com/aikizoku/merlin/src/handler"
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/aikizoku/merlin/src/middleware"
@@ -18,16 +17,6 @@ func Routing(r *chi.Mux, d *Dependency) {
 	// ログ
 	r.Use(log.Handle)
 
-	// 認証なし(Stagingのみ)
-	if !config.IsEnvProduction() {
-		r.Route("/noauth/v1", func(r chi.Router) {
-			r.Use(d.DummyFirebaseAuth.Handle)
-			r.Use(d.DummyHTTPHeader.Handle)
-			subRouting(r, d)
-		})
-	}
-
-	// 認証あり
 	r.Route("/v1", func(r chi.Router) {
 		r.Use(d.FirebaseAuth.Handle)
 		r.Use(d.HTTPHeader.Handle)
@@ -45,8 +34,5 @@ func subRouting(r chi.Router, d *Dependency) {
 	r.Get("/sample", d.SampleHandler.Sample)
 
 	// API(JSONRPC2)
-	r.Route("/rpc", func(r chi.Router) {
-		r.Use(d.JSONRPC2.Handle)
-		r.Post("/", handler.Empty)
-	})
+	r.Post("/rpc", d.JSONRPC2Handler.Handle)
 }
