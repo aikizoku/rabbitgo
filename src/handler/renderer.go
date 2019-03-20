@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aikizoku/merlin/src/lib/errcode"
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/aikizoku/merlin/src/model"
 	"github.com/unrolled/render"
@@ -14,10 +15,30 @@ import (
 )
 
 // HandleError ... 一番典型的なエラーハンドリング
-func HandleError(ctx context.Context, w http.ResponseWriter, status int, format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	log.Errorf(ctx, msg)
-	RenderError(w, status, msg)
+func HandleError(ctx context.Context, w http.ResponseWriter, msg string, err error) {
+	code, ok := errcode.Get(err)
+	if !ok {
+		RenderError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	switch code {
+	case http.StatusBadRequest:
+		msg := fmt.Sprintf("%d StatusBadRequest: %s, %s", code, msg, err.Error())
+		log.Warningf(ctx, msg)
+		RenderError(w, code, msg)
+	case http.StatusForbidden:
+		msg := fmt.Sprintf("%d Forbidden: %s, %s", code, msg, err.Error())
+		log.Warningf(ctx, msg)
+		RenderError(w, code, msg)
+	case http.StatusNotFound:
+		msg := fmt.Sprintf("%d NotFound: %s, %s", code, msg, err.Error())
+		log.Warningf(ctx, msg)
+		RenderError(w, code, msg)
+	default:
+		msg := fmt.Sprintf("%d: %s, %s", code, msg, err.Error())
+		log.Errorf(ctx, msg)
+		RenderError(w, code, msg)
+	}
 }
 
 // RenderSuccess ... 成功レスポンスをレンダリングする
