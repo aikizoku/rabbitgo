@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rabee-inc/push/command/common"
+	"github.com/aikizoku/merlin/command/common"
 	"gopkg.in/yaml.v2"
 )
 

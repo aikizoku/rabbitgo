@@ -63,5 +63,6 @@ Session.vim
 .vscode/
 
 #####=== Project specific settings ===#####
+docker/mysql/data/
 /deploy/
 env.json

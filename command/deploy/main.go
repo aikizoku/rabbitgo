@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/rabee-inc/push/command/common"
+	"github.com/aikizoku/merlin/command/common"
 )
 
 func main() {
