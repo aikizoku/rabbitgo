@@ -189,16 +189,27 @@ dep ensure -add <package-name>
 # よく使うコード
 ```golang
 /****** Logging ******/
-// time [ERROR] foo/bar.go:21 hoge 123
+// 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
 log.Errorf(ctx, "hoge %d", 123)
 
-// time [ERROR] foo/bar.go:21 h.svc.Sample error: invalid params
+// 出力されるログ: time [ERROR] foo/bar.go:21 h.svc.Sample error: invalid params
 log.Errorm(ctx, "h.svc.Sample", err)
+
+// 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
+err := log.Errore(ctx, "hoge %d", 123)
+
+// 任意のエラーコード埋め込み
+err = errcode.Set(err, 404)
+
+// 任意のエラーコード取り出し
+code, ok := errcode.Get(err)
 
 /****** REST Handler ******/
 
-// XXXXHandler ... XXXXのハンドラ
-type XXXXHandler struct {
+package api
+
+// XxxxHandler ... Xxxxのハンドラ
+type XxxxHandler struct {
 }
 
 // TestHTTP ... HTTPテスト
@@ -207,27 +218,25 @@ func (h *XXXXHandler) Hoge(w http.ResponseWriter, r *http.Request) {
 	handler.RenderSuccess(w)
 }
 
-func (h *XXXXHandler) handleError(ctx context.Context, w http.ResponseWriter, status int, msg string) {
-	log.Errorf(ctx, msg)
-	handler.RenderError(w, status, msg)
-}
-
-// NewXXXXHandler ... XXXXHandlerを作成する
-func NewXXXXHandler() *XXXXHandler {
-	return &XXXXHandler{}
+// NewXxxxHandler ... ハンドラを作成する
+func NewXxxxHandler() *XxxxHandler {
+   return &XxxxHandler{}
 }
 
 /****** JSONRPC2 Handler ******/
 
 // dependency.go
-d.JSONRPC2 = jsonrpc2.NewMiddleware()
-d.JSONRPC2.Register("sample", api.NewXxxx())
+d.JSONRPC2Handler = jsonrpc2.NewHandler()
+d.XxxxAction = api.NewXxxxAction()
 
 // routing.go
-r.Route("/rpc", func(r chi.Router) {
-	r.Use(d.JSONRPC2.Handle)
-	r.Post("/", handler.Empty)
+r.Route("/api", func(r chi.Router) {
+    // 内部認証
+    r.Use(d.InternalAuth.Handle)
+    // JSONRPC2
+    r.Post("/rpc", d.JSONRPC2Handler.Handle)
 })
+d.JSONRPC2Handler.Register("sample", d.XxxxAction)
 
 // XXXXHandler ... XXXXのハンドラ
 type XXXXHandler struct {
