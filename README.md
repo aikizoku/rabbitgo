@@ -189,20 +189,27 @@ dep ensure -add <package-name>
 # よく使うコード
 ```golang
 /****** Logging ******/
+// エラーログを出力したい時
 // 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
 log.Errorf(ctx, "hoge %d", 123)
 
+// エラーログを出力したいが文言考えるの面倒なので定型文を使いたい時
 // 出力されるログ: time [ERROR] foo/bar.go:21 h.svc.Sample error: invalid params
 log.Errorm(ctx, "h.svc.Sample", err)
 
+// エラーログを出力すると同時にエラーを作成したい
 // 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
 err := log.Errore(ctx, "hoge %d", 123)
 
-// 任意のエラーコード埋め込み
+// エラーに任意のエラーコードを埋め込む
 err = errcode.Set(err, 404)
 
-// 任意のエラーコード取り出し
+// エラーからエラーコードを取り出す
 code, ok := errcode.Get(err)
+
+// エラーログを出力すると同時にエラーコードを含むエラーを作成したい
+// 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
+err := log.Errorc(ctx, http.StatusNotFound, "hoge %d", 123)
 
 /****** REST Handler ******/
 
