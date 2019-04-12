@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/aikizoku/merlin/src/handler/api"
-	"github.com/aikizoku/merlin/src/lib/cloudfirestore"
 	"github.com/aikizoku/merlin/src/lib/firebaseauth"
 	"github.com/aikizoku/merlin/src/lib/httpheader"
 	"github.com/aikizoku/merlin/src/lib/jsonrpc2"
@@ -28,14 +27,8 @@ func (d *Dependency) Inject() {
 		panic("no config error: GOOGLE_APPLICATION_CREDENTIALS")
 	}
 
-	// Client
-	fCli, err := cloudfirestore.NewClient(crePath)
-	if err != nil {
-		panic(err.Error())
-	}
-
 	// Repository
-	repo := repository.NewSample(fCli)
+	repo := repository.NewSample()
 
 	// Service
 	faSvc := firebaseauth.NewService()

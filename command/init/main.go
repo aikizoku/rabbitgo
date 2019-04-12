@@ -44,6 +44,11 @@ func createDeployDir(env string, app string) {
 
 func createHotReloadLinks(env string, app string) {
 	// app.yaml
+	common.ExecCommand(
+		"cp",
+		fmt.Sprintf("./appengine/app/%s/app_%s.yaml", app, env),
+		fmt.Sprintf("./deploy/appengine/%s/%s/app.yaml", env, app),
+	)
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/app_%s.yaml", app, env),
 		fmt.Sprintf("deploy/appengine/%s/%s/app.yaml", env, app))
@@ -105,9 +110,9 @@ func createValuesFile(env string, app string, pID string, data map[string]string
 	if err != nil {
 		panic(err.Error())
 	}
-	common.CreateFile(
-		fmt.Sprintf("./deploy/appengine/%s/%s/values.yaml", env, app),
-		string(y),
+	common.WriteFile(
+		fmt.Sprintf("./deploy/appengine/%s/%s/app.yaml", env, app),
+		"\n"+string(y),
 	)
 }
 

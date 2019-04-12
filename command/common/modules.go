@@ -43,6 +43,16 @@ func CreateFile(path string, text string) {
 	fmt.Fprintln(file, text)
 }
 
+// WriteFile ... 任意のファイルを開いてデータを書き込む
+func WriteFile(path string, text string) {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer file.Close()
+	fmt.Fprintln(file, text)
+}
+
 // ExecCommand ... 任意のコマンドを実行して結果を出力する
 func ExecCommand(name string, args ...string) {
 	cmd := exec.Command(name, args...)

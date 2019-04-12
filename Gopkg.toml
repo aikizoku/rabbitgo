@@ -27,11 +27,11 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.37.1"
+  version = "0.37.4"
 
 [[constraint]]
   name = "firebase.google.com/go"
-  version = "3.6.0"
+  version = "3.7.0"
 
 [[constraint]]
   name = "github.com/davecgh/go-spew"
@@ -67,7 +67,7 @@
 
 [[constraint]]
   name = "google.golang.org/api"
-  version = "0.2.0"
+  version = "0.3.2"
 
 [[constraint]]
   name = "google.golang.org/appengine"
@@ -75,7 +75,7 @@
 
 [[constraint]]
   name = "gopkg.in/go-playground/validator.v9"
-  version = "9.27.0"
+  version = "9.28.0"
 
 [[constraint]]
   name = "gopkg.in/yaml.v2"

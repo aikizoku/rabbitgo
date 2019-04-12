@@ -9,6 +9,3 @@ automatic_scaling:
   max_instances: 1
 
 service: worker
-
-includes:
-- values.yaml
