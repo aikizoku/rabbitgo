@@ -51,6 +51,9 @@ func Routing(r *chi.Mux, d *Dependency) {
 		// ここにルーティングを書く
 	}
 
+	// 簡易テスト
+	r.Get("/", handler.Empty)
+
 	// 例: 個別にMiddlewareを適用したい場合
 	r.With(d.FirebaseAuth.Handle).Get("/hoge", handler.Empty)
 

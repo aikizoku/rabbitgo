@@ -8,4 +8,4 @@ automatic_scaling:
   min_instances: 0
   max_instances: 1
 
-service: api
+service: default
