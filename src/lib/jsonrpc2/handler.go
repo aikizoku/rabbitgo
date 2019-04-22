@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/aikizoku/merlin/src/lib/errcode"
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
@@ -94,22 +95,26 @@ func (h *Handler) handleBatchRequest(ctx context.Context, w http.ResponseWriter,
 
 func (h *Handler) handleRequest(ctx context.Context, r *http.Request, req request) response {
 	if !req.isValid() {
-		return h.renderErrorJSON(ctx, req.ID, ErrInvalidJsonrpc2, "invalid jsonrpc2 params: %s", spew.Sdump(req))
+		return h.renderErrorJSON(ctx, req.ID, http.StatusBadRequest, "invalid jsonrpc2 params: %s", spew.Sdump(req))
 	}
 
 	action := h.actions[req.Method]
 	if action == nil {
-		return h.renderErrorJSON(ctx, req.ID, ErrMehodNotFaund, "method not found: %s", req.Method)
+		return h.renderErrorJSON(ctx, req.ID, http.StatusBadRequest, "method not found: %s", req.Method)
 	}
 
 	params, err := action.DecodeParams(ctx, req.Params)
 	if err != nil {
-		return h.renderErrorJSON(ctx, req.ID, ErrInvalidParams, "invalid params: %s", err.Error())
+		return h.renderErrorJSON(ctx, req.ID, http.StatusBadRequest, "invalid params: %s", err.Error())
 	}
 
 	result, err := action.Exec(ctx, req.Method, params)
 	if err != nil {
-		return h.renderErrorJSON(ctx, req.ID, ErrInternal, "internal error: %s", err.Error())
+		code, ok := errcode.Get(err)
+		if !ok {
+			code = http.StatusInternalServerError
+		}
+		return h.renderErrorJSON(ctx, req.ID, code, err.Error())
 	}
 
 	return newResponse(req.ID, result)
@@ -117,13 +122,31 @@ func (h *Handler) handleRequest(ctx context.Context, r *http.Request, req reques
 
 func (h *Handler) renderError(ctx context.Context, w http.ResponseWriter, status int, format string, a ...interface{}) {
 	msg := fmt.Sprintf(format, a...)
-	log.Errorf(ctx, msg)
-	render.New().Text(w, status, fmt.Sprintf("%d %s", status, msg))
+	switch status {
+	case http.StatusBadRequest:
+		log.Warningf(ctx, msg)
+	case http.StatusForbidden:
+		log.Warningf(ctx, msg)
+	case http.StatusNotFound:
+		log.Warningf(ctx, msg)
+	default:
+		log.Errorf(ctx, msg)
+	}
+	render.New().Text(w, status, msg)
 }
 
 func (h *Handler) renderErrorJSON(ctx context.Context, rpcID string, rpcStatus int, format string, a ...interface{}) response {
 	msg := fmt.Sprintf(format, a...)
-	log.Errorf(ctx, msg)
+	switch rpcStatus {
+	case http.StatusBadRequest:
+		log.Warningf(ctx, msg)
+	case http.StatusForbidden:
+		log.Warningf(ctx, msg)
+	case http.StatusNotFound:
+		log.Warningf(ctx, msg)
+	default:
+		log.Errorf(ctx, msg)
+	}
 	return newErrorResponse(rpcID, rpcStatus, msg)
 }
 
