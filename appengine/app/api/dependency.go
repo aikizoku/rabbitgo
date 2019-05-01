@@ -3,12 +3,14 @@ package main
 import (
 	"os"
 
+	"github.com/abyssparanoia/merlin/src/config"
 	"github.com/aikizoku/merlin/src/handler/api"
 	"github.com/aikizoku/merlin/src/lib/firebaseauth"
 	"github.com/aikizoku/merlin/src/lib/httpheader"
 	"github.com/aikizoku/merlin/src/lib/jsonrpc2"
 	"github.com/aikizoku/merlin/src/repository"
 	"github.com/aikizoku/merlin/src/service"
+	"github.com/aikizoku/merlin/src/usecase"
 )
 
 // Dependency ... 依存性
@@ -30,10 +32,18 @@ func (d *Dependency) Inject() {
 	// Repository
 	repo := repository.NewSample()
 
+	// Usecase
+	use := usecase.NewSample(repo)
+
 	// Service
-	faSvc := firebaseauth.NewService()
+	var faSvc firebaseauth.Service
+	if config.IsEnvProduction() {
+		faSvc = firebaseauth.NewService()
+	} else {
+		faSvc = firebaseauth.NewDebugService()
+	}
 	hhSvc := httpheader.NewService()
-	svc := service.NewSample(repo)
+	svc := service.NewSample(use, repo)
 
 	// Middleware
 	d.FirebaseAuth = firebaseauth.NewMiddleware(faSvc)

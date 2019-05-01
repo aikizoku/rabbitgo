@@ -25,7 +25,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	handler.RenderSuccess(w)
 }
 
-// NewSampleHandler ... SampleHandlerを作成する
+// NewSampleHandler ... ハンドラを作成する
 func NewSampleHandler(svc service.Sample) *SampleHandler {
 	return &SampleHandler{
 		Svc: svc,

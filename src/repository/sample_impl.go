@@ -15,7 +15,7 @@ func (r *sample) HTTPPost(ctx context.Context) error {
 	return nil
 }
 
-// NewSample ... サンプルリポジトリを取得する
+// NewSample ... リポジトリを作成する
 func NewSample() Sample {
 	return &sample{}
 }

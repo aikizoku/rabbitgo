@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/aikizoku/merlin/src/config"
-
 	"github.com/aikizoku/merlin/src/handler"
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/aikizoku/merlin/src/middleware"
@@ -13,30 +12,21 @@ import (
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
-	/*
-	 * ブラウザのCORS対応
-	 */
+	// ブラウザのCORS対応
 	r.Use(middleware.AccessControl)
 
-	/*
-	 * ログをリクエスト単位でまとめるため、情報をContextに保持する
-	 */
+	// ログをリクエスト単位でまとめるため、情報をContextに保持する
 	r.Use(log.Handle)
 
-	/*
-	 * 障害検知でサーバーの生存確認のため、pingリクエストを用意する
-	 */
+	// 障害検知でサーバーの生存確認のため、pingリクエストを用意する
 	r.Get("/ping", handler.Ping)
 
 	// 例: サブルーティング
 	r.Route("/v1", func(r chi.Router) {
-		/*
-		 * FirebaseAuthentication
-		 */
+		// FirebaseAuthentication
 		r.Use(d.FirebaseAuth.Handle)
-		/*
-		 * HTTPHeaderから値を取得したい時はこちらを使う
-		 */
+
+		// HTTPHeaderから値を取得したい時はこちらを使う
 		r.Use(d.HTTPHeader.Handle)
 
 		// API
