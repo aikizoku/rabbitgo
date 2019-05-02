@@ -55,7 +55,7 @@ func RenderError(w http.ResponseWriter, status int, msg string) {
 
 // RenderJSON ... JSONをレンダリングする
 func RenderJSON(w http.ResponseWriter, status int, v interface{}) {
-	r := render.New(render.Options{IndentJSON: true})
+	r := render.New()
 	r.JSON(w, status, v)
 }
 
