@@ -1,4 +1,4 @@
-package model
+package renderer
 
 // ResponseOK ... 成功レスポンス
 type ResponseOK struct {
@@ -14,21 +14,14 @@ func NewResponseOK(status int) *ResponseOK {
 
 // ResponseError ... エラーレスポンス
 type ResponseError struct {
-	Status int   `json:"status"`
-	Error  Error `json:"error"`
-}
-
-// Error ... エラー
-type Error struct {
+	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
 
 // NewResponseError ... エラーレスポンスを取得する
 func NewResponseError(status int, message string) *ResponseError {
 	return &ResponseError{
-		Status: status,
-		Error: Error{
-			Message: message,
-		},
+		Status:  status,
+		Message: message,
 	}
 }

@@ -15,6 +15,6 @@ func (m *Claims) ToMap() map[string]interface{} {
 }
 
 // NewDummyClaims ... ダミーのClaimsを設定する
-func NewDummyClaims() Claims {
-	return Claims{}
+func NewDummyClaims() *Claims {
+	return &Claims{}
 }

@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/aikizoku/merlin/src/handler"
+	"github.com/aikizoku/merlin/src/lib/renderer"
 	"github.com/aikizoku/merlin/src/service"
 )
 
@@ -18,11 +18,11 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Svc.Sample(ctx)
 	if err != nil {
-		handler.HandleError(ctx, w, "h.Svc.Sample", err)
+		renderer.HandleError(ctx, w, "h.Svc.Sample", err)
 		return
 	}
 
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // NewSampleHandler ... ハンドラを作成する

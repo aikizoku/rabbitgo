@@ -1,4 +1,4 @@
-package handler
+package parameter
 
 import (
 	"context"
@@ -11,13 +11,13 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// GetURLParam ... リクエストからURLParamを取得する
-func GetURLParam(r *http.Request, key string) string {
+// GetURL ... リクエストからURLパラメータを取得する
+func GetURL(r *http.Request, key string) string {
 	return chi.URLParam(r, key)
 }
 
-// GetURLParamByInt64 ... リクエストからURLParamをint64で取得する
-func GetURLParamByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
+// GetURLByInt64 ... リクエストからURLパラメータをint64で取得する
+func GetURLByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
 	str := chi.URLParam(r, key)
 	num, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
@@ -27,13 +27,13 @@ func GetURLParamByInt64(ctx context.Context, r *http.Request, key string) (int64
 	return num, nil
 }
 
-// GetFormValue ... リクエストからFormValueを取得する
-func GetFormValue(r *http.Request, key string) string {
+// GetForm ... リクエストからFormパラメータを取得する
+func GetForm(r *http.Request, key string) string {
 	return r.FormValue(key)
 }
 
-// GetFormValueByInt64 ... リクエストからFormValueをint64で取得する
-func GetFormValueByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
+// GetFormByInt64 ... リクエストからFormパラメータをint64で取得する
+func GetFormByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
 	str := chi.URLParam(r, key)
 	num, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
@@ -43,7 +43,7 @@ func GetFormValueByInt64(ctx context.Context, r *http.Request, key string) (int6
 	return num, nil
 }
 
-// GetJSON ... リクエストからJSONを取得する
+// GetJSON ... リクエストからJSONパラメータを取得する
 func GetJSON(r *http.Request, dst interface{}) error {
 	dec := json.NewDecoder(r.Body)
 	err := dec.Decode(dst)

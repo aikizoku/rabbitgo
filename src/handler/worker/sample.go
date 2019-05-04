@@ -3,8 +3,8 @@ package worker
 import (
 	"net/http"
 
-	"github.com/aikizoku/merlin/src/handler"
 	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/renderer"
 )
 
 // SampleHandler ... サンプルのハンドラ定義
@@ -17,7 +17,7 @@ func (h *SampleHandler) Cron(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf(ctx, "Cronから実行される")
 
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // TaskQueue ... TaskQueueで実行されるハンドラ
@@ -26,7 +26,7 @@ func (h *SampleHandler) TaskQueue(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf(ctx, "TaskQueueから実行される")
 
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // NewSampleHandler ... SampleHandlerを作成する

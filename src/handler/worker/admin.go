@@ -3,8 +3,8 @@ package worker
 import (
 	"net/http"
 
-	"github.com/aikizoku/merlin/src/handler"
 	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/renderer"
 )
 
 // AdminHandler ... 管理用のハンドラ
@@ -18,7 +18,7 @@ func (h *AdminHandler) MigrateMasterData(w http.ResponseWriter, r *http.Request)
 	// ここでマスターデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate master data handler")
 
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // MigrateTestData ... テストデータを作成する
@@ -28,7 +28,7 @@ func (h *AdminHandler) MigrateTestData(w http.ResponseWriter, r *http.Request) {
 	// ここでテストデータを作成する処理を入れる
 	log.Debugf(ctx, "call migrate test data handler")
 
-	handler.RenderSuccess(w)
+	renderer.Success(w)
 }
 
 // NewAdminHandler ... AdminHandlerを作成する
