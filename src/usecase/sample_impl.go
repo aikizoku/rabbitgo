@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/abyssparanoia/merlin/src/repository"
+	"github.com/aikizoku/merlin/src/repository"
 )
 
 type sample struct {

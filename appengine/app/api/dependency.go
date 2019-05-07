@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/abyssparanoia/merlin/src/config"
+	"github.com/aikizoku/merlin/src/config"
 	"github.com/aikizoku/merlin/src/handler/api"
 	"github.com/aikizoku/merlin/src/lib/firebaseauth"
 	"github.com/aikizoku/merlin/src/lib/httpheader"

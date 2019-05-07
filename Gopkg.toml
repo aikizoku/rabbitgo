@@ -27,15 +27,11 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.35.1"
+  version = "0.38.0"
 
 [[constraint]]
   name = "firebase.google.com/go"
   version = "3.7.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/abyssparanoia/merlin"
 
 [[constraint]]
   name = "github.com/davecgh/go-spew"
