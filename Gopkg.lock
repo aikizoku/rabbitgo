@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:cafc909e6e0975ed1df09adb489ba827c1cbe7597f26f75198e5a63e205c1c0a"
+  digest = "1:4d2b28f7ac461495b2c5b0e9bd3eb4a513c6ad4517c40084aef8c087ed27deac"
   name = "cloud.google.com/go"
   packages = [
     "compute/metadata",
     "firestore",
-    "firestore/apiv1",
+    "firestore/apiv1beta1",
     "iam",
     "internal",
     "internal/btree",
@@ -18,8 +18,8 @@
     "storage",
   ]
   pruneopts = "UT"
-  revision = "fcb9a2d5f791d07be64506ab54434de65989d370"
-  version = "v0.37.4"
+  revision = "28a4bc8c44b3acbcc482cff0cdf7de29a4688b61"
+  version = "v0.35.1"
 
 [[projects]]
   digest = "1:15e132c9fdea7f9c5e2c55fac3db41a9fb61ca4271525610f2906be88c201fc9"
@@ -36,6 +36,19 @@
   pruneopts = "UT"
   revision = "c9b5e064033ed12864bf07d9bb34249087617130"
   version = "v3.7.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:88f770879197210e012b113f409577bd86a52023b24e0a423fe0227d3f5c7115"
+  name = "github.com/abyssparanoia/merlin"
+  packages = [
+    "src/config",
+    "src/lib/log",
+    "src/model",
+    "src/repository",
+  ]
+  pruneopts = "UT"
+  revision = "bc84e9a1ae4f8f7abfba8400a59a83dd73ec28da"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -115,12 +128,12 @@
   version = "v0.5.1"
 
 [[projects]]
-  digest = "1:d4e6e8584d0a94ce567d237e19192dae44d57d2767ac7e1d7fbf5626d176381a"
+  digest = "1:31b65f911cf8556fbcd7f95f7b36d554209d98eb5b6c94229a8d099dc6faa574"
   name = "github.com/jinzhu/gorm"
   packages = ["."]
   pruneopts = "UT"
-  revision = "472c70caa40267cb89fd8facb07fe6454b578626"
-  version = "v1.9.2"
+  revision = "5c0f6716ad1e3a6b6a8afa56afeff747032a6926"
+  version = "v1.9.7"
 
 [[projects]]
   branch = "master"
@@ -147,6 +160,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:2e76a73cb51f42d63a2a1a85b3dc5731fd4faf6821b434bd0ef2c099186031d6"
+  name = "github.com/rs/xid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "15d26544def341f036c5f8dca987a4cbe575032c"
+  version = "v1.2.1"
+
+[[projects]]
   digest = "1:d81a708124c38e074fd655f8e9e9218e9461eb208cf23d787b58b193fd3547af"
   name = "github.com/unrolled/render"
   packages = ["."]
@@ -155,7 +176,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:b55b18883730e7d4b34687685cb27b9c576ebc29ae75f72918935015eaaccaa2"
+  digest = "1:429596ab6fea904f2ea2a74de9c95692e39a5a6269e778b770676374e7063f3e"
   name = "go.opencensus.io"
   packages = [
     ".",
@@ -177,12 +198,12 @@
     "trace/tracestate",
   ]
   pruneopts = "UT"
-  revision = "75c0cca22312e51bfd4fafdbe9197ae399e18b38"
-  version = "v0.20.2"
+  revision = "df6e2001952312404b06f5f6f03fcb4aec1648e5"
+  version = "v0.21.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:99881ddf4ae17ca150dde030618d8d45edff291209c6b265577583623755c36f"
+  digest = "1:de0a58bade112f55baf8cb6f3fe7a913de234e52683a78e4a4fe1abc25a2a25e"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -197,7 +218,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "eb5bcb51f2a31c7d5141d810b70815c05d9c9146"
+  revision = "f4e77d36d62c17c2336347bb2670ddbd02d092b7"
 
 [[projects]]
   branch = "master"
@@ -219,18 +240,18 @@
   name = "golang.org/x/sync"
   packages = ["errgroup"]
   pruneopts = "UT"
-  revision = "e225da77a7e68af35c70ccbf71af2b83e6acac3c"
+  revision = "112230192c580c3556b8cee6403af37a4fc5f28c"
 
 [[projects]]
   branch = "master"
-  digest = "1:3e01c69b34e7c3fa4b7a118ca95a6beaecea00f7f4fb701545d83eacd3badb3c"
+  digest = "1:545fb41f3b186052e964e070d76288e527cf8a52ffe95411baffb7b08c2a9409"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "b44545bcd369ef9ff9bebcfebf5f3370ef9b1932"
+  revision = "2953c62de483abe29031e197e72d3b7061f65f91"
 
 [[projects]]
-  digest = "1:df8ea9d0bfb9d8caec6f3890804c12b7c2f35a71e25ce8f6076d86ba636b1c46"
+  digest = "1:9661e64a232739694d7f46016b0b29ae2709becfca99d137c1e62e9cd2d10db1"
   name = "golang.org/x/text"
   packages = [
     "collate",
@@ -241,6 +262,8 @@
     "encoding/japanese",
     "internal/colltab",
     "internal/gen",
+    "internal/language",
+    "internal/language/compact",
     "internal/tag",
     "internal/triegen",
     "internal/ucd",
@@ -253,11 +276,11 @@
     "unicode/rangetable",
   ]
   pruneopts = "UT"
-  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
-  version = "v0.3.0"
+  revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
+  version = "v0.3.2"
 
 [[projects]]
-  digest = "1:26c08602c837f20349dfe958a03f709107039c08c69f005935ad0b06f30798f8"
+  digest = "1:491a28d33d4336368e60b3d1c66c593924f94da7e2bc5221c4e5b75e1d77e16b"
   name = "google.golang.org/api"
   packages = [
     "gensupport",
@@ -275,8 +298,8 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "0cbcb99a9ea0c8023c794b2693cbe1def82ed4d7"
-  version = "v0.3.2"
+  revision = "067bed655e9cbc26f4dbac8f8897b30756d90990"
+  version = "v0.4.0"
 
 [[projects]]
   digest = "1:39ac873c04dedccbfdf4e54bdfe686ebfcdee677d450ae1a63eefd7199c23d0a"
@@ -305,21 +328,21 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:18ca780cb794ab3a561d69a9671821fb9b59e28b8dd50840d409f4de6b511828"
+  digest = "1:3fc2ed8693957f7ba9a42c27e29ac064ecd1420358d9643494d4e764a0a66a48"
   name = "google.golang.org/genproto"
   packages = [
     "googleapis/api/annotations",
-    "googleapis/firestore/v1",
+    "googleapis/firestore/v1beta1",
     "googleapis/iam/v1",
     "googleapis/rpc/code",
     "googleapis/rpc/status",
     "googleapis/type/latlng",
   ]
   pruneopts = "UT"
-  revision = "64821d5d210748c883cd2b809589555ae4654203"
+  revision = "54afdca5d873f7b529e2ce3def1a99df16feda90"
 
 [[projects]]
-  digest = "1:e4d28d0044f64a65dc8870149fb789f2cae1f3158c2ef94e601e7d1e3881591f"
+  digest = "1:10e315fc07ce6c3252fc2467b10434e5bd742941d9d405cde49a13333dcf136a"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -357,8 +380,8 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "236199dd5f8031d698fb64091194aecd1c3895b2"
-  version = "v1.20.0"
+  revision = "25c4f928eaa6d96443009bd842389fb4fa48664e"
+  version = "v1.20.1"
 
 [[projects]]
   digest = "1:7bb1ad654b21fb8f44c77c07840007d6796f70d42d1b470600f943a508ff8a72"
@@ -383,11 +406,14 @@
     "cloud.google.com/go/firestore",
     "firebase.google.com/go",
     "firebase.google.com/go/auth",
+    "github.com/abyssparanoia/merlin/src/config",
+    "github.com/abyssparanoia/merlin/src/repository",
     "github.com/davecgh/go-spew/spew",
     "github.com/go-chi/chi",
     "github.com/go-sql-driver/mysql",
     "github.com/jinzhu/gorm",
     "github.com/otiai10/opengraph",
+    "github.com/rs/xid",
     "github.com/unrolled/render",
     "golang.org/x/sync/errgroup",
     "golang.org/x/text/encoding/japanese",

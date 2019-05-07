@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
@@ -35,4 +36,20 @@ func UpsertOption(columns []string) (string, string) {
 	}
 	opt := "ON DUPLICATE KEY UPDATE " + strings.Join(keys, ", ")
 	return gormInsertOption, opt
+}
+
+// ToNullString ... 文字列を文字列(Nullあり)に変換する
+func ToNullString(str string) sql.NullString {
+	var dst sql.NullString
+	if str == "" {
+		dst = sql.NullString{
+			Valid: false,
+		}
+	} else {
+		dst = sql.NullString{
+			String: str,
+			Valid:  true,
+		}
+	}
+	return dst
 }

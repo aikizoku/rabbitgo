@@ -18,10 +18,10 @@ type Config struct {
 func NewConfig(db string) *Config {
 	db = strings.ToUpper(db)
 
-	hkey := fmt.Sprintf("MYSQL_%s_HOST", db)
-	h := os.Getenv(hkey)
+	hKey := fmt.Sprintf("MYSQL_%s_HOST", db)
+	h := os.Getenv(hKey)
 	if h == "" {
-		panic(fmt.Errorf("no config key %s", hkey))
+		panic(fmt.Errorf("no config key %s", hKey))
 	}
 
 	uKey := fmt.Sprintf("MYSQL_%s_USER", db)
@@ -36,7 +36,7 @@ func NewConfig(db string) *Config {
 		panic(fmt.Errorf("no config key %s", pKey))
 	}
 
-	dKey := fmt.Sprintf("MYSQL_%s_DB", db)
+	dKey := fmt.Sprintf("MYSQL_%s_DATABASE", db)
 	d := os.Getenv(dKey)
 	if d == "" {
 		panic(fmt.Errorf("no config key %s", dKey))

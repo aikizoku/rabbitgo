@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"unsafe"
+
+	"github.com/rs/xid"
 )
 
 const (
@@ -51,4 +53,10 @@ func StrRand(n int) (string, error) {
 		}
 	}
 	return string(buf), nil
+}
+
+// StrUniqueID ... ユニークでソータブルなIDを作成する
+func StrUniqueID() string {
+	guid := xid.New()
+	return guid.String()
 }

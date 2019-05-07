@@ -27,11 +27,15 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.37.4"
+  version = "0.35.1"
 
 [[constraint]]
   name = "firebase.google.com/go"
   version = "3.7.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/abyssparanoia/merlin"
 
 [[constraint]]
   name = "github.com/davecgh/go-spew"
@@ -47,11 +51,15 @@
 
 [[constraint]]
   name = "github.com/jinzhu/gorm"
-  version = "1.9.2"
+  version = "1.9.7"
 
 [[constraint]]
   name = "github.com/otiai10/opengraph"
   version = "1.0.0"
+
+[[constraint]]
+  name = "github.com/rs/xid"
+  version = "1.2.1"
 
 [[constraint]]
   name = "github.com/unrolled/render"
@@ -63,11 +71,11 @@
 
 [[constraint]]
   name = "golang.org/x/text"
-  version = "0.3.0"
+  version = "0.3.2"
 
 [[constraint]]
   name = "google.golang.org/api"
-  version = "0.3.2"
+  version = "0.4.0"
 
 [[constraint]]
   name = "google.golang.org/appengine"
