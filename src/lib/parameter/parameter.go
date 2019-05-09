@@ -27,6 +27,17 @@ func GetURLByInt64(ctx context.Context, r *http.Request, key string) (int64, err
 	return num, nil
 }
 
+// GetURLByFloat64 ... リクエストからURLパラメータをfloat64で取得する
+func GetURLByFloat64(ctx context.Context, r *http.Request, key string) (float64, error) {
+	str := chi.URLParam(r, key)
+	num, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		log.Warningm(ctx, "strconv.ParseFloat", err)
+		return num, err
+	}
+	return num, nil
+}
+
 // GetForm ... リクエストからFormパラメータを取得する
 func GetForm(r *http.Request, key string) string {
 	return r.FormValue(key)
@@ -34,10 +45,21 @@ func GetForm(r *http.Request, key string) string {
 
 // GetFormByInt64 ... リクエストからFormパラメータをint64で取得する
 func GetFormByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
-	str := chi.URLParam(r, key)
+	str := r.FormValue(key)
 	num, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		log.Warningm(ctx, "strconv.ParseInt", err)
+		return num, err
+	}
+	return num, nil
+}
+
+// GetFormByFloat64 ... リクエストからFormパラメータをfloat64で取得する
+func GetFormByFloat64(ctx context.Context, r *http.Request, key string) (float64, error) {
+	str := r.FormValue(key)
+	num, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		log.Warningm(ctx, "strconv.ParseFloat", err)
 		return num, err
 	}
 	return num, nil
