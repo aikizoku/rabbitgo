@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"strconv"
 	"unsafe"
 
 	"github.com/rs/xid"
@@ -59,4 +60,10 @@ func StrRand(n int) (string, error) {
 func StrUniqueID() string {
 	guid := xid.New()
 	return guid.String()
+}
+
+// StrIsNumeric ... 数字か確認する
+func StrIsNumeric(s string) bool {
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
 }
