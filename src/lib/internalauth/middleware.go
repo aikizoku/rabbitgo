@@ -12,7 +12,7 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ah := r.Header.Get("Authorization")
 		if ah == "" || ah != m.Token {
-			http.Error(w, "internal auth error.", http.StatusUnauthorized)
+			http.Error(w, "internal auth error.", http.StatusForbidden)
 			return
 		}
 		next.ServeHTTP(w, r)
