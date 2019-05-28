@@ -29,16 +29,66 @@ func HandleErrors(db *gorm.DB) error {
 }
 
 // ToNullString ... 文字列を文字列(Nullあり)に変換する
-func ToNullString(str string) sql.NullString {
+func ToNullString(str string, zeroable bool) sql.NullString {
 	var dst sql.NullString
 	if str == "" {
-		dst = sql.NullString{
-			Valid: false,
+		if zeroable {
+			dst = sql.NullString{
+				Valid: true,
+			}
+		} else {
+			dst = sql.NullString{
+				Valid: false,
+			}
 		}
 	} else {
 		dst = sql.NullString{
 			String: str,
 			Valid:  true,
+		}
+	}
+	return dst
+}
+
+// ToNullInt64 ... int64をint64(Nullあり)に変換する
+func ToNullInt64(num int64, zeroable bool) sql.NullInt64 {
+	var dst sql.NullInt64
+	if num == 0 {
+		if zeroable {
+			dst = sql.NullInt64{
+				Valid: true,
+			}
+		} else {
+			dst = sql.NullInt64{
+				Valid: false,
+			}
+		}
+	} else {
+		dst = sql.NullInt64{
+			Int64: num,
+			Valid: true,
+		}
+	}
+	return dst
+}
+
+// ToNullFloat64 ... float64をfloat64(Nullあり)に変換する
+func ToNullFloat64(num float64, zeroable bool) sql.NullFloat64 {
+	var dst sql.NullFloat64
+	if num == 0 {
+		if zeroable {
+			dst = sql.NullFloat64{
+				Valid: true,
+			}
+		} else {
+			dst = sql.NullFloat64{
+				Valid: false,
+			}
+		}
+	} else {
+		dst = sql.NullFloat64{
+			Float64: num,
+			Valid:   true,
 		}
 	}
 	return dst
