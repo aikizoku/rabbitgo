@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"mime/multipart"
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/go-chi/chi"
+	"github.com/ka-nabellinc/card-master-backend/src/lib/util"
 )
 
 // GetURL ... リクエストからURLパラメータを取得する
@@ -63,6 +65,62 @@ func GetFormByFloat64(ctx context.Context, r *http.Request, key string) (float64
 		return num, err
 	}
 	return num, nil
+}
+
+// GetForms ... リクエストからFormパラメータを取得する
+func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
+	if reflect.TypeOf(dst).Kind() != reflect.Ptr {
+		err := log.Errore(ctx, "dst isn't a pointer")
+		return err
+	}
+
+	paramType := reflect.TypeOf(dst).Elem()
+	paramValue := reflect.ValueOf(dst).Elem()
+
+	fieldCount := paramType.NumField()
+	for i := 0; i < fieldCount; i++ {
+		field := paramType.Field(i)
+
+		formTag := paramType.Field(i).Tag.Get("form")
+		if util.IsZero(formTag) {
+			continue
+		}
+
+		switch field.Type.Kind() {
+		case reflect.Int64:
+			fieldValue := paramValue.FieldByName(field.Name)
+			if !fieldValue.CanSet() {
+				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
+				return err
+			}
+			val, err := GetFormByInt64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByInt64", err)
+			}
+			fieldValue.SetInt(val)
+		case reflect.Int:
+			fieldValue := paramValue.FieldByName(field.Name)
+			if !fieldValue.CanSet() {
+				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
+				return err
+			}
+			val, err := GetFormByInt64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByInt64", err)
+			}
+			fieldValue.SetInt(val)
+		case reflect.String:
+			fieldValue := paramValue.FieldByName(field.Name)
+			if !fieldValue.CanSet() {
+				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
+				return err
+			}
+			val := GetForm(r, formTag)
+			fieldValue.SetString(val)
+		}
+	}
+
+	return nil
 }
 
 // GetJSON ... リクエストからJSONパラメータを取得する
