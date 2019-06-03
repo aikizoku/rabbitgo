@@ -24,6 +24,11 @@ func IsZero(val interface{}) bool {
 			return true
 		}
 		return false
+	case float64:
+		if val.(float64) == 0 {
+			return true
+		}
+		return false
 	case string:
 		if val.(string) == "" {
 			return true
