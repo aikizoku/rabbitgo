@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"mime/multipart"
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/go-chi/chi"
+	"github.com/ka-nabellinc/card-master-backend/src/lib/util"
 )
 
 // GetURL ... リクエストからURLパラメータを取得する
@@ -38,7 +40,7 @@ func GetURLByFloat64(ctx context.Context, r *http.Request, key string) (float64,
 	return num, nil
 }
 
-// GetForm ... リクエストからFormパラメータを取得する
+// GetForm ... リクエストからFormパラメータをstringで取得する
 func GetForm(r *http.Request, key string) string {
 	return r.FormValue(key)
 }
@@ -63,6 +65,75 @@ func GetFormByFloat64(ctx context.Context, r *http.Request, key string) (float64
 		return num, err
 	}
 	return num, nil
+}
+
+// GetFormByBool ... リクエストからFormパラメータをboolで取得する
+func GetFormByBool(ctx context.Context, r *http.Request, key string) (bool, error) {
+	str := r.FormValue(key)
+	val, err := strconv.ParseBool(str)
+	if err != nil {
+		log.Warningm(ctx, "strconv.ParseInt", err)
+		return val, err
+	}
+	return val, nil
+}
+
+// GetForms ... リクエストからFormパラメータを取得する
+func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
+	if reflect.TypeOf(dst).Kind() != reflect.Ptr {
+		err := log.Errore(ctx, "dst isn't a pointer")
+		return err
+	}
+
+	paramType := reflect.TypeOf(dst).Elem()
+	paramValue := reflect.ValueOf(dst).Elem()
+
+	fieldCount := paramType.NumField()
+	for i := 0; i < fieldCount; i++ {
+		field := paramType.Field(i)
+
+		formTag := paramType.Field(i).Tag.Get("form")
+		if util.IsZero(formTag) {
+			continue
+		}
+
+		fieldValue := paramValue.FieldByName(field.Name)
+		if !fieldValue.CanSet() {
+			err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
+			return err
+		}
+		switch field.Type.Kind() {
+		case reflect.Int64:
+			val, err := GetFormByInt64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByInt64", err)
+			}
+			fieldValue.SetInt(val)
+		case reflect.Int:
+			val, err := GetFormByInt64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByInt64", err)
+			}
+			fieldValue.SetInt(val)
+		case reflect.Float64:
+			val, err := GetFormByFloat64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByFloat64", err)
+			}
+			fieldValue.SetFloat(val)
+		case reflect.String:
+			val := GetForm(r, formTag)
+			fieldValue.SetString(val)
+		case reflect.Bool:
+			val, err := GetFormByBool(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByBool", err)
+			}
+			fieldValue.SetBool(val)
+		}
+	}
+
+	return nil
 }
 
 // GetJSON ... リクエストからJSONパラメータを取得する
