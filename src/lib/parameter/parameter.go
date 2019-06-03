@@ -40,7 +40,7 @@ func GetURLByFloat64(ctx context.Context, r *http.Request, key string) (float64,
 	return num, nil
 }
 
-// GetForm ... リクエストからFormパラメータを取得する
+// GetForm ... リクエストからFormパラメータをstringで取得する
 func GetForm(r *http.Request, key string) string {
 	return r.FormValue(key)
 }
@@ -67,6 +67,17 @@ func GetFormByFloat64(ctx context.Context, r *http.Request, key string) (float64
 	return num, nil
 }
 
+// GetFormByBool ... リクエストからFormパラメータをboolで取得する
+func GetFormByBool(ctx context.Context, r *http.Request, key string) (bool, error) {
+	str := r.FormValue(key)
+	val, err := strconv.ParseBool(str)
+	if err != nil {
+		log.Warningm(ctx, "strconv.ParseInt", err)
+		return val, err
+	}
+	return val, nil
+}
+
 // GetForms ... リクエストからFormパラメータを取得する
 func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
 	if reflect.TypeOf(dst).Kind() != reflect.Ptr {
@@ -86,37 +97,39 @@ func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
 			continue
 		}
 
+		fieldValue := paramValue.FieldByName(field.Name)
+		if !fieldValue.CanSet() {
+			err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
+			return err
+		}
 		switch field.Type.Kind() {
 		case reflect.Int64:
-			fieldValue := paramValue.FieldByName(field.Name)
-			if !fieldValue.CanSet() {
-				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
-				return err
-			}
 			val, err := GetFormByInt64(ctx, r, formTag)
 			if err != nil {
 				log.Debugm(ctx, "GetFormByInt64", err)
 			}
 			fieldValue.SetInt(val)
 		case reflect.Int:
-			fieldValue := paramValue.FieldByName(field.Name)
-			if !fieldValue.CanSet() {
-				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
-				return err
-			}
 			val, err := GetFormByInt64(ctx, r, formTag)
 			if err != nil {
 				log.Debugm(ctx, "GetFormByInt64", err)
 			}
 			fieldValue.SetInt(val)
-		case reflect.String:
-			fieldValue := paramValue.FieldByName(field.Name)
-			if !fieldValue.CanSet() {
-				err := log.Warningc(ctx, http.StatusBadRequest, "fieldValue.CanSet")
-				return err
+		case reflect.Float64:
+			val, err := GetFormByFloat64(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByFloat64", err)
 			}
+			fieldValue.SetFloat(val)
+		case reflect.String:
 			val := GetForm(r, formTag)
 			fieldValue.SetString(val)
+		case reflect.Bool:
+			val, err := GetFormByBool(ctx, r, formTag)
+			if err != nil {
+				log.Debugm(ctx, "GetFormByBool", err)
+			}
+			fieldValue.SetBool(val)
 		}
 	}
 
