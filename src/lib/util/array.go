@@ -233,3 +233,66 @@ func ArrayInt64Chunk(arr []int64, size int) [][]int64 {
 	}
 	return chunks
 }
+
+// ArrayStringMix ... string配列を交互に結合する(空文字は無視)
+func ArrayStringMix(arrList [][]string) []string {
+	maxLen := 0
+	for _, arr := range arrList {
+		len := len(arr)
+		if maxLen < len {
+			maxLen = len
+		}
+	}
+	dst := []string{}
+	for i := 0; i < maxLen; i++ {
+		for _, arr := range arrList {
+			if len(arr) < i+1 || arr[i] == "" {
+				continue
+			}
+			dst = append(dst, arr[i])
+		}
+	}
+	return dst
+}
+
+// ArrayIntMix ... int配列を交互に結合する
+func ArrayIntMix(arrList [][]int) []int {
+	maxLen := 0
+	for _, arr := range arrList {
+		len := len(arr)
+		if maxLen < len {
+			maxLen = len
+		}
+	}
+	dst := []int{}
+	for i := 0; i < maxLen; i++ {
+		for _, arr := range arrList {
+			if len(arr) < i+1 {
+				continue
+			}
+			dst = append(dst, arr[i])
+		}
+	}
+	return dst
+}
+
+// ArrayInt64Mix ... int64配列を交互に結合する
+func ArrayInt64Mix(arrList [][]int64) []int64 {
+	maxLen := 0
+	for _, arr := range arrList {
+		len := len(arr)
+		if maxLen < len {
+			maxLen = len
+		}
+	}
+	dst := []int64{}
+	for i := 0; i < maxLen; i++ {
+		for _, arr := range arrList {
+			if len(arr) < i+1 {
+				continue
+			}
+			dst = append(dst, arr[i])
+		}
+	}
+	return dst
+}

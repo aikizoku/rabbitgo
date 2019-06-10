@@ -18,6 +18,17 @@ func GetURL(r *http.Request, key string) string {
 	return chi.URLParam(r, key)
 }
 
+// GetURLByInt ... リクエストからURLパラメータをintで取得する
+func GetURLByInt(ctx context.Context, r *http.Request, key string) (int, error) {
+	str := chi.URLParam(r, key)
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		log.Warningm(ctx, "strconv.Atoi", err)
+		return num, err
+	}
+	return num, nil
+}
+
 // GetURLByInt64 ... リクエストからURLパラメータをint64で取得する
 func GetURLByInt64(ctx context.Context, r *http.Request, key string) (int64, error) {
 	str := chi.URLParam(r, key)
@@ -43,6 +54,17 @@ func GetURLByFloat64(ctx context.Context, r *http.Request, key string) (float64,
 // GetForm ... リクエストからFormパラメータをstringで取得する
 func GetForm(r *http.Request, key string) string {
 	return r.FormValue(key)
+}
+
+// GetFormByInt ... リクエストからFormパラメータをintで取得する
+func GetFormByInt(ctx context.Context, r *http.Request, key string) (int, error) {
+	str := r.FormValue(key)
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		log.Warningm(ctx, "strconv.Atoi", err)
+		return num, err
+	}
+	return num, nil
 }
 
 // GetFormByInt64 ... リクエストからFormパラメータをint64で取得する
@@ -132,7 +154,6 @@ func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
 			fieldValue.SetBool(val)
 		}
 	}
-
 	return nil
 }
 
