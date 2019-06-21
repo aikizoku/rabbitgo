@@ -113,10 +113,10 @@ func PostJSON(ctx context.Context, url string, json []byte, opt *HTTPOption) (in
 			Headers: map[string]string{},
 		}
 	}
+	opt.Headers["Content-Type"] = "application/json"
 	for key, value := range opt.Headers {
 		req.Header.Set(key, value)
 	}
-	opt.Headers["Content-Type"] = "application/json"
 
 	return send(ctx, req, opt)
 }
