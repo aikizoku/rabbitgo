@@ -9,6 +9,7 @@ import (
 
 	"github.com/aikizoku/merlin/src/lib/errcode"
 	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/util"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/unrolled/render"
 )
@@ -49,6 +50,9 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		h.renderError(ctx, w, http.StatusUnsupportedMediaType, "read http body error: %s", err.Error())
 		return
 	}
+
+	dataStr := util.BytesToStr(data)
+	log.Infof(ctx, "%s", dataStr)
 
 	err = h.handleSingleRequest(ctx, w, r, data)
 	if err != nil {

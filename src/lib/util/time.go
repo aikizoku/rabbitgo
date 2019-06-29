@@ -9,17 +9,19 @@ func TimeNow() time.Time {
 	return time.Now().In(TimeZoneJST())
 }
 
-// TimeNowUnix ... 現在時刻をJSTのUnixTimeStamp(ミリ秒)で取得する
+// TimeNowUnix ... 現在時刻をJSTのUnixtimestamp(ミリ秒)で取得する
 func TimeNowUnix() int64 {
 	return time.Now().In(TimeZoneJST()).UnixNano() / int64(time.Millisecond)
 }
 
-// TimeByUnix ... UnixTimestampからJSTのTimeを取得する
+// TimeByUnix ... Unixtimestamp(ミリ秒)からJSTのTimeを取得する
 func TimeByUnix(u int64) time.Time {
-	return time.Unix(u, 0).In(TimeZoneJST())
+	uNano := u * 1000 * 1000
+	uSec := u / 1000
+	return time.Unix(uSec, uNano-(uSec*1000*1000*1000)).In(TimeZoneJST())
 }
 
-// TimeToUnix ... TimeからUnixTimeStamp(ミリ秒)に変換する
+// TimeToUnix ... TimeからUnixtimestamp(ミリ秒)に変換する
 func TimeToUnix(t time.Time) int64 {
 	return t.UnixNano() / int64(time.Millisecond)
 }
