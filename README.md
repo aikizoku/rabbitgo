@@ -33,6 +33,7 @@ vi .bash_profile
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
+export GO111MODULE=on
 
 source .bash_profile
 ```
@@ -62,23 +63,12 @@ gcloud init
 
 # 新しいアカウントでログイン
 gcloud auth login
-
-# プロジェクトの切り替え
-gcloud config set project <your-project-id>
 ```
 
 ## 依存パッケージのインストール
 ```bash
-# バージョン管理ツールのインストール
-brew install dep
-
-# 依存パッケージのインストール
-dep ensure
-```
-
-# 初期化
-```bash
-make init
+cd appengine/app/api
+go test
 ```
 
 # 動かす
@@ -99,9 +89,6 @@ make run-production app=worker
 ```
 // アプリを確認
 http://localhost:8080/ping
-
-// 各種データの確認
-http://localhost:8000/instances
 ```
 
 ## デプロイ
@@ -117,14 +104,6 @@ make deploy-production app=worker
 # Cron
 make deploy-cron
 make deploy-cron-production
-
-# Dispatch
-make deploy-dispatch
-make deploy-dispatch-production
-
-# Index
-make deploy-index
-make deploy-index-production
 
 # Queue
 make deploy-queue
@@ -175,15 +154,21 @@ gcloud projects list
 # プロジェクトの切り替え
 gcloud config set project <your-project-id>
 
-### dep ###
-# 依存パッケージのインストール
-dep ensure
+### Go Modules ###
+# 初期化
+go mod init
 
-# 依存パッケージのアップデート
-dep ensure update
+# 依存パッケージのインストール
+go get
+
+# 依存パッケージの更新
+go get -u
 
 # 依存パッケージの追加
-dep ensure -add <package-name>
+go get -u hogehoge
+
+# 依存パッケージの整理
+go mod tidy
 ```
 
 # よく使うコード
@@ -210,7 +195,6 @@ code, ok := errcode.Get(err)
 // エラーログを出力すると同時にエラーコードを含むエラーを作成したい
 // 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
 err := log.Errorc(ctx, http.StatusNotFound, "hoge %d", 123)
-
 
 /****** Middleware ******/
 

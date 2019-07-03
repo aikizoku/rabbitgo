@@ -31,15 +31,6 @@ deploy-production:
 	${call init}
 	${call deploy,production,${app}}
 
-# [GAE] ディスパッチ設定をデプロイ
-deploy-dispatch:
-	${call init}
-	${call deploy-config,staging,dispatch}
-
-deploy-dispatch-production:
-	${call init}
-	${call deploy-config,production,dispatch}
-
 # [GAE] Cron設定をデプロイ
 deploy-cron:
 	${call init}
@@ -58,41 +49,19 @@ deploy-queue-production:
 	${call init}
 	${call deploy-config,production,queue}
 
-# [GAE] Datastoreの複合インデックス定義をデプロイ
-deploy-index:
-	${call init}
-	${call deploy-config,staging,index}
-
-deploy-index-production:
-	${call init}
-	${call deploy-config,production,index}
-
-# [Firestore] 全データ削除
-firestore-delete:
-	${call init}
-	${call firestore-delete,local}
-
-firestore-delete-staging:
-	${call init}
-	${call firestore-delete,staging}
-
 # マクロ
 define init
-	@go run ./command/init/main.go 
+	@GO111MODULE=off go run ./command/init/main.go 
 endef
 
 define run
-	@go run ./command/run/main.go -env $1 -app $2
+	@GO111MODULE=off go run ./command/run/main.go -env $1 -app $2
 endef
 
 define deploy
-	@go run ./command/deploy/main.go -env $1 -app $2
+	@GO111MODULE=off go run ./command/deploy/main.go -env $1 -app $2
 endef
 
 define deploy-config
-	@go run ./command/deploy_config/main.go -env $1 -cfg $2
-endef
-
-define firestore-delete
-	@go run ./command/firestore_delete/main.go -env $1
+	@GO111MODULE=off go run ./command/deploy_config/main.go -env $1 -cfg $2
 endef

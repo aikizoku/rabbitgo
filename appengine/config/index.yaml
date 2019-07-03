@@ -1,8 +1,0 @@
-indexes:
-
-- kind: Sample
-  properties:
-  - name: Category
-  - name: Enabled
-  - name: CreatedAt
-    direction: desc

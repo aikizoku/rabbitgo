@@ -3,11 +3,12 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi"
+
 	"github.com/aikizoku/merlin/src/config"
 	"github.com/aikizoku/merlin/src/handler"
 	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/aikizoku/merlin/src/middleware"
-	"github.com/go-chi/chi"
 )
 
 // Routing ... ルーティング設定
