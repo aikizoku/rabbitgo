@@ -33,7 +33,6 @@ vi .bash_profile
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-export GO111MODULE=on
 
 source .bash_profile
 ```
@@ -68,7 +67,7 @@ gcloud auth login
 ## 依存パッケージのインストール
 ```bash
 cd appengine/app/api
-go test
+GO111MODULE=on go test
 ```
 
 # 動かす
