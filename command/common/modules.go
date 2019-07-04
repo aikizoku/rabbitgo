@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // LoadEnvFile ... 環境変数ファイルを読み込む
@@ -51,6 +52,29 @@ func WriteFile(path string, text string) {
 	}
 	defer file.Close()
 	fmt.Fprintln(file, text)
+}
+
+// ReplaceFile ... 任意のファイルを開いてデータを置換する
+func ReplaceFile(path string, old string, new string) {
+	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		panic(err.Error())
+	}
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		file.Close()
+		panic(err.Error())
+	}
+	file.Close()
+
+	rData := strings.Replace(string(data), old, new, -1)
+
+	file, err = os.OpenFile(path, os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer file.Close()
+	fmt.Fprintf(file, rData)
 }
 
 // ExecCommand ... 任意のコマンドを実行して結果を出力する

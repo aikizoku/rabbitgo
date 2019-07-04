@@ -60,9 +60,13 @@ func createHotReloadLinks(env string, app string) {
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/routing.go", app),
 		fmt.Sprintf("deploy/appengine/%s/%s/routing.go", env, app))
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/go.mod", app),
-		fmt.Sprintf("deploy/appengine/%s/%s/go.mod", env, app))
+	goModFile := fmt.Sprintf("./deploy/appengine/%s/%s/go.mod", env, app)
+	common.ExecCommand(
+		"cp",
+		fmt.Sprintf("./appengine/app/%s/go.mod", app),
+		goModFile,
+	)
+	common.ReplaceFile(goModFile, "../../../src", "./src")
 	os.Symlink(
 		fmt.Sprintf("../../../../appengine/app/%s/go.sum", app),
 		fmt.Sprintf("deploy/appengine/%s/%s/go.sum", env, app))
