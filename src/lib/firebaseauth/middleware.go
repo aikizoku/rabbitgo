@@ -26,7 +26,6 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 			return
 		}
 		ctx = setAuthHeader(ctx, ah)
-		log.Debugf(ctx, "Authorization Header: %s", ah)
 
 		// 認証
 		userID, claims, err := m.Svc.Authentication(ctx, ah)
