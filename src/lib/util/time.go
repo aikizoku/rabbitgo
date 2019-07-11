@@ -30,3 +30,23 @@ func TimeToUnix(t time.Time) int64 {
 func TimeZoneJST() *time.Location {
 	return time.FixedZone("Asia/Tokyo", 9*60*60)
 }
+
+// TimeSecondsToMiliseconds ... 指定秒数をミリ秒に変換する
+func TimeSecondsToMiliseconds(seconds int) int64 {
+	return int64(seconds * 1000)
+}
+
+// TimeMinutesToMiliseconds ... 指定分数をミリ秒に変換する
+func TimeMinutesToMiliseconds(minutes int) int64 {
+	return int64(minutes * 60 * 1000)
+}
+
+// TimeHoursToMiliseconds ... 指定時数をミリ秒に変換する
+func TimeHoursToMiliseconds(hours int) int64 {
+	return int64(hours * 60 * 60 * 1000)
+}
+
+// TimeDaysToMiliseconds ... 指定日数をミリ秒に変換する
+func TimeDaysToMiliseconds(days int) int64 {
+	return int64(days * 24 * 60 * 60 * 1000)
+}
