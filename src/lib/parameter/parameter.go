@@ -8,9 +8,10 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/aikizoku/merlin/src/lib/log"
 	"github.com/go-chi/chi"
-	"github.com/ka-nabellinc/card-master-backend/src/lib/util"
+
+	"github.com/aikizoku/merlin/src/lib/log"
+	"github.com/aikizoku/merlin/src/lib/util"
 )
 
 // GetURL ... リクエストからURLパラメータを取得する
