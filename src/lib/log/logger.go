@@ -3,11 +3,13 @@ package log
 import (
 	"context"
 	"fmt"
+	orLog "log"
 	"runtime"
 	"strings"
 
-	"github.com/aikizoku/merlin/src/lib/errcode"
 	"google.golang.org/appengine/log"
+
+	"github.com/aikizoku/merlin/src/lib/errcode"
 )
 
 // Logger ... ロガー
@@ -30,18 +32,29 @@ func NewLogger(minLevel Level) Logger {
 // Debugf ... Debugログを出力する
 func Debugf(ctx context.Context, format string, args ...interface{}) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelDebug) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Debugf(ctx, fl+format, args...)
+		msg := fmt.Sprintf("[%s] %s%s", LevelDebug, fl, format)
+		orLog.Printf(msg, args...)
+	} else {
+		if logger.IsLogging(LevelDebug) {
+			fl := getFileLine()
+			log.Debugf(ctx, fl+format, args...)
+		}
 	}
 }
 
 // Debugm ... Debugログの定形を出力する
 func Debugm(ctx context.Context, method string, err error) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelDebug) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Debugf(ctx, "%s%s: %s", fl, method, err.Error())
+		orLog.Printf("[%s] %s%s: %s", LevelDebug.String(), fl, method, err.Error())
+	} else {
+		if logger.IsLogging(LevelDebug) {
+			fl := getFileLine()
+			log.Debugf(ctx, "%s%s: %s", fl, method, err.Error())
+		}
 	}
 }
 
@@ -49,9 +62,14 @@ func Debugm(ctx context.Context, method string, err error) {
 func Debuge(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelDebug) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Debugf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelDebug.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelDebug) {
+			fl := getFileLine()
+			log.Debugf(ctx, fl+err.Error())
+		}
 	}
 	return err
 }
@@ -60,9 +78,14 @@ func Debuge(ctx context.Context, format string, args ...interface{}) error {
 func Debugc(ctx context.Context, code int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelDebug) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Debugf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelDebug.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelDebug) {
+			fl := getFileLine()
+			log.Debugf(ctx, fl+err.Error())
+		}
 	}
 	return errcode.Set(err, code)
 }
@@ -70,18 +93,29 @@ func Debugc(ctx context.Context, code int, format string, args ...interface{}) e
 // Infof ... Infoログを出力する
 func Infof(ctx context.Context, format string, args ...interface{}) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelInfo) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Infof(ctx, fl+format, args...)
+		msg := fmt.Sprintf("[%s] %s%s", LevelInfo, fl, format)
+		orLog.Printf(msg, args...)
+	} else {
+		if logger.IsLogging(LevelInfo) {
+			fl := getFileLine()
+			log.Infof(ctx, fl+format, args...)
+		}
 	}
 }
 
 // Infom ... Infoログの定形を出力する
 func Infom(ctx context.Context, method string, err error) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelInfo) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Infof(ctx, "%s%s: %s", fl, method, err.Error())
+		orLog.Printf("[%s] %s%s: %s", LevelInfo.String(), fl, method, err.Error())
+	} else {
+		if logger.IsLogging(LevelInfo) {
+			fl := getFileLine()
+			log.Infof(ctx, "%s%s: %s", fl, method, err.Error())
+		}
 	}
 }
 
@@ -89,9 +123,14 @@ func Infom(ctx context.Context, method string, err error) {
 func Infoe(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelInfo) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Infof(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelInfo.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelInfo) {
+			fl := getFileLine()
+			log.Infof(ctx, fl+err.Error())
+		}
 	}
 	return err
 }
@@ -100,9 +139,14 @@ func Infoe(ctx context.Context, format string, args ...interface{}) error {
 func Infoc(ctx context.Context, code int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelInfo) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Infof(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelInfo.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelInfo) {
+			fl := getFileLine()
+			log.Infof(ctx, fl+err.Error())
+		}
 	}
 	return errcode.Set(err, code)
 }
@@ -110,18 +154,29 @@ func Infoc(ctx context.Context, code int, format string, args ...interface{}) er
 // Warningf ... Warningログを出力する
 func Warningf(ctx context.Context, format string, args ...interface{}) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelWarning) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Warningf(ctx, fl+format, args...)
+		msg := fmt.Sprintf("[%s] %s%s", LevelWarning, fl, format)
+		orLog.Printf(msg, args...)
+	} else {
+		if logger.IsLogging(LevelWarning) {
+			fl := getFileLine()
+			log.Warningf(ctx, fl+format, args...)
+		}
 	}
 }
 
 // Warningm ... Warningログの定形を出力する
 func Warningm(ctx context.Context, method string, err error) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelWarning) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Warningf(ctx, "%s%s: %s", fl, method, err.Error())
+		orLog.Printf("[%s] %s%s: %s", LevelWarning.String(), fl, method, err.Error())
+	} else {
+		if logger.IsLogging(LevelWarning) {
+			fl := getFileLine()
+			log.Warningf(ctx, "%s%s: %s", fl, method, err.Error())
+		}
 	}
 }
 
@@ -129,9 +184,14 @@ func Warningm(ctx context.Context, method string, err error) {
 func Warninge(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelWarning) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Warningf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelWarning.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelWarning) {
+			fl := getFileLine()
+			log.Warningf(ctx, fl+err.Error())
+		}
 	}
 	return err
 }
@@ -140,9 +200,14 @@ func Warninge(ctx context.Context, format string, args ...interface{}) error {
 func Warningc(ctx context.Context, code int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelWarning) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Warningf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelWarning.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelWarning) {
+			fl := getFileLine()
+			log.Warningf(ctx, fl+err.Error())
+		}
 	}
 	return errcode.Set(err, code)
 }
@@ -150,18 +215,29 @@ func Warningc(ctx context.Context, code int, format string, args ...interface{})
 // Errorf ... Errorログを出力する
 func Errorf(ctx context.Context, format string, args ...interface{}) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelError) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Errorf(ctx, fl+format, args...)
+		msg := fmt.Sprintf("[%s] %s%s", LevelError, fl, format)
+		orLog.Printf(msg, args...)
+	} else {
+		if logger.IsLogging(LevelError) {
+			fl := getFileLine()
+			log.Errorf(ctx, fl+format, args...)
+		}
 	}
 }
 
 // Errorm ... Errorログの定形を出力する
 func Errorm(ctx context.Context, method string, err error) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelError) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Errorf(ctx, "%s%s: %s", fl, method, err.Error())
+		orLog.Printf("[%s] %s%s: %s", LevelError.String(), fl, method, err.Error())
+	} else {
+		if logger.IsLogging(LevelError) {
+			fl := getFileLine()
+			log.Errorf(ctx, "%s%s: %s", fl, method, err.Error())
+		}
 	}
 }
 
@@ -169,9 +245,14 @@ func Errorm(ctx context.Context, method string, err error) {
 func Errore(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelError) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Errorf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelError.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelError) {
+			fl := getFileLine()
+			log.Errorf(ctx, fl+err.Error())
+		}
 	}
 	return err
 }
@@ -180,9 +261,14 @@ func Errore(ctx context.Context, format string, args ...interface{}) error {
 func Errorc(ctx context.Context, code int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelError) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Errorf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelError.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelError) {
+			fl := getFileLine()
+			log.Errorf(ctx, fl+err.Error())
+		}
 	}
 	return errcode.Set(err, code)
 }
@@ -190,18 +276,29 @@ func Errorc(ctx context.Context, code int, format string, args ...interface{}) e
 // Criticalf ... Criticalログを出力する
 func Criticalf(ctx context.Context, format string, args ...interface{}) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelCritical) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Criticalf(ctx, fl+format, args...)
+		msg := fmt.Sprintf("[%s] %s%s", LevelCritical, fl, format)
+		orLog.Printf(msg, args...)
+	} else {
+		if logger.IsLogging(LevelCritical) {
+			fl := getFileLine()
+			log.Criticalf(ctx, fl+format, args...)
+		}
 	}
 }
 
 // Criticalm ... Criticalログの定形を出力する
 func Criticalm(ctx context.Context, method string, err error) {
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelCritical) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Criticalf(ctx, "%s%s: %s", fl, method, err.Error())
+		orLog.Printf("[%s] %s%s: %s", LevelCritical.String(), fl, method, err.Error())
+	} else {
+		if logger.IsLogging(LevelCritical) {
+			fl := getFileLine()
+			log.Criticalf(ctx, "%s%s: %s", fl, method, err.Error())
+		}
 	}
 }
 
@@ -209,9 +306,14 @@ func Criticalm(ctx context.Context, method string, err error) {
 func Criticale(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelCritical) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Criticalf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelCritical.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelCritical) {
+			fl := getFileLine()
+			log.Criticalf(ctx, fl+err.Error())
+		}
 	}
 	return err
 }
@@ -220,9 +322,14 @@ func Criticale(ctx context.Context, format string, args ...interface{}) error {
 func Criticalc(ctx context.Context, code int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	logger := GetLogger(ctx)
-	if logger.IsLogging(LevelCritical) {
+	if logger == nil {
 		fl := getFileLine()
-		log.Criticalf(ctx, fl+err.Error())
+		orLog.Printf("[%s] %s%s", LevelCritical.String(), fl, err.Error())
+	} else {
+		if logger.IsLogging(LevelCritical) {
+			fl := getFileLine()
+			log.Criticalf(ctx, fl+err.Error())
+		}
 	}
 	return errcode.Set(err, code)
 }

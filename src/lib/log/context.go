@@ -9,8 +9,12 @@ type contextKey string
 const loggerContextKey contextKey = "log:logger"
 
 // GetLogger ... HTTPHeaderの値を取得
-func GetLogger(ctx context.Context) Logger {
-	return ctx.Value(loggerContextKey).(Logger)
+func GetLogger(ctx context.Context) *Logger {
+	if itf := ctx.Value(loggerContextKey); itf != nil {
+		logger := itf.(Logger)
+		return &logger
+	}
+	return nil
 }
 
 // SetLogger ... HTTPHeaderの値を設定
