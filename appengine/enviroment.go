@@ -4,7 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deployed"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 )
 
 // Environment ... 環境変数
@@ -27,7 +27,7 @@ func (e *Environment) Get() {
 	if err != nil {
 		panic(err)
 	}
-	if deployed.IsLocal() {
+	if deploy.IsLocal() {
 
 	}
 }

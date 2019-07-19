@@ -1,4 +1,4 @@
-.PHONY: init run deploy
+.PHONY: init run deploy deploy-production
 
 # 準備
 init:
@@ -10,19 +10,19 @@ run:
 
 deploy:
 	${call init}
-	${call deploy,staging,${call read_env,credentials.staging.project_id}}
+	${call deploy,staging,${call get_env,credentials.staging.project_id}}
 
 deploy-production:
 	${call init}
-	${call deploy,production,${call read_env,credentials.production.project_id}}
+	${call deploy,production,${call get_env,credentials.production.project_id}}
 
 # マクロ
-define read_env
+define get_env
 	$(shell node -p "require('../env.json').$1")
 endef
 
 define init
-	@go run ../command/init/main.go 
+	@go run ../command/init_appengine/main.go 
 endef
 
 define run

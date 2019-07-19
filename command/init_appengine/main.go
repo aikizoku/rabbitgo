@@ -22,18 +22,18 @@ func main() {
 
 	// 初期化
 	createDeployDir(common.Local)
-	createHotReloadLinks(common.Local)
-	createValuesFile(common.Local, pIDs.Local, env.Values.Local)
+	createSourceFile(common.Local)
+	createEnvironmentFile(common.Local, pIDs.Local, env.Appengine.Local)
 	createCredentialsFile(common.Local, env.Credentials.Local)
 
 	createDeployDir(common.Staging)
-	createHotReloadLinks(common.Staging)
-	createValuesFile(common.Staging, pIDs.Staging, env.Values.Staging)
+	createSourceFile(common.Staging)
+	createEnvironmentFile(common.Staging, pIDs.Staging, env.Appengine.Staging)
 	createCredentialsFile(common.Staging, env.Credentials.Staging)
 
 	createDeployDir(common.Production)
-	createHotReloadLinks(common.Production)
-	createValuesFile(common.Production, pIDs.Production, env.Values.Production)
+	createSourceFile(common.Production)
+	createEnvironmentFile(common.Production, pIDs.Production, env.Appengine.Production)
 	createCredentialsFile(common.Production, env.Credentials.Production)
 }
 
@@ -41,7 +41,7 @@ func createDeployDir(deploy string) {
 	os.MkdirAll(fmt.Sprintf("./deploy/%s", deploy), 0755)
 }
 
-func createHotReloadLinks(deploy string) {
+func createSourceFile(deploy string) {
 	// app.yaml
 	if deploy != common.Local {
 		os.Symlink(
@@ -82,7 +82,7 @@ func createHotReloadLinks(deploy string) {
 		fmt.Sprintf("deploy/%s/.gcloudignore", deploy))
 }
 
-func createValuesFile(deploy string, pID string, data map[string]string) {
+func createEnvironmentFile(deploy string, pID string, data map[string]interface{}) {
 	data["PROJECT_ID"] = pID
 	data["DEPLOY"] = deploy
 	data["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials.json"
@@ -96,7 +96,7 @@ func createValuesFile(deploy string, pID string, data map[string]string) {
 	)
 }
 
-func createCredentialsFile(deploy string, data map[string]string) {
+func createCredentialsFile(deploy string, data map[string]interface{}) {
 	j, err := json.Marshal(data)
 	if err != nil {
 		panic(err.Error())

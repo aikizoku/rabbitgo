@@ -10,7 +10,7 @@ import (
 	"google.golang.org/api/option"
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deployed"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/httpclient"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
@@ -46,7 +46,7 @@ func (c *Client) AddTask(ctx context.Context, queue string, path string, params 
 }
 
 func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEngineHttpRequest) error {
-	if deployed.IsLocal() {
+	if deploy.IsLocal() {
 		url := fmt.Sprintf("http://localhost:%d%s", c.Port, aeReq.RelativeUri)
 		status, _, err := httpclient.PostJSON(ctx, url, aeReq.Body, nil)
 		if err != nil {

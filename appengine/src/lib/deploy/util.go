@@ -1,4 +1,4 @@
-package deployed
+package deploy
 
 import (
 	"os"

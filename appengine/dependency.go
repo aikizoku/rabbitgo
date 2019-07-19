@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/aikizoku/rabbitgo/appengine/src/handler/api"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deployed"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/firebaseauth"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/jsonrpc2"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
@@ -24,7 +24,7 @@ func (d *Dependency) Inject(e *Environment) {
 	// Client
 	fCli := cloudfirestore.NewClient(e.CredentialsPath)
 	var lCli log.Writer
-	if deployed.IsLocal() {
+	if deploy.IsLocal() {
 		lCli = log.NewWriterStdout()
 	} else {
 		lCli = log.NewWriterStackdriver(e.ProjectID)
@@ -35,7 +35,7 @@ func (d *Dependency) Inject(e *Environment) {
 
 	// Service
 	var faSvc firebaseauth.Service
-	if deployed.IsProduction() {
+	if deploy.IsProduction() {
 		faSvc = firebaseauth.NewService()
 	} else {
 		faSvc = firebaseauth.NewDebugService()

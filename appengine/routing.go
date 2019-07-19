@@ -7,7 +7,7 @@ import (
 
 	"github.com/aikizoku/rabbitgo/appengine/src/handler"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/accesscontrol"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deployed"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 )
 
 // Routing ... ルーティング設定
@@ -31,7 +31,7 @@ func Routing(r *chi.Mux, d *Dependency) {
 	})
 
 	// 例: Stagingのみ適用したいルーティング
-	if deployed.IsStaging() {
+	if deploy.IsStaging() {
 		// ここにルーティングを書く
 	}
 
