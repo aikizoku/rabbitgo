@@ -6,9 +6,8 @@ import (
 
 // Env ... 環境変数ファイルの定義
 type Env struct {
-	Apps        []string `json:"apps"`
-	Credentials EnvData  `json:"credentials"`
-	Values      EnvData  `json:"values"`
+	Credentials EnvData `json:"credentials"`
+	Values      EnvData `json:"values"`
 }
 
 // EnvData ... 環境変数ファイルの環境毎のデータの定義
