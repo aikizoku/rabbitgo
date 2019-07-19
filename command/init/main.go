@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/aikizoku/merlin/command/common"
+	"github.com/aikizoku/rabbitgo/command/common"
 )
 
 func main() {
@@ -39,84 +39,76 @@ func main() {
 	}
 }
 
-func createDeployDir(env string, app string) {
-	os.MkdirAll(fmt.Sprintf("./deploy/appengine/%s/%s", env, app), 0755)
+func createDeployDir(deploy string, app string) {
+	os.MkdirAll(fmt.Sprintf("./deploy/%s/%s", deploy, app), 0755)
 }
 
-func createHotReloadLinks(env string, app string) {
+func createHotReloadLinks(deploy string, app string) {
 	// app.yaml
-	common.ExecCommand(
-		"cp",
-		fmt.Sprintf("./appengine/app/%s/app_%s.yaml", app, env),
-		fmt.Sprintf("./deploy/appengine/%s/%s/app.yaml", env, app),
-	)
+	if deploy != common.Local {
+		os.Symlink(
+			fmt.Sprintf("../../../%s/app_%s.yaml", app, deploy),
+			fmt.Sprintf("deploy/%s/%s/app.yaml", deploy, app))
+	}
+
 	// go
 	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/main.go", app),
-		fmt.Sprintf("deploy/appengine/%s/%s/main.go", env, app))
+		fmt.Sprintf("../../../%s/enviroment.go", app),
+		fmt.Sprintf("deploy/%s/%s/enviroment.go", deploy, app))
 	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/dependency.go", app),
-		fmt.Sprintf("deploy/appengine/%s/%s/dependency.go", env, app))
+		fmt.Sprintf("../../../%s/dependency.go", app),
+		fmt.Sprintf("deploy/%s/%s/dependency.go", deploy, app))
 	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/routing.go", app),
-		fmt.Sprintf("deploy/appengine/%s/%s/routing.go", env, app))
-	goModFile := fmt.Sprintf("./deploy/appengine/%s/%s/go.mod", env, app)
+		fmt.Sprintf("../../../%s/routing.go", app),
+		fmt.Sprintf("deploy/%s/%s/routing.go", deploy, app))
+	os.Symlink(
+		fmt.Sprintf("../../../%s/main.go", app),
+		fmt.Sprintf("deploy/%s/%s/main.go", deploy, app))
+
+	// go mod
+	goModFile := fmt.Sprintf("./deploy/%s/%s/go.mod", deploy, app)
 	common.ExecCommand(
 		"cp",
-		fmt.Sprintf("./appengine/app/%s/go.mod", app),
+		fmt.Sprintf("./%s/go.mod", app),
 		goModFile,
 	)
-	common.ReplaceFile(goModFile, "../../../src", "./src")
+	common.ReplaceFile(goModFile, "../src", "./src")
 	os.Symlink(
-		fmt.Sprintf("../../../../appengine/app/%s/go.sum", app),
-		fmt.Sprintf("deploy/appengine/%s/%s/go.sum", env, app))
-	// cron.yaml
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/config/cron.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/%s/cron.yaml", env, app))
-	os.Symlink(
-		fmt.Sprintf("../../../appengine/config/cron.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/cron.yaml", env))
-	// queue.yaml
-	os.Symlink(
-		fmt.Sprintf("../../../../appengine/config/queue.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/%s/queue.yaml", env, app))
-	os.Symlink(
-		fmt.Sprintf("../../../appengine/config/queue.yaml"),
-		fmt.Sprintf("deploy/appengine/%s/queue.yaml", env))
+		fmt.Sprintf("../../../%s/go.sum", app),
+		fmt.Sprintf("deploy/%s/%s/go.sum", deploy, app))
+
 	// src
 	os.Symlink(
-		fmt.Sprintf("../../../../src"),
-		fmt.Sprintf("deploy/appengine/%s/%s/src", env, app))
+		fmt.Sprintf("../../../src"),
+		fmt.Sprintf("deploy/%s/%s/src", deploy, app))
+
 	// .gcloudignore
 	os.Symlink(
 		fmt.Sprintf("../../../../.gcloudignore"),
-		fmt.Sprintf("deploy/appengine/%s/%s/.gcloudignore", env, app))
+		fmt.Sprintf("deploy/%s/%s/.gcloudignore", deploy, app))
 }
 
-func createValuesFile(env string, app string, pID string, data map[string]string) {
-	yData := map[string]interface{}{}
+func createValuesFile(deploy string, app string, pID string, data map[string]string) {
 	data["PROJECT_ID"] = pID
-	data["ENV"] = env
+	data["DEPLOY"] = deploy
 	data["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials.json"
-	yData["env_variables"] = data
-	y, err := yaml.Marshal(yData)
+	y, err := yaml.Marshal(data)
 	if err != nil {
 		panic(err.Error())
 	}
-	common.WriteFile(
-		fmt.Sprintf("./deploy/appengine/%s/%s/app.yaml", env, app),
-		"\n"+string(y),
+	common.CreateFile(fmt.Sprintf(
+		"./deploy/%s/%s/.env", deploy, app),
+		string(y),
 	)
 }
 
-func createCredentialsFile(env string, app string, data map[string]string) {
+func createCredentialsFile(deploy string, app string, data map[string]string) {
 	j, err := json.Marshal(data)
 	if err != nil {
 		panic(err.Error())
 	}
 	common.CreateFile(
-		fmt.Sprintf("./deploy/appengine/%s/%s/credentials.json", env, app),
+		fmt.Sprintf("./deploy/%s/%s/credentials.json", deploy, app),
 		string(j),
 	)
 }

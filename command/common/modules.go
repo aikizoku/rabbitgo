@@ -13,7 +13,7 @@ import (
 
 // LoadEnvFile ... 環境変数ファイルを読み込む
 func LoadEnvFile() Env {
-	raw, err := ioutil.ReadFile("./env.json")
+	raw, err := ioutil.ReadFile("../env.json")
 	if err != nil {
 		panic(err)
 	}
