@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -21,7 +22,18 @@ func (w *writerStackdriver) Request(
 	dr time.Duration) {
 	u := *r.URL
 	u.Fragment = ""
+
+	remoteAddr := ""
+	if v := r.Header.Get("X-AppEngine-User-IP"); v != "" {
+		remoteAddr = v
+	} else if v := r.Header.Get("X-Forwarded-For"); v != "" {
+		remoteAddr = v
+	} else {
+		remoteAddr = strings.SplitN(r.RemoteAddr, ":", 2)[0]
+	}
+
 	falseV := false
+
 	e := &Entry{
 		Severity: severity.String(),
 		Time:     Time(at),
@@ -33,7 +45,7 @@ func (w *writerStackdriver) Request(
 			RequestSize:                    r.ContentLength,
 			Status:                         status,
 			UserAgent:                      r.UserAgent(),
-			RemoteIP:                       r.RemoteAddr,
+			RemoteIP:                       remoteAddr,
 			Referer:                        r.Referer(),
 			Latency:                        Duration(dr),
 			CacheLookup:                    &falseV,

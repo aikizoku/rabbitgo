@@ -1,15 +1,16 @@
-module github.com/aikizoku/rabbitgo/appengine/default
+module github.com/aikizoku/rabbitgo/appengine
 
 go 1.12
 
 require (
-	cloud.google.com/go v0.41.0 // indirect
-	firebase.google.com/go v3.8.1+incompatible // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	cloud.google.com/go v0.43.0
+	firebase.google.com/go v3.8.1+incompatible
+	github.com/davecgh/go-spew v1.1.1
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/joho/godotenv v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/rs/xid v1.2.1 // indirect
-	github.com/unrolled/render v1.0.0 // indirect
-	github.com/vvakame/sdlog v0.0.0-20190523062053-be70263e9c6c // indirect
+	github.com/rs/xid v1.2.1
+	github.com/unrolled/render v1.0.0
+	golang.org/x/text v0.3.2
+	google.golang.org/api v0.7.0
 )
