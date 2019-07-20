@@ -1,6 +1,6 @@
 # これはなに？
 GAE/Go環境での爆速で汎用性高い開発を目指したフレームワーク
-とても早くて軽いAPI/Workerをワンソースで作る事が出来る
+とても早くて軽いAPIやWorkerをワンソースで作る事が出来る
 - インフラをあまり考えなくて良い
 - 適当に作っていても循環参照が発生しない
 - 緩い命名規則で縛っているので、柔軟かつ迷わない命名が可能
@@ -63,27 +63,46 @@ GO111MODULE=on go test
 # 動かす
 ## 起動
 ```bash
-make run app=default
+# GoogleAppEngine
+cd appengine
+make run
 ```
 
 ## ローカルで確認
 ```
-http://localhost:8080/ping
+http://localhost:3000/ping
 ```
 
 ## デプロイ
 ```bash
-# Appengine
-make deploy app=default
+# Google App Engine
+cd appengine
+make deploy            # ステージング環境
+make deploy-production # 本番環境
 
-# Scheduler
+# Cloud Functions
+cd functions
+make deploy name=function-name            # ステージング環境
+make deploy-production name=function-name # 本番環境
 
-# Tasks
+# Cloud Scheduler
+cd scheduler
+make deploy-http name=schedule-name                 # HTTPのURLを実行する ステージング環境
+make deploy-http-production name=schedule-name      # HTTPのURLを実行する 本番環境
+make deploy-appengine name=schedule-name            # GAEのAPIを実行する ステージング環境
+make deploy-appengine-production name=schedule-name # GAEのAPIを実行する 本番環境
+make deploy-pubsub name=schedule-name               # PubSubのトピックに送信する ステージング環境
+make deploy-pubsub-production name=schedule-name    # PubSubのトピックに送信する 本番環境
 
-# Pub/Sub
+# Cloud Tasks
+cd tasks
+make deploy            # ステージング環境
+make deploy-production # 本番環境
 
-# Functions
-
+# Cloud Pub/Sub
+cd pubsub
+make deploy            # ステージング環境
+make deploy-production # 本番環境
 ```
 
 # 開発で使う便利なコマンド集
