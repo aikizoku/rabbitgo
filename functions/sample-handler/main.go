@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-// Main ...
-func Main(w http.ResponseWriter, r *http.Request) {
+// Handle ...
+func Handle(w http.ResponseWriter, r *http.Request) {
 	var d struct {
 		Message string `json:"message"`
 	}
