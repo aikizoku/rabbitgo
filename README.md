@@ -56,7 +56,7 @@ gcloud auth login
 
 ## 依存パッケージのインストール
 ```bash
-cd appengine
+cd appengine/default
 GO111MODULE=on go test
 ```
 

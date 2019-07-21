@@ -47,9 +47,10 @@ func (l *Logger) WriteRequest(r *http.Request, at time.Time, dr time.Duration) {
 // NewLogger ... Loggerを作成する
 func NewLogger(writer Writer, minSeverity Severity, traceID string) *Logger {
 	return &Logger{
-		Writer:         writer,
-		MinOutSeverity: minSeverity,
-		TraceID:        traceID,
+		Writer:            writer,
+		MinOutSeverity:    minSeverity,
+		MaxOuttedSeverity: SeverityDebug,
+		TraceID:           traceID,
 	}
 }
 

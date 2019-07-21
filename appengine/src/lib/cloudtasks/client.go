@@ -18,18 +18,19 @@ import (
 // Client ... GCSのクライアント
 type Client struct {
 	cli        *cloudtasks.Client
-	Port       int
-	Deploy     string
-	ProjectID  string
-	LocationID string
-	AuthToken  string
+	port       int
+	deploy     string
+	projectID  string
+	locationID string
+	serviceID  string
+	authToken  string
 }
 
 // AddTask ... リクエストをEnqueueする
 func (c *Client) AddTask(ctx context.Context, queue string, path string, params interface{}) error {
 	headers := map[string]string{
 		"Content-Type":  "application/json",
-		"Authorization": c.AuthToken,
+		"Authorization": c.authToken,
 	}
 	body, err := json.Marshal(params)
 	if err != nil {
@@ -37,6 +38,9 @@ func (c *Client) AddTask(ctx context.Context, queue string, path string, params 
 		return err
 	}
 	req := &taskspb.AppEngineHttpRequest{
+		AppEngineRouting: &taskspb.AppEngineRouting{
+			Service: c.serviceID,
+		},
 		HttpMethod:  taskspb.HttpMethod_POST,
 		RelativeUri: path,
 		Headers:     headers,
@@ -46,8 +50,8 @@ func (c *Client) AddTask(ctx context.Context, queue string, path string, params 
 }
 
 func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEngineHttpRequest) error {
-	if deploy.IsLocal() {
-		url := fmt.Sprintf("http://localhost:%d%s", c.Port, aeReq.RelativeUri)
+	if !deploy.IsLocal() {
+		url := fmt.Sprintf("http://localhost:%d%s", c.port, aeReq.RelativeUri)
 		status, _, err := httpclient.PostJSON(ctx, url, aeReq.Body, nil)
 		if err != nil {
 			log.Errorm(ctx, "httpclient.PostJSON", err)
@@ -59,7 +63,7 @@ func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEn
 		}
 	} else {
 		req := &taskspb.CreateTaskRequest{
-			Parent: fmt.Sprintf("projects/%s/locations/%s/queues/%s", c.ProjectID, c.LocationID, queue),
+			Parent: fmt.Sprintf("projects/%s/locations/%s/queues/%s", c.projectID, c.locationID, queue),
 			Task: &taskspb.Task{
 				MessageType: &taskspb.Task_AppEngineHttpRequest{
 					AppEngineHttpRequest: aeReq,
@@ -76,7 +80,14 @@ func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEn
 }
 
 // NewClient ... クライアントを作成する
-func NewClient(credentialsPath string) *Client {
+func NewClient(
+	credentialsPath string,
+	port int,
+	deploy string,
+	projectID string,
+	locationID string,
+	serviceID string,
+	authToken string) *Client {
 	ctx := context.Background()
 	opt := option.WithCredentialsFile(credentialsPath)
 	cli, err := cloudtasks.NewClient(ctx, opt)
@@ -84,6 +95,12 @@ func NewClient(credentialsPath string) *Client {
 		panic(err)
 	}
 	return &Client{
-		cli: cli,
+		cli:        cli,
+		port:       port,
+		deploy:     deploy,
+		projectID:  projectID,
+		locationID: locationID,
+		serviceID:  serviceID,
+		authToken:  authToken,
 	}
 }
