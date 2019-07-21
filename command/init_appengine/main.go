@@ -97,6 +97,7 @@ func createSourceFile(deploy string, app string) {
 
 func createEnvironmentFile(deploy string, app string, pID string, data map[string]interface{}) {
 	data["PROJECT_ID"] = pID
+	data["SERVICE_ID"] = app
 	data["DEPLOY"] = deploy
 	data["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials.json"
 	y, err := yaml.Marshal(data)
