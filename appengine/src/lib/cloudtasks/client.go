@@ -50,7 +50,7 @@ func (c *Client) AddTask(ctx context.Context, queue string, path string, params 
 }
 
 func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEngineHttpRequest) error {
-	if !deploy.IsLocal() {
+	if deploy.IsLocal() {
 		url := fmt.Sprintf("http://localhost:%d%s", c.port, aeReq.RelativeUri)
 		status, _, err := httpclient.PostJSON(ctx, url, aeReq.Body, nil)
 		if err != nil {
