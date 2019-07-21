@@ -15,19 +15,18 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
-// Client ... GCSのクライアント
+// Client ... CloudTasksのクライアント
 type Client struct {
 	cli        *cloudtasks.Client
 	port       int
 	deploy     string
 	projectID  string
 	locationID string
-	serviceID  string
 	authToken  string
 }
 
 // AddTask ... リクエストをEnqueueする
-func (c *Client) AddTask(ctx context.Context, queue string, path string, params interface{}) error {
+func (c *Client) AddTask(ctx context.Context, queue string, serviceID string, path string, params interface{}) error {
 	headers := map[string]string{
 		"Content-Type":  "application/json",
 		"Authorization": c.authToken,
@@ -39,7 +38,7 @@ func (c *Client) AddTask(ctx context.Context, queue string, path string, params 
 	}
 	req := &taskspb.AppEngineHttpRequest{
 		AppEngineRouting: &taskspb.AppEngineRouting{
-			Service: c.serviceID,
+			Service: serviceID,
 		},
 		HttpMethod:  taskspb.HttpMethod_POST,
 		RelativeUri: path,
@@ -100,7 +99,6 @@ func NewClient(
 		deploy:     deploy,
 		projectID:  projectID,
 		locationID: locationID,
-		serviceID:  serviceID,
 		authToken:  authToken,
 	}
 }
