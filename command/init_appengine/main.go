@@ -21,7 +21,7 @@ func main() {
 	os.RemoveAll("./deploy")
 
 	// 初期化
-	for _, app := range env.Apps {
+	for _, app := range env.Appengine.Apps {
 		createDeployDir(common.Local, app)
 		createSourceFile(common.Local, app)
 		createEnvironmentFile(common.Local, app, pIDs.Local, env.Appengine.Local)

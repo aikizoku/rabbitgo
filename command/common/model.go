@@ -6,14 +6,14 @@ import (
 
 // Env ... 環境変数ファイルの定義
 type Env struct {
-	Apps        []string `json:"apps"`
-	Credentials EnvData  `json:"credentials"`
-	Appengine   EnvData  `json:"appengine"`
-	Functions   EnvData  `json:"functions"`
+	Credentials EnvData `json:"credentials"`
+	Appengine   EnvData `json:"appengine"`
+	Functions   EnvData `json:"functions"`
 }
 
 // EnvData ... 環境変数ファイルの環境毎のデータの定義
 type EnvData struct {
+	Apps       []string               `json:"apps"`
 	Local      map[string]interface{} `json:"local,omitempty"`
 	Staging    map[string]interface{} `json:"staging"`
 	Production map[string]interface{} `json:"production"`
