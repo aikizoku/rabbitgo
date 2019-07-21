@@ -3,8 +3,6 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 )
 
 // Environment ... 環境変数
@@ -26,8 +24,5 @@ func (e *Environment) Get() {
 	err = envconfig.Process("", e)
 	if err != nil {
 		panic(err)
-	}
-	if deploy.IsLocal() {
-
 	}
 }

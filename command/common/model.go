@@ -6,9 +6,10 @@ import (
 
 // Env ... 環境変数ファイルの定義
 type Env struct {
-	Credentials EnvData `json:"credentials"`
-	Appengine   EnvData `json:"appengine"`
-	Functions   EnvData `json:"functions"`
+	Apps        []string `json:"apps"`
+	Credentials EnvData  `json:"credentials"`
+	Appengine   EnvData  `json:"appengine"`
+	Functions   EnvData  `json:"functions"`
 }
 
 // EnvData ... 環境変数ファイルの環境毎のデータの定義

@@ -65,20 +65,24 @@ GO111MODULE=on go test
 ```bash
 # GoogleAppEngine
 cd appengine
-make run
+make run name=default
 ```
 
 ## ローカルで確認
 ```
-http://localhost:3000/ping
+# 動作確認
+http://localhost:8080/ping
+
+# 状況確認
+http://localhost:5002/
 ```
 
 ## デプロイ
 ```bash
 # Google App Engine
 cd appengine
-make deploy            # ステージング環境
-make deploy-production # 本番環境
+make deploy name=default            # ステージング環境
+make deploy-production name=default # 本番環境
 
 # Cloud Functions
 cd functions

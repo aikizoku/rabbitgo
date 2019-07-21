@@ -6,15 +6,15 @@ init:
 
 run:
 	${call init}
-	${call run,local}
+	${call run,local,$(name)}
 
 deploy:
 	${call init}
-	${call deploy,staging,${call get_env,credentials.staging.project_id}}
+	${call deploy,staging,$(name),${call get_env,credentials.staging.project_id}}
 
 deploy-production:
 	${call init}
-	${call deploy,production,${call get_env,credentials.production.project_id}}
+	${call deploy,production,$(name),${call get_env,credentials.production.project_id}}
 
 # マクロ
 define get_env
@@ -26,9 +26,9 @@ define init
 endef
 
 define run
-@cd ./deploy/$1; $(GOPATH)/bin/gin -i --all -t ../../ run enviroment.go dependency.go routing.go main.go
+@cd ./deploy/$1/$2; $(GOPATH)/bin/realize start --server
 endef
 
 define deploy
-@cd ./deploy/$1; gcloud app deploy -q app.yaml --project $2
+@cd ./deploy/$1/$2; gcloud app deploy -q app.yaml --project $3
 endef

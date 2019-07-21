@@ -21,68 +21,81 @@ func main() {
 	os.RemoveAll("./deploy")
 
 	// 初期化
-	createDeployDir(common.Local)
-	createSourceFile(common.Local)
-	createEnvironmentFile(common.Local, pIDs.Local, env.Appengine.Local)
-	createCredentialsFile(common.Local, env.Credentials.Local)
+	for _, app := range env.Apps {
+		createDeployDir(common.Local, app)
+		createSourceFile(common.Local, app)
+		createEnvironmentFile(common.Local, app, pIDs.Local, env.Appengine.Local)
+		createCredentialsFile(common.Local, app, env.Credentials.Local)
 
-	createDeployDir(common.Staging)
-	createSourceFile(common.Staging)
-	createEnvironmentFile(common.Staging, pIDs.Staging, env.Appengine.Staging)
-	createCredentialsFile(common.Staging, env.Credentials.Staging)
+		createDeployDir(common.Staging, app)
+		createSourceFile(common.Staging, app)
+		createEnvironmentFile(common.Staging, app, pIDs.Staging, env.Appengine.Staging)
+		createCredentialsFile(common.Staging, app, env.Credentials.Staging)
 
-	createDeployDir(common.Production)
-	createSourceFile(common.Production)
-	createEnvironmentFile(common.Production, pIDs.Production, env.Appengine.Production)
-	createCredentialsFile(common.Production, env.Credentials.Production)
+		createDeployDir(common.Production, app)
+		createSourceFile(common.Production, app)
+		createEnvironmentFile(common.Production, app, pIDs.Production, env.Appengine.Production)
+		createCredentialsFile(common.Production, app, env.Credentials.Production)
+	}
 }
 
-func createDeployDir(deploy string) {
-	os.MkdirAll(fmt.Sprintf("./deploy/%s", deploy), 0755)
+func createDeployDir(deploy string, app string) {
+	os.MkdirAll(fmt.Sprintf("./deploy/%s/%s", deploy, app), 0755)
 }
 
-func createSourceFile(deploy string) {
+func createSourceFile(deploy string, app string) {
 	// app.yaml
 	if deploy != common.Local {
 		os.Symlink(
-			fmt.Sprintf("../../app_%s.yaml", deploy),
-			fmt.Sprintf("deploy/%s/app.yaml", deploy))
+			fmt.Sprintf("../../../%s/app_%s.yaml", app, deploy),
+			fmt.Sprintf("deploy/%s/%s/app.yaml", deploy, app))
 	}
 
 	// go
 	os.Symlink(
-		"../../enviroment.go",
-		fmt.Sprintf("deploy/%s/enviroment.go", deploy))
+		fmt.Sprintf("../../../%s/enviroment.go", app),
+		fmt.Sprintf("deploy/%s/%s/enviroment.go", deploy, app))
 	os.Symlink(
-		"../../dependency.go",
-		fmt.Sprintf("deploy/%s/dependency.go", deploy))
+		fmt.Sprintf("../../../%s/dependency.go", app),
+		fmt.Sprintf("deploy/%s/%s/dependency.go", deploy, app))
 	os.Symlink(
-		"../../routing.go",
-		fmt.Sprintf("deploy/%s/routing.go", deploy))
+		fmt.Sprintf("../../../%s/routing.go", app),
+		fmt.Sprintf("deploy/%s/%s/routing.go", deploy, app))
 	os.Symlink(
-		"../../main.go",
-		fmt.Sprintf("deploy/%s/main.go", deploy))
+		fmt.Sprintf("../../../%s/main.go", app),
+		fmt.Sprintf("deploy/%s/%s/main.go", deploy, app))
 
 	// go mod
+	goModFile := fmt.Sprintf("./deploy/%s/%s/go.mod", deploy, app)
+	common.ExecCommand(
+		"cp",
+		fmt.Sprintf("./%s/go.mod", app),
+		goModFile,
+	)
+	common.ReplaceFile(goModFile, "../src", "./src")
 	os.Symlink(
-		"../../go.mod",
-		fmt.Sprintf("deploy/%s/go.mod", deploy))
-	os.Symlink(
-		"../../go.sum",
-		fmt.Sprintf("deploy/%s/go.sum", deploy))
+		fmt.Sprintf("../../../%s/go.sum", app),
+		fmt.Sprintf("deploy/%s/%s/go.sum", deploy, app))
 
 	// src
 	os.Symlink(
-		"../../src",
-		fmt.Sprintf("deploy/%s/src", deploy))
+		fmt.Sprintf("../../../src"),
+		fmt.Sprintf("deploy/%s/%s/src", deploy, app))
+
+	// realize
+	common.ExecCommand(
+		"cp",
+		fmt.Sprintf("./%s/.realize.yaml", app),
+		fmt.Sprintf("./deploy/%s/%s/.realize.yaml", deploy, app),
+	)
 
 	// .gcloudignore
 	os.Symlink(
-		"../../../.gcloudignore",
-		fmt.Sprintf("deploy/%s/.gcloudignore", deploy))
+		fmt.Sprintf("../../../../.gcloudignore"),
+		fmt.Sprintf("deploy/%s/%s/.gcloudignore", deploy, app))
 }
 
-func createEnvironmentFile(deploy string, pID string, data map[string]interface{}) {
+func createEnvironmentFile(deploy string, app string, pID string, data map[string]interface{}) {
 	data["PROJECT_ID"] = pID
 	data["DEPLOY"] = deploy
 	data["GOOGLE_APPLICATION_CREDENTIALS"] = "./credentials.json"
@@ -91,18 +104,18 @@ func createEnvironmentFile(deploy string, pID string, data map[string]interface{
 		panic(err.Error())
 	}
 	common.CreateFile(fmt.Sprintf(
-		"./deploy/%s/.env", deploy),
+		"./deploy/%s/%s/.env", deploy, app),
 		string(y),
 	)
 }
 
-func createCredentialsFile(deploy string, data map[string]interface{}) {
+func createCredentialsFile(deploy string, app string, data map[string]interface{}) {
 	j, err := json.Marshal(data)
 	if err != nil {
 		panic(err.Error())
 	}
 	common.CreateFile(
-		fmt.Sprintf("./deploy/%s/credentials.json", deploy),
+		fmt.Sprintf("./deploy/%s/%s/credentials.json", deploy, app),
 		string(j),
 	)
 }
