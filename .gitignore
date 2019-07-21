@@ -64,5 +64,6 @@ Session.vim
 
 #####=== Project specific settings ===#####
 docker/mysql/data/
-/deploy/
+appengine/deploy/
+functions/deploy/
 env.json

@@ -8,14 +8,15 @@ import (
 type Env struct {
 	Apps        []string `json:"apps"`
 	Credentials EnvData  `json:"credentials"`
-	Values      EnvData  `json:"values"`
+	Appengine   EnvData  `json:"appengine"`
+	Functions   EnvData  `json:"functions"`
 }
 
 // EnvData ... 環境変数ファイルの環境毎のデータの定義
 type EnvData struct {
-	Local      map[string]string `json:"local"`
-	Staging    map[string]string `json:"staging"`
-	Production map[string]string `json:"production"`
+	Local      map[string]interface{} `json:"local,omitempty"`
+	Staging    map[string]interface{} `json:"staging"`
+	Production map[string]interface{} `json:"production"`
 }
 
 // ProjectIDs ... 各環境のProjectIDの定義

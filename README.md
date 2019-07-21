@@ -1,10 +1,10 @@
 # これはなに？
-GAE/Go環境で動作するサーバー開発のテンプレート
-とても早くて軽いAPI/Workerをワンソースで作る事が出来ます。
+GAE/Go環境での爆速で汎用性高い開発を目指したフレームワーク
+とても早くて軽いAPIやWorkerをワンソースで作る事が出来る
 - インフラをあまり考えなくて良い
 - 適当に作っていても循環参照が発生しない
 - 緩い命名規則で縛っているので、柔軟かつ迷わない命名が可能
-- 新しい機能を追加するときも本テンプレートの対応を待たないで素直に実装可能
+- 新しい機能を追加するときもフレームワークの対応を待たないで素直に実装可能
 - 実務で困らない範囲の役務分担と抽象化
 - 難しく考えずにサクサク開発できる
 
@@ -18,23 +18,13 @@ brew install goenv
 goenv install -l
 
 # バージョンを指定してインストール(Go1.11.x系の最新選択)
-goenv install 1.11.x
+goenv install 1.12.x
 
 # バージョン切り替え
-goenv global 1.11.x
+goenv global 1.12.x
 
 # バージョン確認
 go version
-```
-
-## GOPATHを通す
-```bash
-vi .bash_profile
-
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-
-source .bash_profile
 ```
 
 ## ghq(リポジトリ管理)のセットアップ
@@ -45,8 +35,8 @@ brew install ghq
 # 設定
 git config --global ghq.root $GOPATH/src
 
-# Goプロジェクトを取得(例:merlinの場合)
-ghq get git@github.com:aikizoku/merlin.git
+# Goプロジェクトを取得(例:rabbitgoの場合)
+ghq get git@github.com:aikizoku/rabbitgo.git
 ```
 
 ## Google Cloud SDKのセットアップ
@@ -66,47 +56,57 @@ gcloud auth login
 
 ## 依存パッケージのインストール
 ```bash
-cd appengine/app/api
+cd appengine/default
 GO111MODULE=on go test
 ```
 
 # 動かす
 ## 起動
 ```bash
-# API
-make run app=api
-make run-staging app=api
-make run-production app=api
-
-# Worker
-make run app=worker
-make run-staging app=worker
-make run-production app=worker
+# GoogleAppEngine
+cd appengine
+make run name=default
 ```
 
 ## ローカルで確認
 ```
-// アプリを確認
+# 動作確認
 http://localhost:8080/ping
+
+# 状況確認
+http://localhost:5002/
 ```
 
 ## デプロイ
 ```bash
-# API
-make deploy app=api
-make deploy-production app=api
+# Google App Engine
+cd appengine
+make deploy name=default            # ステージング環境
+make deploy-production name=default # 本番環境
 
-# Worker
-make deploy app=worker
-make deploy-production app=worker
+# Cloud Functions
+cd functions
+make deploy name=function-name            # ステージング環境
+make deploy-production name=function-name # 本番環境
 
-# Cron
-make deploy-cron
-make deploy-cron-production
+# Cloud Scheduler
+cd scheduler
+make deploy-http name=schedule-name                 # HTTPのURLを実行する ステージング環境
+make deploy-http-production name=schedule-name      # HTTPのURLを実行する 本番環境
+make deploy-appengine name=schedule-name            # GAEのAPIを実行する ステージング環境
+make deploy-appengine-production name=schedule-name # GAEのAPIを実行する 本番環境
+make deploy-pubsub name=schedule-name               # PubSubのトピックに送信する ステージング環境
+make deploy-pubsub-production name=schedule-name    # PubSubのトピックに送信する 本番環境
 
-# Queue
-make deploy-queue
-make deploy-queue-production
+# Cloud Tasks
+cd tasks
+make deploy            # ステージング環境
+make deploy-production # 本番環境
+
+# Cloud Pub/Sub
+cd pubsub
+make deploy            # ステージング環境
+make deploy-production # 本番環境
 ```
 
 # 開発で使う便利なコマンド集
@@ -123,18 +123,18 @@ brew upgrade goenv
 goenv install -l
 
 # バージョンを指定してインストール
-goenv install 1.11.1
+goenv install 1.12.7
 
 # バージョン切り替え
-goenv global 1.11.1
+goenv global 1.12.7
 
 # バージョン確認
 go version
 
 ###### ghq ######
 
-# Goプロジェクトを取得(例:merlinの場合)
-ghq get git@github.com:aikizoku/merlin.git
+# Goプロジェクトを取得(例:rabbitgoの場合)
+ghq get git@github.com:aikizoku/rabbitgo.git
 
 ###### Google Cloud SDK ######
 
@@ -194,15 +194,6 @@ code, ok := errcode.Get(err)
 // エラーログを出力すると同時にエラーコードを含むエラーを作成したい
 // 出力されるログ: time [ERROR] foo/bar.go:21 hoge 123
 err := log.Errorc(ctx, http.StatusNotFound, "hoge %d", 123)
-
-/****** Middleware ******/
-
-// XXXX ... XXXXのミドルウェア
-func XXXX(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r)
-	})
-}
 
 /****** リクエストの値を取得 ******/
 

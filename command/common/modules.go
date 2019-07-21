@@ -13,7 +13,7 @@ import (
 
 // LoadEnvFile ... 環境変数ファイルを読み込む
 func LoadEnvFile() Env {
-	raw, err := ioutil.ReadFile("./env.json")
+	raw, err := ioutil.ReadFile("../env.json")
 	if err != nil {
 		panic(err)
 	}
@@ -28,9 +28,9 @@ func LoadEnvFile() Env {
 // GetProjectIDs ... 環境変数データからProjectIDを取得する
 func GetProjectIDs(env Env) ProjectIDs {
 	return ProjectIDs{
-		Local:      env.Credentials.Local["project_id"],
-		Staging:    env.Credentials.Staging["project_id"],
-		Production: env.Credentials.Production["project_id"],
+		Local:      env.Credentials.Local["project_id"].(string),
+		Staging:    env.Credentials.Staging["project_id"].(string),
+		Production: env.Credentials.Production["project_id"].(string),
 	}
 }
 
