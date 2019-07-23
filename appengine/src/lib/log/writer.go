@@ -10,6 +10,7 @@ type Writer interface {
 	Request(
 		severity Severity,
 		traceID string,
+		applicationLogs []*EntryChild,
 		r *http.Request,
 		status int,
 		at time.Time,

@@ -19,6 +19,7 @@ type Logger struct {
 	MaxOuttedSeverity Severity
 	TraceID           string
 	ResponseStatus    int
+	ApplicationLogs   []*EntryChild
 }
 
 // IsLogging ... レベル毎のログ出力許可
@@ -33,11 +34,22 @@ func (l *Logger) SetOuttedSeverity(severity Severity) {
 	}
 }
 
+// AddApplicationLog ... アプリケーションログ履歴を記録する
+func (l *Logger) AddApplicationLog(severity Severity, file string, line int64, function string, msg string, at time.Time) {
+	src := &EntryChild{
+		Severity: severity.String(),
+		Message:  fmt.Sprintf("%s:%d [%s] %s", file, line, function, msg),
+		Time:     Time(at),
+	}
+	l.ApplicationLogs = append(l.ApplicationLogs, src)
+}
+
 // WriteRequest ... リクエストログを出力する
 func (l *Logger) WriteRequest(r *http.Request, at time.Time, dr time.Duration) {
 	l.Writer.Request(
 		l.MaxOuttedSeverity,
 		l.TraceID,
+		l.ApplicationLogs,
 		r,
 		l.ResponseStatus,
 		at,
@@ -69,15 +81,17 @@ func Debugf(ctx context.Context, format string, args ...interface{}) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf(format, args...)
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf(format, args...),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -88,15 +102,17 @@ func Debugm(ctx context.Context, method string, err error) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf("%s: %s", method, err.Error())
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf("%s: %s", method, err.Error()),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -108,15 +124,17 @@ func Debuge(ctx context.Context, format string, args ...interface{}) error {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return err
 }
@@ -129,15 +147,17 @@ func Debugc(ctx context.Context, code int, format string, args ...interface{}) e
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return errcode.Set(err, code)
 }
@@ -149,15 +169,17 @@ func Infof(ctx context.Context, format string, args ...interface{}) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf(format, args...)
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf(format, args...),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -168,15 +190,17 @@ func Infom(ctx context.Context, method string, err error) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf("%s: %s", method, err.Error())
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf("%s: %s", method, err.Error()),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -188,15 +212,17 @@ func Infoe(ctx context.Context, format string, args ...interface{}) error {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return err
 }
@@ -209,15 +235,17 @@ func Infoc(ctx context.Context, code int, format string, args ...interface{}) er
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return errcode.Set(err, code)
 }
@@ -229,15 +257,17 @@ func Warningf(ctx context.Context, format string, args ...interface{}) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf(format, args...)
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf(format, args...),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -248,15 +278,17 @@ func Warningm(ctx context.Context, method string, err error) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf("%s: %s", method, err.Error())
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf("%s: %s", method, err.Error()),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -268,15 +300,17 @@ func Warninge(ctx context.Context, format string, args ...interface{}) error {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return err
 }
@@ -289,15 +323,17 @@ func Warningc(ctx context.Context, code int, format string, args ...interface{})
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return errcode.Set(err, code)
 }
@@ -309,15 +345,17 @@ func Errorf(ctx context.Context, format string, args ...interface{}) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf(format, args...)
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf(format, args...),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -328,15 +366,17 @@ func Errorm(ctx context.Context, method string, err error) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf("%s: %s", method, err.Error())
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf("%s: %s", method, err.Error()),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -345,18 +385,20 @@ func Errore(ctx context.Context, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
 	severity := SeverityError
 	logger := GetLogger(ctx)
+	msg := err.Error()
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return err
 }
@@ -369,15 +411,17 @@ func Errorc(ctx context.Context, code int, format string, args ...interface{}) e
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return errcode.Set(err, code)
 }
@@ -389,15 +433,17 @@ func Criticalf(ctx context.Context, format string, args ...interface{}) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf(format, args...)
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf(format, args...),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -408,15 +454,17 @@ func Criticalm(ctx context.Context, method string, err error) {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := fmt.Sprintf("%s: %s", method, err.Error())
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			fmt.Sprintf("%s: %s", method, err.Error()),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 }
 
@@ -428,15 +476,17 @@ func Criticale(ctx context.Context, format string, args ...interface{}) error {
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return err
 }
@@ -449,15 +499,17 @@ func Criticalc(ctx context.Context, code int, format string, args ...interface{}
 	if logger != nil && logger.IsLogging(severity) {
 		now := util.TimeNow()
 		file, line, function := getFileLine()
+		msg := err.Error()
 		logger.Writer.Application(
 			severity,
 			logger.TraceID,
-			err.Error(),
+			msg,
 			file,
 			line,
 			function,
 			now)
 		logger.SetOuttedSeverity(severity)
+		logger.AddApplicationLog(severity, file, line, function, msg, now)
 	}
 	return errcode.Set(err, code)
 }

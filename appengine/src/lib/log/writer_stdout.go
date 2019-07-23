@@ -13,6 +13,7 @@ type writerStdout struct {
 func (w *writerStdout) Request(
 	severity Severity,
 	traceID string,
+	applicationLogs []*EntryChild,
 	r *http.Request,
 	status int,
 	at time.Time,
@@ -32,7 +33,7 @@ func (w *writerStdout) Application(
 	function string,
 	at time.Time) {
 	date := at.Format(w.TimeFormat)
-	fmt.Printf("%s [%s] %s:%d %s %s\n", date, severity.String(), file, line, function, msg)
+	fmt.Printf("%s [%s] %s:%d [%s] %s\n", date, severity.String(), file, line, function, msg)
 }
 
 // NewWriterStdout ... ログ出力を作成する

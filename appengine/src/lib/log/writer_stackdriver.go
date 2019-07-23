@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -16,6 +15,7 @@ type writerStackdriver struct {
 func (w *writerStackdriver) Request(
 	severity Severity,
 	traceID string,
+	applicationLogs []*EntryChild,
 	r *http.Request,
 	status int,
 	at time.Time,
@@ -23,21 +23,14 @@ func (w *writerStackdriver) Request(
 	u := *r.URL
 	u.Fragment = ""
 
-	remoteAddr := ""
-	if v := r.Header.Get("X-AppEngine-User-IP"); v != "" {
-		remoteAddr = v
-	} else if v := r.Header.Get("X-Forwarded-For"); v != "" {
-		remoteAddr = v
-	} else {
-		remoteAddr = strings.SplitN(r.RemoteAddr, ":", 2)[0]
-	}
-
 	falseV := false
 
 	e := &Entry{
 		Severity: severity.String(),
 		Time:     Time(at),
 		Trace:    fmt.Sprintf("projects/%s/traces/%s", w.ProjectID, traceID),
+		TraceID:  traceID,
+		Childs:   applicationLogs,
 		Message:  "",
 		HTTPRequest: &EntryHTTPRequest{
 			RequestMethod:                  r.Method,
@@ -45,7 +38,6 @@ func (w *writerStackdriver) Request(
 			RequestSize:                    r.ContentLength,
 			Status:                         status,
 			UserAgent:                      r.UserAgent(),
-			RemoteIP:                       remoteAddr,
 			Referer:                        r.Referer(),
 			Latency:                        Duration(dr),
 			CacheLookup:                    &falseV,
@@ -74,12 +66,7 @@ func (w *writerStackdriver) Application(
 		Severity: severity.String(),
 		Time:     Time(at),
 		Trace:    fmt.Sprintf("projects/%s/traces/%s", w.ProjectID, traceID),
-		Message:  msg,
-		SourceLocation: &EntrySourceLocation{
-			File:     file,
-			Line:     line,
-			Function: function,
-		},
+		Message:  fmt.Sprintf("%s:%d [%s] %s", file, line, function, msg),
 	}
 	b, err := json.Marshal(e)
 	if err != nil {

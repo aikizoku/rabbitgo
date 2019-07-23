@@ -3,12 +3,13 @@ package log
 // Entry ... 構造ログ定義
 // https://cloud.google.com/logging/docs/agent/configuration#special-fields
 type Entry struct {
-	Severity       string               `json:"severity"`
-	HTTPRequest    *EntryHTTPRequest    `json:"httpRequest,omitempty"`
-	Time           Time                 `json:"time"`
-	Trace          string               `json:"logging.googleapis.com/trace"`
-	SourceLocation *EntrySourceLocation `json:"logging.googleapis.com/sourceLocation"`
-	Message        string               `json:"message,omitempty"`
+	Severity    string            `json:"severity"`
+	HTTPRequest *EntryHTTPRequest `json:"httpRequest,omitempty"`
+	Time        Time              `json:"time"`
+	Trace       string            `json:"logging.googleapis.com/trace"`
+	TraceID     string            `json:"traceId"`
+	Childs      []*EntryChild     `json:"childs"`
+	Message     string            `json:"message,omitempty"`
 }
 
 // EntryHTTPRequest ... HTTPリクエストの構造ログ定義
@@ -20,7 +21,6 @@ type EntryHTTPRequest struct {
 	Status                         int      `json:"status"`
 	ResponseSize                   int64    `json:"responseSize,string,omitempty"`
 	UserAgent                      string   `json:"userAgent,omitempty"`
-	RemoteIP                       string   `json:"remoteIp,omitempty"`
 	Referer                        string   `json:"referer,omitempty"`
 	Latency                        Duration `json:"latency,omitempty"`
 	CacheLookup                    *bool    `json:"cacheLookup,omitempty"`
@@ -28,6 +28,13 @@ type EntryHTTPRequest struct {
 	CacheValidatedWithOriginServer *bool    `json:"cacheValidatedWithOriginServer,omitempty"`
 	CacheFillBytes                 *int64   `json:"cacheFillBytes,string,omitempty"`
 	Protocol                       string   `json:"protocol"`
+}
+
+// EntryChild ... 子ログの構造ログ定義
+type EntryChild struct {
+	Severity string `json:"severity"`
+	Message  string `json:"message"`
+	Time     Time   `json:"time"`
 }
 
 // EntrySourceLocation ... SourceLocationの構造ログ定義
