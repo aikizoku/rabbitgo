@@ -26,6 +26,10 @@ func HandleError(ctx context.Context, w http.ResponseWriter, msg string, err err
 		msg := fmt.Sprintf("%d StatusBadRequest: %s, %s", code, msg, err.Error())
 		log.Warningf(ctx, msg)
 		Error(ctx, w, code, msg)
+	case http.StatusUnauthorized:
+		msg := fmt.Sprintf("%d Unauthorized: %s, %s", code, msg, err.Error())
+		log.Warningf(ctx, msg)
+		Error(ctx, w, code, msg)
 	case http.StatusForbidden:
 		msg := fmt.Sprintf("%d Forbidden: %s, %s", code, msg, err.Error())
 		log.Warningf(ctx, msg)
@@ -67,6 +71,13 @@ func JSON(ctx context.Context, w http.ResponseWriter, status int, v interface{})
 func HTML(ctx context.Context, w http.ResponseWriter, status int, name string, values interface{}) {
 	r := render.New()
 	r.HTML(w, status, name, values)
+	log.SetResponseStatus(ctx, status)
+}
+
+// Text ... テキストをレンダリングする
+func Text(ctx context.Context, w http.ResponseWriter, status int, body string) {
+	r := render.New()
+	r.Text(w, status, body)
 	log.SetResponseStatus(ctx, status)
 }
 

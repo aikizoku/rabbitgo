@@ -7,11 +7,12 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/davecgh/go-spew/spew"
+	"github.com/unrolled/render"
+
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/unrolled/render"
 )
 
 // Handler ... JSONRPC2に準拠したアクション
@@ -34,20 +35,23 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	// POSTで送信されていること
 	if r.Method != "POST" {
-		h.renderError(ctx, w, http.StatusNotAcceptable, "invalid http method: %s", r.Method)
+		log.SetResponseStatus(ctx, http.StatusMethodNotAllowed)
+		h.renderError(ctx, w, http.StatusMethodNotAllowed, "invalid http method: %s", r.Method)
 		return
 	}
 
 	// リクエストのContent-TypeもしくはAcceptがapplication/jsonであること
 	contentType := r.Header.Get("Content-Type")
 	if contentType != contentType {
+		log.SetResponseStatus(ctx, http.StatusUnsupportedMediaType)
 		h.renderError(ctx, w, http.StatusUnsupportedMediaType, "invalid http header content-type: %s", contentType)
 		return
 	}
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		h.renderError(ctx, w, http.StatusUnsupportedMediaType, "read http body error: %s", err.Error())
+		log.SetResponseStatus(ctx, http.StatusBadRequest)
+		h.renderError(ctx, w, http.StatusBadRequest, "read http body error: %s", err.Error())
 		return
 	}
 
@@ -59,9 +63,11 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		err = h.handleBatchRequest(ctx, w, r, data)
 	}
 	if err != nil {
+		log.SetResponseStatus(ctx, http.StatusBadRequest)
 		h.renderError(ctx, w, http.StatusBadRequest, "parse json error: %s", err.Error())
 		return
 	}
+	log.SetResponseStatus(ctx, http.StatusOK)
 }
 
 func (h *Handler) handleSingleRequest(ctx context.Context, w http.ResponseWriter, r *http.Request, data []byte) error {
