@@ -2,10 +2,12 @@ package ogp
 
 import (
 	"context"
+	"sync"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 	"github.com/otiai10/opengraph"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
 // Get ... OG情報を取得する
@@ -38,8 +40,9 @@ func Get(ctx context.Context, url string) (*OpenGraph, error) {
 
 // GetMulti ... OG情報を複数取得する
 func GetMulti(ctx context.Context, urls []string) ([]*OpenGraph, error) {
-	var ogs []*OpenGraph
+	ogs := []*OpenGraph{}
 	eg := errgroup.Group{}
+	mutex := &sync.Mutex{}
 	for _, url := range urls {
 		url := url
 		eg.Go(func() error {
@@ -48,7 +51,9 @@ func GetMulti(ctx context.Context, urls []string) ([]*OpenGraph, error) {
 				log.Debugm(ctx, "Get", err)
 				return err
 			}
+			mutex.Lock()
 			ogs = append(ogs, og)
+			mutex.Unlock()
 			return nil
 		})
 	}

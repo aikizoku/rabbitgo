@@ -296,3 +296,45 @@ func ArrayInt64Mix(arrList [][]int64) []int64 {
 	}
 	return dst
 }
+
+// ArrayStringExcludes ... string配列で指定したbaseArrayの中でtargetArrayに含まれない値の配列を取得
+func ArrayStringExcludes(baseArray []string, targetArray []string) []string {
+	return ArrayStringFilter(baseArray, func(v string) bool {
+		isExclude := true
+		for _, t := range targetArray {
+			if t == v {
+				isExclude = false
+				continue
+			}
+		}
+		return isExclude
+	})
+}
+
+// ArrayIntExcludes ... int配列で指定したbaseArrayの中でtargetArrayに含まれない値の配列を取得
+func ArrayIntExcludes(baseArray []int, targetArray []int) []int {
+	return ArrayIntFilter(baseArray, func(v int) bool {
+		isExclude := true
+		for _, t := range targetArray {
+			if t == v {
+				isExclude = false
+				continue
+			}
+		}
+		return isExclude
+	})
+}
+
+// ArrayInt64Excludes ... int64配列で指定したbaseArrayの中でtargetArrayに含まれない値の配列を取得
+func ArrayInt64Excludes(baseArray []int64, targetArray []int64) []int64 {
+	return ArrayInt64Filter(baseArray, func(v int64) bool {
+		isExclude := true
+		for _, t := range targetArray {
+			if t == v {
+				isExclude = false
+				continue
+			}
+		}
+		return isExclude
+	})
+}
