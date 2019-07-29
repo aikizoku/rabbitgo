@@ -1,0 +1,26 @@
+[
+    {
+        "origin": ["http://localhost:3000"],
+        "responseHeader": ["Content-Type"],
+        "method": ["GET", "HEAD", "DELETE"],
+        "maxAgeSeconds": 3600
+    },
+    {
+        "origin": ["http://localhost:50130"],
+        "responseHeader": ["Content-Type"],
+        "method": ["GET", "HEAD", "DELETE"],
+        "maxAgeSeconds": 3600
+    },
+    {
+        "origin": ["https://api-dot-staging-hogehoge.appspot.com"],
+        "responseHeader": ["Content-Type"],
+        "method": ["GET", "HEAD", "DELETE"],
+        "maxAgeSeconds": 3600
+    },
+    {
+        "origin": ["https://api-dot-hogehoge.appspot.com"],
+        "responseHeader": ["Content-Type"],
+        "method": ["GET", "HEAD", "DELETE"],
+        "maxAgeSeconds": 3600
+    }
+]
