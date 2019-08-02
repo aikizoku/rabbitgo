@@ -22,4 +22,7 @@ COPY --from=server_builder /go/src/github.com/aikizoku/rabbitgo/serviceAccount.j
 
 WORKDIR /go/src/github.com/aikizoku/rabbitgo
 
+ENV PORT 8080
+EXPOSE 8080
+
 ENTRYPOINT ["/bin/rabbitgo"]

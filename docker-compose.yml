@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/go/src/github.com/aikizoku/rabbitgo
     ports:
-      - "3001:3001"
+      - "8080:8080"
   db:
     build: ./mysql
     volumes:
