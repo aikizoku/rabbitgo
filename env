@@ -1,0 +1,8 @@
+DEPLOY=local
+GOOGLE_APPLICATION_CREDENTIALS=./serviceAccount.json
+PORT=3001
+
+DB_HOST=tcp(db:3306)
+DB_USER=root
+DB_PASSWORD=password
+DB_DATABASE=sample
