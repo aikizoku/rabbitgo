@@ -17,4 +17,9 @@ FROM alpine AS server
 
 RUN apk add ca-certificates
 COPY --from=server_builder /go/bin/rabbitgo /bin/rabbitgo
+COPY --from=server_builder /go/src/github.com/aikizoku/rabbitgo/.env /go/src/github.com/aikizoku/rabbitgo/.env
+COPY --from=server_builder /go/src/github.com/aikizoku/rabbitgo/serviceAccount.json /go/src/github.com/aikizoku/rabbitgo/serviceAccount.json
+
+WORKDIR /go/src/github.com/aikizoku/rabbitgo
+
 ENTRYPOINT ["/bin/rabbitgo"]
