@@ -7,7 +7,7 @@ import (
 	"github.com/otiai10/opengraph"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 // Get ... OG情報を取得する

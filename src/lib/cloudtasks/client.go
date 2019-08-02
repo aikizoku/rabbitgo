@@ -10,9 +10,9 @@ import (
 	"google.golang.org/api/option"
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/httpclient"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/deploy"
+	"github.com/aikizoku/rabbitgo/src/lib/httpclient"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 // Client ... CloudTasksのクライアント

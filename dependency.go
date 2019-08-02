@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/aikizoku/rabbitgo/appengine/src/handler/api"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/firebaseauth"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/jsonrpc2"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
-	"github.com/aikizoku/rabbitgo/appengine/src/repository"
-	"github.com/aikizoku/rabbitgo/appengine/src/service"
+	"github.com/aikizoku/rabbitgo/src/handler/api"
+	"github.com/aikizoku/rabbitgo/src/lib/cloudfirestore"
+	"github.com/aikizoku/rabbitgo/src/lib/deploy"
+	"github.com/aikizoku/rabbitgo/src/lib/firebaseauth"
+	"github.com/aikizoku/rabbitgo/src/lib/jsonrpc2"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/repository"
+	"github.com/aikizoku/rabbitgo/src/service"
 )
 
 // Dependency ... 依存性

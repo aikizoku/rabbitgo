@@ -11,8 +11,8 @@ import (
 	"github.com/vincent-petithory/dataurl"
 	"google.golang.org/api/option"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/errcode"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 // Client ... GCSのクライアント

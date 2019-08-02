@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/httpclient"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/httpclient"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 // Client ... JSONRPC2のリクエストを行う

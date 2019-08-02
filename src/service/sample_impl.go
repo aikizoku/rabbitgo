@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/repository"
+	"github.com/aikizoku/rabbitgo/src/repository"
 )
 
 type sample struct {

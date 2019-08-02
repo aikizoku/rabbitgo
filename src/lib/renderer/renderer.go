@@ -10,8 +10,8 @@ import (
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/errcode"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 // HandleError ... 一番典型的なエラーハンドリング

@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/renderer"
-	"github.com/aikizoku/rabbitgo/appengine/src/service"
+	"github.com/aikizoku/rabbitgo/src/lib/renderer"
+	"github.com/aikizoku/rabbitgo/src/service"
 )
 
 // SampleHandler ... サンプルのハンドラ

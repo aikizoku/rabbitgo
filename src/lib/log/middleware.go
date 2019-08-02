@@ -3,7 +3,7 @@ package log
 import (
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
+	"github.com/aikizoku/rabbitgo/src/lib/util"
 )
 
 // Middleware ... ロガー

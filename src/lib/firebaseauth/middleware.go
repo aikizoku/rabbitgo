@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/renderer"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/renderer"
 )
 
 // Middleware ... Firebase認証のミドルウェア

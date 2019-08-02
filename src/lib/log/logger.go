@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
+	"github.com/aikizoku/rabbitgo/src/lib/errcode"
+	"github.com/aikizoku/rabbitgo/src/lib/util"
 )
 
 // Logger ... ロガー

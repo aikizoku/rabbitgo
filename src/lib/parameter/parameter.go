@@ -10,8 +10,8 @@ import (
 
 	"github.com/go-chi/chi"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/util"
 )
 
 // GetURL ... リクエストからURLパラメータを取得する

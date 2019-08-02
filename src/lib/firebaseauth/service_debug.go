@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 type serviceDebug struct {

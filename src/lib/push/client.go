@@ -3,8 +3,8 @@ package push
 import (
 	"context"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/jsonrpc2"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/src/lib/jsonrpc2"
+	"github.com/aikizoku/rabbitgo/src/lib/log"
 )
 
 type entryParams struct {

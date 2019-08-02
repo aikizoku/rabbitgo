@@ -1,1 +1,1 @@
-module github.com/aikizoku/rabbitgo/appengine/src
+module github.com/aikizoku/rabbitgo/src
