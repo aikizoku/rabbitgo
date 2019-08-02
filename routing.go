@@ -5,9 +5,9 @@ import (
 
 	"github.com/go-chi/chi"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/handler"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/accesscontrol"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
+	"github.com/aikizoku/rabbitgo/src/handler"
+	"github.com/aikizoku/rabbitgo/src/lib/accesscontrol"
+	"github.com/aikizoku/rabbitgo/src/lib/deploy"
 )
 
 // Routing ... ルーティング設定
