@@ -1,4 +1,12 @@
 steps:
+  - id: Download serviceAccount.json
+    name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "gs://$PROJECT_ID-secret"/serviceAccount.json", "./"]
+  
+  - id: Download dotenv
+    name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "gs://$PROJECT_ID-secret"/.env", "./"]
+
   - id: Build docker image
     name: "gcr.io/cloud-builders/docker"
     args:
@@ -10,6 +18,7 @@ steps:
         "./Prd.Dockerfile",
         ".",
       ]
+
   - id: Push docker image to GCR
     name: "gcr.io/cloud-builders/docker"
     args: ["push", "asia.gcr.io/$PROJECT_ID/rabbitgo:$SHORT_SHA"]
