@@ -12,8 +12,6 @@ services:
       - .:/go/src/github.com/aikizoku/rabbitgo
     ports:
       - "3001:3001"
-    env_file:
-      - env
   db:
     build: ./mysql
     volumes:
