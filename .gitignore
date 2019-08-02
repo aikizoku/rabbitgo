@@ -67,3 +67,5 @@ docker/mysql/data/
 appengine/deploy/
 functions/deploy/
 env.json
+serviceAccount.json
+data
