@@ -28,4 +28,4 @@ services:
     environment:
       TZ: "Asia/Tokyo"
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: rapid_go
+      MYSQL_DATABASE: sample
