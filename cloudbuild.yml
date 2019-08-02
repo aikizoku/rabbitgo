@@ -22,3 +22,7 @@ steps:
   - id: Push docker image to GCR
     name: "gcr.io/cloud-builders/docker"
     args: ["push", "asia.gcr.io/$PROJECT_ID/rabbitgo:$SHORT_SHA"]
+
+  # - id: Deploy Cloud Run
+  #   name: "gcr.io/cloud-builders/gcloud"
+  #   args: ["beta", "run", "deploy", "--project", "${PROJECT_ID}", "--image", "asia.gcr.io/$PROJECT_ID/rabbitgo:$SHORT_SHA"]
