@@ -1,0 +1,31 @@
+version: "3"
+
+volumes:
+  vendor:
+
+services:
+  api:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - .:/go/src/github.com/aikizoku/rabbitgo
+    ports:
+      - "3001:3001"
+    environment:
+      - ENV=develop
+      - DB_HOST=tcp(db:3306)
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_DATABASE=rapid_go
+  db:
+    build: ./mysql
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: rapid_go
