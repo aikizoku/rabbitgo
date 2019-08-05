@@ -2,6 +2,7 @@ package common
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,6 +10,10 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go"
+	"google.golang.org/api/option"
 )
 
 // LoadEnvFile ... 環境変数ファイルを読み込む
@@ -103,4 +108,23 @@ func PrintOutput(r io.Reader) {
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
 	}
+}
+
+// NewFirestoreClient ... Firestoreのクライアントを取得する
+func NewFirestoreClient(credentials map[string]interface{}) *firestore.Client {
+	b, err := json.Marshal(credentials)
+	if err != nil {
+		panic(err)
+	}
+	ctx := context.Background()
+	opt := option.WithCredentialsJSON(b)
+	app, err := firebase.NewApp(ctx, nil, opt)
+	if err != nil {
+		panic(err)
+	}
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return client
 }

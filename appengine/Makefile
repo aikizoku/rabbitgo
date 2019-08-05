@@ -16,6 +16,9 @@ deploy-production:
 	${call init}
 	${call deploy,production,$(name),${call get_env,credentials.production.project_id}}
 
+seed:
+	${call seed}
+
 # マクロ
 define get_env
 $(shell node -p "require('../env.json').$1")
@@ -31,4 +34,8 @@ endef
 
 define deploy
 @cd ./deploy/$1/$2; gcloud app deploy -q app.yaml --project $3
+endef
+
+define seed
+@go run ../command/seed/main.go 
 endef

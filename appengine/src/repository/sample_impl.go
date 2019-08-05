@@ -14,10 +14,6 @@ func (r *sample) Sample(ctx context.Context) error {
 	return nil
 }
 
-func (r *sample) HTTPPost(ctx context.Context) error {
-	return nil
-}
-
 // NewSample ... リポジトリを作成する
 func NewSample(fCli *firestore.Client) Sample {
 	return &sample{

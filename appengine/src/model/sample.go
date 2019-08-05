@@ -1,21 +1,14 @@
 package model
 
-import (
-	"time"
-)
+import "cloud.google.com/go/firestore"
 
 // Sample ... サンプルモデル
 type Sample struct {
-	ID        int64           `datastore:"-" boom:"id"`
-	Category  string          ``
-	Name      string          `datastore:",noindex"`
-	Enabled   bool            ``
-	Details   []*SampleDetail `datastore:",flatten,noindex"`
-	CreatedAt time.Time       ``
-	UpdatedAt time.Time       `datastore:"-"`
-}
-
-type SampleDetail struct {
-	Name   string `datastore:""`
-	Detail string `datastore:""`
+	ID        string                 `firestore:"-"        cloudfirestore:"id"`
+	Ref       *firestore.DocumentRef `firestore:"-"        cloudfirestore:"ref"`
+	Category  string                 `firestore:"category"`
+	Name      string                 `firestore:"name"`
+	Disabled  bool                   `firestore:"disabled"`
+	CreatedAt int64                  `firestore:"created_at"`
+	UpdatedAt int64                  `firestore:"updated_at"`
 }
