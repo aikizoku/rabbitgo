@@ -321,6 +321,30 @@ func Delete(ctx context.Context, docRef *firestore.DocumentRef) error {
 	return nil
 }
 
+// DeleteByQuery ... クエリで複数削除する
+func DeleteByQuery(ctx context.Context, query firestore.Query) (int, error) {
+	it := query.Documents(ctx)
+	defer it.Stop()
+	cnt := 0
+	for {
+		dsnp, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Errorm(ctx, "it.Next", err)
+			return cnt, err
+		}
+		_, err = dsnp.Ref.Delete(ctx)
+		if err != nil {
+			log.Errorm(ctx, "dsnp.Ref.Delete", err)
+			return cnt, err
+		}
+		cnt++
+	}
+	return cnt, nil
+}
+
 // BtDelete ... 削除する（バッチ書き込み）
 func BtDelete(ctx context.Context, bt *firestore.WriteBatch, docRef *firestore.DocumentRef) {
 	_ = bt.Delete(docRef)
