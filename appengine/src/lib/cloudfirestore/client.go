@@ -2,8 +2,6 @@ package cloudfirestore
 
 import (
 	"context"
-	"encoding/base64"
-	"encoding/json"
 	"reflect"
 
 	"cloud.google.com/go/firestore"
@@ -121,14 +119,9 @@ func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{
 }
 
 // GetMultiByQueryCursor ... クエリで複数取得する（ページング）
-func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int, cursor string, dsts interface{}) (string, error) {
-	if cursor != "" {
-		docRef, err := decodeCursor(ctx, cursor)
-		if err != nil {
-			log.Errorm(ctx, "decodeCursor", err)
-			return "", err
-		}
-		query = query.StartAfter(&firestore.DocumentSnapshot{Ref: docRef})
+func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int, cursor *firestore.DocumentSnapshot, dsts interface{}) (*firestore.DocumentSnapshot, error) {
+	if cursor != nil {
+		query = query.StartAfter(cursor)
 	}
 	it := query.Limit(limit).Documents(ctx)
 	defer it.Stop()
@@ -142,13 +135,13 @@ func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int
 		}
 		if err != nil {
 			log.Errorm(ctx, "it.Next", err)
-			return "", err
+			return nil, err
 		}
 		v := reflect.New(rrt).Interface()
 		err = dsnp.DataTo(v)
 		if err != nil {
 			log.Errorm(ctx, "doc.DataTo", err)
-			return "", err
+			return nil, err
 		}
 		rrv := reflect.ValueOf(v)
 		setDocByDsts(rrv, rrt, dsnp.Ref)
@@ -156,14 +149,9 @@ func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int
 		lastDsnp = dsnp
 	}
 	if rv.Len() == limit {
-		nextCursor, err := encodeCursor(ctx, lastDsnp.Ref)
-		if err != nil {
-			log.Errorm(ctx, "encodeCursor", err)
-			return "", err
-		}
-		return nextCursor, nil
+		return lastDsnp, nil
 	}
-	return "", nil
+	return nil, nil
 }
 
 // TxGet ... １つ取得する（トランザクション）
@@ -394,28 +382,4 @@ func setDocByDsts(rv reflect.Value, rt reflect.Type, ref *firestore.DocumentRef)
 			}
 		}
 	}
-}
-
-func encodeCursor(ctx context.Context, docRef *firestore.DocumentRef) (string, error) {
-	b, err := json.Marshal(docRef)
-	if err != nil {
-		log.Errorm(ctx, "json.Marshal", err)
-		return "", err
-	}
-	return base64.StdEncoding.EncodeToString(b), err
-}
-
-func decodeCursor(ctx context.Context, cursor string) (*firestore.DocumentRef, error) {
-	b, err := base64.StdEncoding.DecodeString(cursor)
-	if err != nil {
-		log.Errorm(ctx, "base64.StdEncoding.DecodeString", err)
-		return nil, err
-	}
-	docRef := &firestore.DocumentRef{}
-	err = json.Unmarshal(b, docRef)
-	if err != nil {
-		log.Errorm(ctx, "json.Unmarshal", err)
-		return nil, err
-	}
-	return docRef, err
 }
