@@ -23,6 +23,15 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 		ctx := r.Context()
 		ctx = SetLogger(ctx, logger)
 
+		// Panicのハンドリングを設定
+		defer func() {
+			if rcvr := recover(); rcvr != nil {
+				msg := Panic(ctx, rcvr)
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(msg))
+			}
+		}()
+
 		// 実行
 		next.ServeHTTP(w, r.WithContext(ctx))
 

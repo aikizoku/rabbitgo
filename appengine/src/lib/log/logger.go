@@ -514,6 +514,25 @@ func Criticalc(ctx context.Context, code int, format string, args ...interface{}
 	return errcode.Set(err, code)
 }
 
+// Panic ... Panicをハンドリングする
+func Panic(ctx context.Context, rcvr interface{}) string {
+	traces := []string{}
+	for depth := 0; ; depth++ {
+		if depth < 2 {
+			continue
+		}
+		_, file, line, ok := runtime.Caller(depth)
+		if !ok {
+			break
+		}
+		trace := fmt.Sprintf("%02d: %v:%d", depth-1, file, line)
+		traces = append(traces, trace)
+	}
+	msg := fmt.Sprintf("panic!! %v\n%s", rcvr, strings.Join(traces, "\n"))
+	Criticalf(ctx, msg)
+	return msg
+}
+
 func getFileLine() (string, int64, string) {
 	if pt, file, line, ok := runtime.Caller(2); ok {
 		parts := strings.Split(file, "/")
