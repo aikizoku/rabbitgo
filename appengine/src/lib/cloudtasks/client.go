@@ -87,8 +87,8 @@ func NewClient(
 	port int,
 	deploy string,
 	projectID string,
-	locationID string,
 	serviceID string,
+	locationID string,
 	authToken string) *Client {
 	ctx := context.Background()
 	opt := option.WithCredentialsFile(credentialsPath)
