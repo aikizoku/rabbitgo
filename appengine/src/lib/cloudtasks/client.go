@@ -21,12 +21,13 @@ type Client struct {
 	port       int
 	deploy     string
 	projectID  string
+	serviceID  string
 	locationID string
 	authToken  string
 }
 
 // AddTask ... リクエストをEnqueueする
-func (c *Client) AddTask(ctx context.Context, queue string, serviceID string, path string, params interface{}) error {
+func (c *Client) AddTask(ctx context.Context, queue string, path string, params interface{}) error {
 	headers := map[string]string{
 		"Content-Type":  "application/json",
 		"Authorization": c.authToken,
@@ -38,7 +39,7 @@ func (c *Client) AddTask(ctx context.Context, queue string, serviceID string, pa
 	}
 	req := &taskspb.AppEngineHttpRequest{
 		AppEngineRouting: &taskspb.AppEngineRouting{
-			Service: serviceID,
+			Service: c.serviceID,
 		},
 		HttpMethod:  taskspb.HttpMethod_POST,
 		RelativeUri: path,
@@ -51,7 +52,9 @@ func (c *Client) AddTask(ctx context.Context, queue string, serviceID string, pa
 func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEngineHttpRequest) error {
 	if deploy.IsLocal() {
 		url := fmt.Sprintf("http://localhost:%d%s", c.port, aeReq.RelativeUri)
-		status, _, err := httpclient.PostJSON(ctx, url, aeReq.Body, nil)
+		status, _, err := httpclient.PostJSON(ctx, url, aeReq.Body, &httpclient.HTTPOption{
+			Headers: aeReq.Headers,
+		})
 		if err != nil {
 			log.Errorm(ctx, "httpclient.PostJSON", err)
 			return err
@@ -98,6 +101,7 @@ func NewClient(
 		port:       port,
 		deploy:     deploy,
 		projectID:  projectID,
+		serviceID:  serviceID,
 		locationID: locationID,
 		authToken:  authToken,
 	}
