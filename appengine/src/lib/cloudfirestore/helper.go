@@ -5,9 +5,10 @@ import (
 	"reflect"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
+
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
-	"google.golang.org/api/iterator"
 )
 
 // Get ... １つ取得する
@@ -73,7 +74,7 @@ func GetByQuery(ctx context.Context, query firestore.Query, dst interface{}) (bo
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "Get", dsnp.Ref.Path)
+	dump(ctx, "GetByQuery", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -104,7 +105,7 @@ func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{
 		rv.Set(reflect.Append(rv, rrv))
 		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMulti", paths)
+	dumps(ctx, "GetMultiByQuery", paths)
 	return nil
 }
 
@@ -140,7 +141,7 @@ func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int
 		lastDsnp = dsnp
 		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMulti", paths)
+	dumps(ctx, "GetMultiByQueryCursor", paths)
 	if rv.Len() == limit {
 		return lastDsnp, nil
 	}
@@ -163,7 +164,7 @@ func TxGet(ctx context.Context, tx *firestore.Transaction, docRef *firestore.Doc
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "Get", dsnp.Ref.Path)
+	dump(ctx, "Transaction Get", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -192,7 +193,56 @@ func TxGetMulti(ctx context.Context, tx *firestore.Transaction, docRefs []*fires
 		rv.Set(reflect.Append(rv, rrv))
 		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMulti", paths)
+	dumps(ctx, "Transaction GetMulti", paths)
+	return nil
+}
+
+// TxGetByQuery ... クエリで１つ取得する（トランザクション）
+func TxGetByQuery(ctx context.Context, tx *firestore.Transaction, query firestore.Query, dst interface{}) (bool, error) {
+	it := tx.Documents(query)
+	defer it.Stop()
+	dsnp, err := it.Next()
+	if err == iterator.Done {
+		return false, nil
+	}
+	err = dsnp.DataTo(dst)
+	if err != nil {
+		log.Errorm(ctx, "dsnp.DataTo", err)
+		return false, err
+	}
+	setDocByDst(dst, dsnp.Ref)
+	dump(ctx, "Transaction GetByQuery", dsnp.Ref.Path)
+	return true, nil
+}
+
+// TxGetMultiByQuery ... クエリで複数取得する（トランザクション）
+func TxGetMultiByQuery(ctx context.Context, tx *firestore.Transaction, query firestore.Query, dsts interface{}) error {
+	it := tx.Documents(query)
+	defer it.Stop()
+	rv := reflect.Indirect(reflect.ValueOf(dsts))
+	rrt := rv.Type().Elem().Elem()
+	paths := []string{}
+	for {
+		dsnp, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Errorm(ctx, "it.Next", err)
+			return err
+		}
+		v := reflect.New(rrt).Interface()
+		err = dsnp.DataTo(&v)
+		if err != nil {
+			log.Errorm(ctx, "dsnp.DataTo", err)
+			return err
+		}
+		rrv := reflect.ValueOf(v)
+		setDocByDsts(rrv, rrt, dsnp.Ref)
+		rv.Set(reflect.Append(rv, rrv))
+		paths = append(paths, dsnp.Ref.Path)
+	}
+	dumps(ctx, "Transaction GetMultiByQuery", paths)
 	return nil
 }
 
@@ -314,31 +364,6 @@ func Delete(ctx context.Context, docRef *firestore.DocumentRef) error {
 	}
 	dump(ctx, "Delete", docRef.Path)
 	return nil
-}
-
-// DeleteByQuery ... クエリで複数削除する
-func DeleteByQuery(ctx context.Context, query firestore.Query) (int, error) {
-	it := query.Documents(ctx)
-	defer it.Stop()
-	paths := []string{}
-	for {
-		dsnp, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			log.Errorm(ctx, "it.Next", err)
-			return 0, err
-		}
-		_, err = dsnp.Ref.Delete(ctx)
-		if err != nil {
-			log.Errorm(ctx, "dsnp.Ref.Delete", err)
-			return 0, err
-		}
-		paths = append(paths, dsnp.Ref.Path)
-	}
-	dumps(ctx, "DeleteByQuery", paths)
-	return len(paths), nil
 }
 
 // BtDelete ... 削除する（バッチ書き込み）
