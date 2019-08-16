@@ -11,17 +11,8 @@ GAE/Go環境での爆速で汎用性高い開発を目指したフレームワ�
 # 開発環境構築
 ## Goのセットアップ
 ```bash
-# goenv(Goのバージョン管理)のインストール
-brew install goenv
-
-# インストール可能なバージョンを確認
-goenv install -l
-
-# バージョンを指定してインストール(Go1.11.x系の最新選択)
-goenv install 1.12.x
-
-# バージョン切り替え
-goenv global 1.12.x
+# goのインストール
+brew install go
 
 # バージョン確認
 go version
@@ -111,26 +102,6 @@ make deploy-production # 本番環境
 
 # 開発で使う便利なコマンド集
 ```bash
-###### Go ######
-
-# goenv(Goのバージョン管理)のインストール
-brew install goenv
-
-# goenv(Goのバージョン管理)のアップデート
-brew upgrade goenv
-
-# インストール可能なバージョンを確認
-goenv install -l
-
-# バージョンを指定してインストール
-goenv install 1.12.7
-
-# バージョン切り替え
-goenv global 1.12.7
-
-# バージョン確認
-go version
-
 ###### ghq ######
 
 # Goプロジェクトを取得(例:rabbitgoの場合)
