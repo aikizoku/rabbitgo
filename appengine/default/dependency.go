@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/aikizoku/rabbitgo/appengine/src/handler/api"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/cloudfirestore"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/cloudpubsub"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/firebaseauth"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/images"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/jsonrpc2"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 	"github.com/aikizoku/rabbitgo/appengine/src/repository"
@@ -29,9 +31,11 @@ func (d *Dependency) Inject(e *Environment) {
 	} else {
 		lCli = log.NewWriterStackdriver(e.ProjectID)
 	}
+	psCli := cloudpubsub.NewClient(e.ProjectID, e.CredentialsPath, []string{"image-converter"})
+	imgCli := images.NewClient(psCli, "image-converter")
 
 	// Repository
-	repo := repository.NewSample(fCli)
+	repo := repository.NewSample(fCli, imgCli)
 
 	// Service
 	var faSvc firebaseauth.Service

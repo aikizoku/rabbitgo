@@ -24,7 +24,7 @@ func Routing(r *chi.Mux, d *Dependency) {
 	// 例: サブルーティング
 	r.Route("/v1", func(r chi.Router) {
 		// API
-		r.With(d.FirebaseAuth.Handle).Get("/sample", d.SampleHandler.Sample)
+		r.Get("/sample", d.SampleHandler.Sample)
 
 		// API(JSONRPC2)
 		r.With(d.FirebaseAuth.Handle).Post("/rpc", d.JSONRPC2Handler.Handle)

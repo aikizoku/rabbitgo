@@ -11,6 +11,19 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
 )
 
+// GenerateDocumentRef ...
+func GenerateDocumentRef(fCli *firestore.Client, docRefs []*DocRef) *firestore.DocumentRef {
+	var dst *firestore.DocumentRef
+	for i, docRef := range docRefs {
+		if i == 0 {
+			dst = fCli.Collection(docRef.CollectionName).Doc(docRef.DocID)
+		} else {
+			dst = dst.Collection(docRef.CollectionName).Doc(docRef.DocID)
+		}
+	}
+	return dst
+}
+
 // Get ... １つ取得する
 func Get(ctx context.Context, docRef *firestore.DocumentRef, dst interface{}) (bool, error) {
 	dsnp, err := docRef.Get(ctx)

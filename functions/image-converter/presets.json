@@ -1,0 +1,12 @@
+[
+    {
+        "name": "thumbnail",
+        "width": 300,
+        "height": 300
+    },
+    {
+        "name": "large",
+        "width": 600,
+        "height": 600
+    }
+]
