@@ -11,7 +11,7 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
 )
 
-// GenerateDocumentRef ...
+// GenerateDocumentRef ... ドキュメント参照を作成する
 func GenerateDocumentRef(fCli *firestore.Client, docRefs []*DocRef) *firestore.DocumentRef {
 	var dst *firestore.DocumentRef
 	for i, docRef := range docRefs {

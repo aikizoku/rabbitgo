@@ -11,28 +11,19 @@ import (
 )
 
 func main() {
-	// env.jsonの読み込み
-	env := common.LoadEnvFile()
-
-	// ProjectIDsの読み込み
-	pIDs := common.GetProjectIDs(env)
-
 	// リセット
 	os.RemoveAll("./deploy")
 
-	// 初期化
-	createDeployDir(common.Staging)
-	for app, config := range env.Functions.Staging {
-		createSourceFile(common.Staging, app)
-		createEnvironmentFile(common.Staging, app, pIDs.Staging, config.(map[string]interface{})["environment"].(map[string]interface{}))
-		createCredentialsFile(common.Staging, app, env.Credentials.Staging)
-	}
+	deploys := []string{common.Staging, common.Production}
 
-	createDeployDir(common.Production)
-	for app, config := range env.Functions.Production {
-		createSourceFile(common.Production, app)
-		createEnvironmentFile(common.Production, app, pIDs.Production, config.(map[string]interface{})["environment"].(map[string]interface{}))
-		createCredentialsFile(common.Production, app, env.Credentials.Production)
+	for _, deploy := range deploys {
+		env := common.LoadEnvFile(deploy)
+		for app, config := range env.Functions {
+			createDeployDir(deploy)
+			createSourceFile(deploy, app)
+			createEnvironmentFile(deploy, app, env.GetProjectID(), config.(map[string]interface{})["environment"].(map[string]interface{}))
+			createCredentialsFile(deploy, app, env.Credentials)
+		}
 	}
 }
 

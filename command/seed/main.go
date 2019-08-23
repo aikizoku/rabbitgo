@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/aikizoku/rabbitgo/command/common"
 	"github.com/aikizoku/rabbitgo/command/seed/content"
-	"github.dena.jp/esports/toname-backend/command/common"
 )
 
 func main() {

@@ -146,5 +146,5 @@ func (m *Sample) getMultiByQueryCursor(ctx context.Context) {
 		// NotFound
 		return
 	}
-	fmt.Printf("2: %d, %s\n", len(dsts), nextCursor)
+	fmt.Printf("2: %d, %v\n", len(dsts), nextCursor)
 }

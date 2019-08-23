@@ -13,30 +13,36 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	"github.com/algolia/algoliasearch-client-go/algolia/search"
 	"google.golang.org/api/option"
 )
 
 // LoadEnvFile ... 環境変数ファイルを読み込む
-func LoadEnvFile() Env {
+func LoadEnvFile(deploy string) Env {
 	raw, err := ioutil.ReadFile("../env.json")
 	if err != nil {
 		panic(err)
 	}
-	var env Env
-	err = json.Unmarshal(raw, &env)
+	src := map[string]interface{}{}
+	err = json.Unmarshal(raw, &src)
 	if err != nil {
 		panic(err)
 	}
-	return env
-}
-
-// GetProjectIDs ... 環境変数データからProjectIDを取得する
-func GetProjectIDs(env Env) ProjectIDs {
-	return ProjectIDs{
-		Local:      env.Credentials.Local["project_id"].(string),
-		Staging:    env.Credentials.Staging["project_id"].(string),
-		Production: env.Credentials.Production["project_id"].(string),
+	apps := src["appengine"].(map[string]interface{})["apps"].([]interface{})
+	appSts := []string{}
+	for _, app := range apps {
+		appSts = append(appSts, app.(string))
 	}
+	var dst Env
+	dst.Apps = appSts
+	dst.Credentials = src["credentials"].(map[string]interface{})[deploy].(map[string]interface{})
+	if env, ok := src["appengine"].(map[string]interface{})[deploy]; ok {
+		dst.Appengine = env.(map[string]interface{})
+	}
+	if env, ok := src["functions"].(map[string]interface{})[deploy]; ok {
+		dst.Functions = env.(map[string]interface{})
+	}
+	return dst
 }
 
 // CreateFile ... 任意の場所に任意のファイルを作成してデータを書き込む
@@ -111,8 +117,8 @@ func PrintOutput(r io.Reader) {
 }
 
 // NewFirestoreClient ... Firestoreのクライアントを取得する
-func NewFirestoreClient(credentials map[string]interface{}) *firestore.Client {
-	b, err := json.Marshal(credentials)
+func NewFirestoreClient(env Env) *firestore.Client {
+	b, err := json.Marshal(env.Credentials)
 	if err != nil {
 		panic(err)
 	}
@@ -126,5 +132,14 @@ func NewFirestoreClient(credentials map[string]interface{}) *firestore.Client {
 	if err != nil {
 		panic(err)
 	}
+	return client
+}
+
+// NewAlgoliaClient ... Algoliaのクライアントを取得する
+func NewAlgoliaClient(env Env) *search.Client {
+	client := search.NewClientWithConfig(search.Configuration{
+		AppID:  env.Appengine["ALGOLIA_APP_ID"].(string),
+		APIKey: env.Appengine["ALGOLIA_API_KEY"].(string),
+	})
 	return client
 }
