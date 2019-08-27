@@ -11,10 +11,10 @@ func main() {
 	ctx := context.Background()
 
 	// env.jsonの読み込み
-	env := common.LoadEnvFile()
+	env := common.LoadEnvFile(common.Production)
 
 	// Inject
-	fCli := common.NewFirestoreClient(env.Credentials.Staging)
+	fCli := common.NewFirestoreClient(env)
 
 	u := &content.Sample{
 		FCli: fCli,

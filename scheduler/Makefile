@@ -24,7 +24,7 @@ $(shell node -p "require('../env.json').$1")
 endef
 
 define deploy-http
-@gcloud scheduler jobs create http $1 \
+gcloud scheduler jobs create http $1 \
 --schedule "$3" \
 --description "$4" \
 --uri "$5" \
@@ -36,7 +36,7 @@ define deploy-http
 endef
 
 define deploy-appengine
-@gcloud scheduler jobs create app-engine $1 \
+gcloud scheduler jobs create app-engine $1 \
 --schedule "$3" \
 --description "$4" \
 --service "$5" \
@@ -49,10 +49,10 @@ define deploy-appengine
 endef
 
 define deploy-pubsub
-@gcloud scheduler jobs create pubsub $1 \
+gcloud scheduler jobs create pubsub $1 \
 --schedule "$3" \
 --description "$4" \
---topic "$5" \
+--topic "projects/$2/topics/$5" \
 --message-body "$6" \
 --time-zone "Asia/Tokyo" \
 --project $2

@@ -1,4 +1,4 @@
-.PHONY: deploy deploy-production
+.PHONY: deploy-topic deploy-topic-production deploy-sub deploy-sub-production
 
 deploy-topic:
 	${call deploy-topic,$(name),${call get_env,credentials.staging.project_id}}

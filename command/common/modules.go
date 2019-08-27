@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/pubsub"
 	firebase "firebase.google.com/go"
 	"github.com/algolia/algoliasearch-client-go/algolia/search"
 	"google.golang.org/api/option"
@@ -142,4 +143,20 @@ func NewAlgoliaClient(env Env) *search.Client {
 		APIKey: env.Appengine["ALGOLIA_API_KEY"].(string),
 	})
 	return client
+}
+
+// NewPubSubClient ... PubSubのクライアントを取得する
+func NewPubSubClient(env Env) *pubsub.Client {
+	b, err := json.Marshal(env.Credentials)
+	if err != nil {
+		panic(err)
+	}
+	ctx := context.Background()
+	opt := option.WithCredentialsJSON(b)
+	pID := env.Credentials["project_id"].(string)
+	psClient, err := pubsub.NewClient(ctx, pID, opt)
+	if err != nil {
+		panic(err)
+	}
+	return psClient
 }
