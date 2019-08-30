@@ -10,14 +10,17 @@ run:
 
 deploy:
 	${call init}
-	${call deploy,staging,$(name),${call get_env,credentials.staging.project_id}}
+	${call deploy,staging,$(name),${call get_env,credentials.staging.project_id,--promote}}
 
 deploy-production:
 	${call init}
-	${call deploy,production,$(name),${call get_env,credentials.production.project_id}}
+	${call deploy,production,$(name),${call get_env,credentials.production.project_id,--no-promote}}
 
 seed:
 	${call seed}
+
+migration:
+	${call migration}
 
 # マクロ
 define get_env
@@ -33,9 +36,13 @@ define run
 endef
 
 define deploy
-@cd ./deploy/$1/$2; gcloud app deploy -q app.yaml --project $3
+@cd ./deploy/$1/$2; gcloud app deploy -q app.yaml $4 --project $3
 endef
 
 define seed
 @go run ../command/seed/main.go 
+endef
+
+define migration
+@go run ../command/migration/main.go 
 endef

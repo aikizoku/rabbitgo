@@ -29,6 +29,13 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 				msg := Panic(ctx, rcvr)
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(msg))
+
+				// 実行時間を計算
+				endAt := util.TimeNow()
+				dr := endAt.Sub(startAt)
+
+				// リクエストログを出力
+				logger.WriteRequest(r, endAt, dr)
 			}
 		}()
 

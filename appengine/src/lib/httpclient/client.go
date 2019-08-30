@@ -5,13 +5,13 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 	"github.com/davecgh/go-spew/spew"
+
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
 const defaultTimeout time.Duration = 15 * time.Second
@@ -139,13 +139,6 @@ func PostBody(ctx context.Context, url string, body []byte, opt *HTTPOption) (in
 }
 
 func send(ctx context.Context, req *http.Request, opt *HTTPOption) (int, []byte, error) {
-	dump, err := httputil.DumpRequestOut(req, true)
-	if err == nil {
-		log.Debugf(ctx, "send http request: %s", dump)
-	} else {
-		log.Warningf(ctx, "dumb http request error: %s, error=%s", spew.Sdump(req), err.Error())
-	}
-
 	client := http.Client{}
 	if opt != nil && opt.Timeout > 0 {
 		client.Timeout = opt.Timeout
@@ -159,16 +152,9 @@ func send(ctx context.Context, req *http.Request, opt *HTTPOption) (int, []byte,
 		return 0, nil, err
 	}
 
-	dump, err = httputil.DumpResponse(res, true)
-	if err == nil {
-		log.Debugf(ctx, "http response: %s", dump)
-	} else {
-		log.Warningf(ctx, "dumb http response error: %s, error=%s", spew.Sdump(req), err.Error())
-	}
-
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Warningf(ctx, "read http response body error: %s, error=%s", spew.Sdump(res), err.Error())
+		log.Warningf(ctx, "read http response body error: %s, error: %s", spew.Sdump(res), err.Error())
 		return res.StatusCode, nil, nil
 	}
 	defer res.Body.Close()
