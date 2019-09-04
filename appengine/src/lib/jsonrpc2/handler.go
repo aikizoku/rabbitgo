@@ -12,7 +12,6 @@ import (
 
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
 )
 
 // Handler ... JSONRPC2に準拠したアクション
@@ -54,9 +53,6 @@ func (h *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		h.renderError(ctx, w, http.StatusBadRequest, "read http body error: %s", err.Error())
 		return
 	}
-
-	dataStr := util.BytesToStr(data)
-	log.Infof(ctx, "%s", dataStr)
 
 	err = h.handleSingleRequest(ctx, w, r, data)
 	if err != nil {

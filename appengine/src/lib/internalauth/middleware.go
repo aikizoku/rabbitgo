@@ -1,6 +1,13 @@
 package internalauth
 
-import "net/http"
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
+	"github.com/aikizoku/rabbitgo/appengine/src/lib/renderer"
+)
 
 // Middleware ... 内部認証機能を提供するミドルウェア
 type Middleware struct {
@@ -12,11 +19,18 @@ func (m *Middleware) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ah := r.Header.Get("Authorization")
 		if ah == "" || ah != m.Token {
-			http.Error(w, "internal auth error.", http.StatusForbidden)
+			ctx := r.Context()
+			m.renderError(ctx, w, http.StatusForbidden, "Internal auth error token: %s", ah)
 			return
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func (m *Middleware) renderError(ctx context.Context, w http.ResponseWriter, status int, format string, args ...string) {
+	msg := fmt.Sprintf(format, args)
+	log.Warningf(ctx, msg)
+	renderer.Error(ctx, w, status, msg)
 }
 
 // NewMiddleware ... Middlewareを作成する

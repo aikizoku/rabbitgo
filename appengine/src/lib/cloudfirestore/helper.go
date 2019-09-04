@@ -40,7 +40,6 @@ func Get(ctx context.Context, docRef *firestore.DocumentRef, dst interface{}) (b
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "Get", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -53,7 +52,6 @@ func GetMulti(ctx context.Context, fCli *firestore.Client, docRefs []*firestore.
 	}
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
-	paths := []string{}
 	for _, dsnp := range dsnps {
 		if !dsnp.Exists() {
 			continue
@@ -67,9 +65,7 @@ func GetMulti(ctx context.Context, fCli *firestore.Client, docRefs []*firestore.
 		rrv := reflect.ValueOf(v)
 		setDocByDsts(rrv, rrt, dsnp.Ref)
 		rv.Set(reflect.Append(rv, rrv))
-		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMulti", paths)
 	return nil
 }
 
@@ -87,7 +83,6 @@ func GetByQuery(ctx context.Context, query firestore.Query, dst interface{}) (bo
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "GetByQuery", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -97,7 +92,6 @@ func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{
 	defer it.Stop()
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
-	paths := []string{}
 	for {
 		dsnp, err := it.Next()
 		if err == iterator.Done {
@@ -116,9 +110,7 @@ func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{
 		rrv := reflect.ValueOf(v)
 		setDocByDsts(rrv, rrt, dsnp.Ref)
 		rv.Set(reflect.Append(rv, rrv))
-		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMultiByQuery", paths)
 	return nil
 }
 
@@ -132,7 +124,6 @@ func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
 	var lastDsnp *firestore.DocumentSnapshot
-	paths := []string{}
 	for {
 		dsnp, err := it.Next()
 		if err == iterator.Done {
@@ -152,9 +143,7 @@ func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int
 		setDocByDsts(rrv, rrt, dsnp.Ref)
 		rv.Set(reflect.Append(rv, rrv))
 		lastDsnp = dsnp
-		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "GetMultiByQueryCursor", paths)
 	if rv.Len() == limit {
 		return lastDsnp, nil
 	}
@@ -177,7 +166,6 @@ func TxGet(ctx context.Context, tx *firestore.Transaction, docRef *firestore.Doc
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "Transaction Get", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -190,7 +178,6 @@ func TxGetMulti(ctx context.Context, tx *firestore.Transaction, docRefs []*fires
 	}
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
-	paths := []string{}
 	for _, dsnp := range dsnps {
 		if !dsnp.Exists() {
 			continue
@@ -204,9 +191,7 @@ func TxGetMulti(ctx context.Context, tx *firestore.Transaction, docRefs []*fires
 		rrv := reflect.ValueOf(v)
 		setDocByDsts(rrv, rrt, dsnp.Ref)
 		rv.Set(reflect.Append(rv, rrv))
-		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "Transaction GetMulti", paths)
 	return nil
 }
 
@@ -224,7 +209,6 @@ func TxGetByQuery(ctx context.Context, tx *firestore.Transaction, query firestor
 		return false, err
 	}
 	setDocByDst(dst, dsnp.Ref)
-	dump(ctx, "Transaction GetByQuery", dsnp.Ref.Path)
 	return true, nil
 }
 
@@ -234,7 +218,6 @@ func TxGetMultiByQuery(ctx context.Context, tx *firestore.Transaction, query fir
 	defer it.Stop()
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
-	paths := []string{}
 	for {
 		dsnp, err := it.Next()
 		if err == iterator.Done {
@@ -253,9 +236,7 @@ func TxGetMultiByQuery(ctx context.Context, tx *firestore.Transaction, query fir
 		rrv := reflect.ValueOf(v)
 		setDocByDsts(rrv, rrt, dsnp.Ref)
 		rv.Set(reflect.Append(rv, rrv))
-		paths = append(paths, dsnp.Ref.Path)
 	}
-	dumps(ctx, "Transaction GetMultiByQuery", paths)
 	return nil
 }
 
@@ -267,7 +248,6 @@ func Create(ctx context.Context, colRef *firestore.CollectionRef, src interface{
 		return err
 	}
 	setDocByDst(src, ref)
-	dump(ctx, "Create", ref.Path)
 	return nil
 }
 
@@ -277,7 +257,6 @@ func BtCreate(ctx context.Context, bt *firestore.WriteBatch, colRef *firestore.C
 	ref := colRef.Doc(id)
 	bt.Create(ref, src)
 	setDocByDst(src, ref)
-	dump(ctx, "Batch Create", ref.Path)
 }
 
 // TxCreate ... 作成する（トランザクション）
@@ -290,7 +269,6 @@ func TxCreate(ctx context.Context, tx *firestore.Transaction, colRef *firestore.
 		return err
 	}
 	setDocByDst(src, ref)
-	dump(ctx, "Transaction Create", ref.Path)
 	return nil
 }
 
@@ -306,7 +284,6 @@ func Update(ctx context.Context, docRef *firestore.DocumentRef, kv map[string]in
 		log.Errorm(ctx, "docRef.Update", err)
 		return err
 	}
-	dump(ctx, "Update", docRef.Path)
 	return nil
 }
 
@@ -318,7 +295,6 @@ func BtUpdate(ctx context.Context, bt *firestore.WriteBatch, docRef *firestore.D
 		srcs = append(srcs, src)
 	}
 	_ = bt.Update(docRef, srcs)
-	dump(ctx, "Batch Update", docRef.Path)
 }
 
 // TxUpdate ... 更新する（トランザクション）
@@ -333,7 +309,6 @@ func TxUpdate(ctx context.Context, tx *firestore.Transaction, docRef *firestore.
 		log.Errorm(ctx, "tx.Update", err)
 		return err
 	}
-	dump(ctx, "Transaction Update", docRef.Path)
 	return nil
 }
 
@@ -345,7 +320,6 @@ func Set(ctx context.Context, docRef *firestore.DocumentRef, src interface{}) er
 		return err
 	}
 	setDocByDst(src, docRef)
-	dump(ctx, "Set", docRef.Path)
 	return nil
 }
 
@@ -353,7 +327,6 @@ func Set(ctx context.Context, docRef *firestore.DocumentRef, src interface{}) er
 func BtSet(ctx context.Context, bt *firestore.WriteBatch, docRef *firestore.DocumentRef, src interface{}) {
 	_ = bt.Set(docRef, src)
 	setDocByDst(src, docRef)
-	dump(ctx, "Batch Set", docRef.Path)
 }
 
 // TxSet ... 上書きする（トランザクション）
@@ -364,7 +337,6 @@ func TxSet(ctx context.Context, tx *firestore.Transaction, docRef *firestore.Doc
 		return err
 	}
 	setDocByDst(src, docRef)
-	dump(ctx, "Transaction Set", docRef.Path)
 	return nil
 }
 
@@ -375,14 +347,12 @@ func Delete(ctx context.Context, docRef *firestore.DocumentRef) error {
 		log.Errorm(ctx, "docRef.Delete", err)
 		return err
 	}
-	dump(ctx, "Delete", docRef.Path)
 	return nil
 }
 
 // BtDelete ... 削除する（バッチ書き込み）
 func BtDelete(ctx context.Context, bt *firestore.WriteBatch, docRef *firestore.DocumentRef) {
 	_ = bt.Delete(docRef)
-	dump(ctx, "Batch Delete", docRef.Path)
 }
 
 // TxDelete ... 削除する（トランザクション）
@@ -392,6 +362,5 @@ func TxDelete(ctx context.Context, tx *firestore.Transaction, docRef *firestore.
 		log.Errorm(ctx, "tx.Delete", err)
 		return err
 	}
-	dump(ctx, "Transaction Delete", docRef.Path)
 	return nil
 }

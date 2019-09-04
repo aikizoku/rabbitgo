@@ -1,14 +1,9 @@
 package cloudfirestore
 
 import (
-	"context"
-	"fmt"
 	"reflect"
-	"strings"
 
 	"cloud.google.com/go/firestore"
-
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
 func setDocByDst(dst interface{}, ref *firestore.DocumentRef) {
@@ -45,14 +40,4 @@ func setDocByDsts(rv reflect.Value, rt reflect.Type, ref *firestore.DocumentRef)
 			}
 		}
 	}
-}
-
-func dump(ctx context.Context, method string, path string) {
-	msg := fmt.Sprintf("[firestore] [%s] %s", method, path)
-	log.Debugf(ctx, msg)
-}
-
-func dumps(ctx context.Context, method string, paths []string) {
-	msg := fmt.Sprintf("[firestore] [%s]\n%s", method, strings.Join(paths, ", "))
-	log.Debugf(ctx, msg)
 }
