@@ -1,18 +1,18 @@
-package cloudfirestore
+package firebaseauth
 
 import (
 	"context"
 	"time"
 
-	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 )
 
-// NewClient ... Firestoreのクライアントを取得する
-func NewClient(credentialsPath string) *firestore.Client {
+// NewClient ... クライアントを作成
+func NewClient(credentialsPath string) *auth.Client {
 	ctx := context.Background()
 	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
@@ -24,7 +24,7 @@ func NewClient(credentialsPath string) *firestore.Client {
 	if err != nil {
 		panic(err)
 	}
-	cli, err := app.Firestore(ctx)
+	cli, err := app.Auth(ctx)
 	if err != nil {
 		panic(err)
 	}

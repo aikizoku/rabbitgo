@@ -1,32 +1,13 @@
 package firebaseauth
 
 import (
-	"context"
 	"strings"
-
-	firebase "firebase.google.com/go"
-	"firebase.google.com/go/auth"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
 const (
 	headerPrefix      string = "BEARER"
 	debugHeaderPrefix string = "user="
 )
-
-func getAuthClient(ctx context.Context) (*auth.Client, error) {
-	app, err := firebase.NewApp(ctx, nil)
-	if err != nil {
-		log.Errorm(ctx, "firebase.NewApp", err)
-		return nil, err
-	}
-	c, err := app.Auth(ctx)
-	if err != nil {
-		log.Errorm(ctx, "app.Auth", err)
-		return nil, err
-	}
-	return c, nil
-}
 
 func getTokenByAuthHeader(ah string) string {
 	pLen := len(headerPrefix)

@@ -4,16 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	pubsub "cloud.google.com/go/pubsub"
 	pubsubapi "cloud.google.com/go/pubsub/apiv1"
 	"google.golang.org/api/option"
 	pubsubpb "google.golang.org/genproto/googleapis/pubsub/v1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
 
-// Client ...
+// Client ... Pub/Subのクライアント
 type Client struct {
 	projectID string
 	psClient  *pubsub.Client
@@ -118,12 +121,17 @@ func (c *Client) generateSub(subID string) string {
 func NewClient(projectID string, credentialsPath string, topicIDs []string) *Client {
 	// Clientを作成
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(credentialsPath)
-	psClient, err := pubsub.NewClient(ctx, projectID, opt)
+	cOpt := option.WithCredentialsFile(credentialsPath)
+	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                30 * time.Millisecond,
+		Timeout:             20 * time.Millisecond,
+		PermitWithoutStream: true,
+	}))
+	psClient, err := pubsub.NewClient(ctx, projectID, cOpt, gOpt)
 	if err != nil {
 		panic(err)
 	}
-	psaClient, err := pubsubapi.NewSubscriberClient(ctx, opt)
+	psaClient, err := pubsubapi.NewSubscriberClient(ctx, cOpt, gOpt)
 	if err != nil {
 		panic(err)
 	}

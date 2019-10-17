@@ -5,10 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"google.golang.org/api/option"
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/deploy"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/httpclient"
@@ -91,8 +94,13 @@ func NewClient(
 	locationID string,
 	authToken string) *Client {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(credentialsPath)
-	cli, err := cloudtasks.NewClient(ctx, opt)
+	cOpt := option.WithCredentialsFile(credentialsPath)
+	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                30 * time.Millisecond,
+		Timeout:             20 * time.Millisecond,
+		PermitWithoutStream: true,
+	}))
+	cli, err := cloudtasks.NewClient(ctx, cOpt, gOpt)
 	if err != nil {
 		panic(err)
 	}

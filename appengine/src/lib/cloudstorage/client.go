@@ -10,6 +10,8 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/vincent-petithory/dataurl"
 	"google.golang.org/api/option"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/errcode"
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
@@ -18,7 +20,7 @@ import (
 // Client ... GCSのクライアント
 type Client struct {
 	cli    *storage.Client
-	backet string
+	bucket string
 }
 
 // UploadForDataURL ... DataURLのファイルをアップロードする
@@ -50,7 +52,7 @@ func (c *Client) Upload(
 	data []byte) (string, error) {
 	// Writerを作成
 	w := c.cli.
-		Bucket(c.backet).
+		Bucket(c.bucket).
 		Object(strings.Join([]string{path, name}, "/")).
 		NewWriter(ctx)
 
@@ -80,20 +82,46 @@ func (c *Client) Upload(
 	}
 
 	// URLを作成
-	url := GenerateFileURL(c.backet, path, name)
+	url := GenerateFileURL(c.bucket, path, name)
 	return url, nil
 }
 
+// GetReader ... 指定ファイルのReaderを取得する
+func (c *Client) GetReader(
+	ctx context.Context,
+	path string) (*storage.Reader, error) {
+	reader, err := c.cli.
+		Bucket(c.bucket).
+		Object(path).
+		NewReader(ctx)
+	if err != nil {
+		log.Errorm(ctx, "c.cli.NewReader", err)
+		return nil, err
+	}
+
+	return reader, nil
+}
+
+// GetBucket ... バケット名
+func (c *Client) GetBucket() string {
+	return c.bucket
+}
+
 // NewClient ... クライアントを作成する
-func NewClient(credentialsPath string, backet string) *Client {
+func NewClient(credentialsPath string, bucket string) *Client {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(credentialsPath)
-	cli, err := storage.NewClient(ctx, opt)
+	cOpt := option.WithCredentialsFile(credentialsPath)
+	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                30 * time.Millisecond,
+		Timeout:             20 * time.Millisecond,
+		PermitWithoutStream: true,
+	}))
+	cli, err := storage.NewClient(ctx, cOpt, gOpt)
 	if err != nil {
 		panic(err)
 	}
 	return &Client{
 		cli:    cli,
-		backet: backet,
+		bucket: bucket,
 	}
 }

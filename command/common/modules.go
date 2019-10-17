@@ -14,7 +14,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/pubsub"
 	firebase "firebase.google.com/go"
-	"github.com/algolia/algoliasearch-client-go/algolia/search"
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"google.golang.org/api/option"
 )
 

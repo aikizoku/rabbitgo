@@ -147,22 +147,18 @@ func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
 			return err
 		}
 		switch field.Type.Kind() {
-		case reflect.Int64:
+		case reflect.Int64, reflect.Int:
 			val, err := GetFormByInt64(ctx, r, formTag)
 			if err != nil {
-				log.Debugm(ctx, "GetFormByInt64", err)
-			}
-			fieldValue.SetInt(val)
-		case reflect.Int:
-			val, err := GetFormByInt64(ctx, r, formTag)
-			if err != nil {
-				log.Debugm(ctx, "GetFormByInt64", err)
+				log.Warningm(ctx, "GetFormByInt64", err)
+				return err
 			}
 			fieldValue.SetInt(val)
 		case reflect.Float64:
 			val, err := GetFormByFloat64(ctx, r, formTag)
 			if err != nil {
-				log.Debugm(ctx, "GetFormByFloat64", err)
+				log.Warningm(ctx, "GetFormByFloat64", err)
+				return err
 			}
 			fieldValue.SetFloat(val)
 		case reflect.String:
@@ -171,7 +167,8 @@ func GetForms(ctx context.Context, r *http.Request, dst interface{}) error {
 		case reflect.Bool:
 			val, err := GetFormByBool(ctx, r, formTag)
 			if err != nil {
-				log.Debugm(ctx, "GetFormByBool", err)
+				log.Warningm(ctx, "GetFormByBool", err)
+				return err
 			}
 			fieldValue.SetBool(val)
 		}

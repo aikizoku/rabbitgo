@@ -24,6 +24,7 @@ type Dependency struct {
 // Inject ... 依存性を注入する
 func (d *Dependency) Inject(e *Environment) {
 	// Client
+	aCli := firebaseauth.NewClient(e.CredentialsPath)
 	fCli := cloudfirestore.NewClient(e.CredentialsPath)
 	var lCli log.Writer
 	if deploy.IsLocal() {
@@ -40,9 +41,9 @@ func (d *Dependency) Inject(e *Environment) {
 	// Service
 	var faSvc firebaseauth.Service
 	if deploy.IsProduction() {
-		faSvc = firebaseauth.NewService()
+		faSvc = firebaseauth.NewService(aCli)
 	} else {
-		faSvc = firebaseauth.NewDebugService()
+		faSvc = firebaseauth.NewDebugService(aCli)
 	}
 	svc := service.NewSample(repo)
 

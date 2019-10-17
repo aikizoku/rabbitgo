@@ -3,10 +3,13 @@ package bigquery
 import (
 	"context"
 	"reflect"
+	"time"
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 
 	"github.com/aikizoku/rabbitgo/appengine/src/lib/log"
 )
@@ -24,8 +27,10 @@ func (c *Client) GetList(ctx context.Context, query string, limit int, cursor st
 		log.Errorm(ctx, "q.Read", err)
 		return "", err
 	}
-	it.PageInfo().MaxSize = limit
-	it.PageInfo().Token = cursor
+	if pageInfo := it.PageInfo(); pageInfo != nil {
+		pageInfo.MaxSize = limit
+		pageInfo.Token = cursor
+	}
 
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
 	rrt := rv.Type().Elem().Elem()
@@ -47,14 +52,23 @@ func (c *Client) GetList(ctx context.Context, query string, limit int, cursor st
 			break
 		}
 	}
-	return it.PageInfo().Token, nil
+	var token string
+	if pageInfo := it.PageInfo(); pageInfo != nil {
+		token = pageInfo.Token
+	}
+	return token, nil
 }
 
 // NewClient ... クライアントを作成する
 func NewClient(projectID string, credentialsPath string) *Client {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(credentialsPath)
-	client, err := bigquery.NewClient(ctx, projectID, opt)
+	cOpt := option.WithCredentialsFile(credentialsPath)
+	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:                30 * time.Millisecond,
+		Timeout:             20 * time.Millisecond,
+		PermitWithoutStream: true,
+	}))
+	client, err := bigquery.NewClient(ctx, projectID, cOpt, gOpt)
 	if err != nil {
 		panic(err)
 	}
