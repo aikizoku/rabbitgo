@@ -16,11 +16,8 @@ schema:
     extensions:
     - go
     paths:
-    - ../../../default
-    - ../../../src
+    - ./
     ignored_paths:
-    - .git
     - .realize
-    - vender
     - go.mod
     - go.sum

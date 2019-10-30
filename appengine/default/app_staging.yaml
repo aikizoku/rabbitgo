@@ -9,3 +9,6 @@ automatic_scaling:
   max_instances: 1
 
 service: default
+
+env_variables:
+  DEPLOY: "staging"

@@ -5,21 +5,23 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+
+	"github.com/aikizoku/rabbitgo/appengine/default/src/app"
 )
 
 func main() {
 	// Environment
-	e := &Environment{}
+	e := &app.Environment{}
 	e.Get()
 
 	// Dependency
-	d := &Dependency{}
+	d := &app.Dependency{}
 	d.Inject(e)
 
 	// Routing
 	r := chi.NewRouter()
-	Routing(r, d)
+	app.Routing(r, d)
 
 	// Run
-	http.ListenAndServe(fmt.Sprintf(":%d", e.Port), r)
+	http.ListenAndServe(fmt.Sprintf(":%d", 8080), r)
 }

@@ -7,9 +7,9 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/k0kubun/pp"
 
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/appengine/src/lib/util"
-	"github.com/aikizoku/rabbitgo/appengine/src/model"
+	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
+	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/util"
+	"github.com/aikizoku/rabbitgo/appengine/default/src/model"
 )
 
 // Sample ... サンプルのシードデータ

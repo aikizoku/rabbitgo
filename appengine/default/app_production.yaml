@@ -10,3 +10,6 @@ automatic_scaling:
   max_concurrent_requests: 80
 
 service: default
+
+env_variables:
+  DEPLOY: "production"
