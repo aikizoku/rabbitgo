@@ -23,5 +23,5 @@ func main() {
 	app.Routing(r, d)
 
 	// Run
-	http.ListenAndServe(fmt.Sprintf(":%d", 8080), r)
+	http.ListenAndServe(fmt.Sprintf(":%d", e.Port), r)
 }

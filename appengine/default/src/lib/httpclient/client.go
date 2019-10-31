@@ -14,7 +14,7 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/log"
 )
 
-const defaultTimeout time.Duration = 15 * time.Second
+const defaultTimeout time.Duration = 30 * time.Second
 
 // HTTPOption ... HTTP通信モジュールの追加設定
 type HTTPOption struct {

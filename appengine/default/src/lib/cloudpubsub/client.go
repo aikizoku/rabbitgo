@@ -118,20 +118,19 @@ func (c *Client) generateSub(subID string) string {
 }
 
 // NewClient ... Pub/Subのクライアントを取得する
-func NewClient(projectID string, credentialsPath string, topicIDs []string) *Client {
+func NewClient(projectID string, topicIDs []string) *Client {
 	// Clientを作成
 	ctx := context.Background()
-	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 		Time:                30 * time.Millisecond,
 		Timeout:             20 * time.Millisecond,
 		PermitWithoutStream: true,
 	}))
-	psClient, err := pubsub.NewClient(ctx, projectID, cOpt, gOpt)
+	psClient, err := pubsub.NewClient(ctx, projectID, gOpt)
 	if err != nil {
 		panic(err)
 	}
-	psaClient, err := pubsubapi.NewSubscriberClient(ctx, cOpt, gOpt)
+	psaClient, err := pubsubapi.NewSubscriberClient(ctx, gOpt)
 	if err != nil {
 		panic(err)
 	}

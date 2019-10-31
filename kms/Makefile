@@ -1,16 +1,15 @@
 .PHONY: deploy-topic deploy-topic-production deploy-sub deploy-sub-production
 
+help:
+	@echo ほげほげ
+	@echo ふがふが
+
+
 encript:
 	${call deploy-topic,$(name),${call get_env,credentials.staging.project_id}}
 
 decript:
 	${call deploy-topic,$(name),${call get_env,credentials.production.project_id}}
-
-deploy-sub:
-	${call deploy-sub,$(name),${topic},${call get_env,credentials.staging.project_id}}
-
-deploy-sub-production:
-	${call deploy-sub,$(name),${topic},${call get_env,credentials.production.project_id}}
 
 # マクロ
 define get_env

@@ -12,15 +12,15 @@ import (
 )
 
 // NewClient ... Firestoreのクライアントを取得する
-func NewClient(credentialsPath string) *firestore.Client {
+func NewClient(projectID string) *firestore.Client {
 	ctx := context.Background()
-	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 		Time:                30 * time.Millisecond,
 		Timeout:             20 * time.Millisecond,
 		PermitWithoutStream: true,
 	}))
-	app, err := firebase.NewApp(ctx, nil, cOpt, gOpt)
+	conf := &firebase.Config{ProjectID: projectID}
+	app, err := firebase.NewApp(ctx, conf, gOpt)
 	if err != nil {
 		panic(err)
 	}

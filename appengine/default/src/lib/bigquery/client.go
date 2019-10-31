@@ -60,15 +60,14 @@ func (c *Client) GetList(ctx context.Context, query string, limit int, cursor st
 }
 
 // NewClient ... クライアントを作成する
-func NewClient(projectID string, credentialsPath string) *Client {
+func NewClient(projectID string) *Client {
 	ctx := context.Background()
-	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 		Time:                30 * time.Millisecond,
 		Timeout:             20 * time.Millisecond,
 		PermitWithoutStream: true,
 	}))
-	client, err := bigquery.NewClient(ctx, projectID, cOpt, gOpt)
+	client, err := bigquery.NewClient(ctx, projectID, gOpt)
 	if err != nil {
 		panic(err)
 	}

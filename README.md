@@ -219,3 +219,11 @@ func Get(ctx context.Context) error {
 	return nil
 }
 ```
+
+
+
+`google: could not find default credentials.` が発生したら
+```bash
+gcloud auth application-default login
+```
+

@@ -108,15 +108,14 @@ func (c *Client) GetBucket() string {
 }
 
 // NewClient ... クライアントを作成する
-func NewClient(credentialsPath string, bucket string) *Client {
+func NewClient(bucket string) *Client {
 	ctx := context.Background()
-	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 		Time:                30 * time.Millisecond,
 		Timeout:             20 * time.Millisecond,
 		PermitWithoutStream: true,
 	}))
-	cli, err := storage.NewClient(ctx, cOpt, gOpt)
+	cli, err := storage.NewClient(ctx, gOpt)
 	if err != nil {
 		panic(err)
 	}

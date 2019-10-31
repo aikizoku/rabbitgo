@@ -86,7 +86,6 @@ func (c *Client) addTask(ctx context.Context, queue string, aeReq *taskspb.AppEn
 
 // NewClient ... クライアントを作成する
 func NewClient(
-	credentialsPath string,
 	port int,
 	deploy string,
 	projectID string,
@@ -94,13 +93,12 @@ func NewClient(
 	locationID string,
 	authToken string) *Client {
 	ctx := context.Background()
-	cOpt := option.WithCredentialsFile(credentialsPath)
 	gOpt := option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 		Time:                30 * time.Millisecond,
 		Timeout:             20 * time.Millisecond,
 		PermitWithoutStream: true,
 	}))
-	cli, err := cloudtasks.NewClient(ctx, cOpt, gOpt)
+	cli, err := cloudtasks.NewClient(ctx, gOpt)
 	if err != nil {
 		panic(err)
 	}

@@ -16,7 +16,8 @@ schema:
     extensions:
     - go
     paths:
-    - ./
+    - /
+    - /src
     ignored_paths:
     - .realize
     - go.mod

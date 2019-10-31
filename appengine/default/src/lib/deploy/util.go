@@ -6,7 +6,8 @@ import (
 
 // IsLocal ... 現在の環境がローカルか判定する
 func IsLocal() bool {
-	return os.Getenv("DEPLOY") == "local"
+	d := os.Getenv("DEPLOY")
+	return d == "" || d == "local"
 }
 
 // IsStaging ... 現在の環境がステージングか判定する

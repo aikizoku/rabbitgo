@@ -1,12 +1,10 @@
-.PHONY: init run deploy deploy-production
+.PHONY: run deploy deploy-production
 
 # 準備
-init:
-	${call init}
+help:
 
 run:
-	${call init}
-	${call run,local,$(name)}
+	${call run,local}
 
 deploy:
 	${call init}
@@ -27,12 +25,8 @@ define get_env
 $(shell node -p "require('../env.json').$1")
 endef
 
-define init
-@go run ../command/init_appengine/main.go 
-endef
-
 define run
-@cd ./deploy/$1/$2; $(GOPATH)/bin/realize start --server
+$(GOPATH)/bin/realize start --server
 endef
 
 define deploy
