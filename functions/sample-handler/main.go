@@ -3,8 +3,8 @@ package p
 import (
 	"encoding/json"
 	"fmt"
-	"html"
 	"net/http"
+	"os"
 )
 
 // Handle ...
@@ -18,7 +18,9 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	}
 	if d.Message == "" {
 		fmt.Fprint(w, "Hello World!")
+		fmt.Fprint(w, os.Getenv("GCP_PROJECT"))
 		return
 	}
-	fmt.Fprint(w, html.EscapeString(d.Message))
+	// fmt.Fprint(w, html.EscapeString(d.Message))
+	fmt.Fprint(w, os.Getenv("GCP_PROJECT"))
 }

@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	"gopkg.in/yaml.v2"
+
 	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/deploy"
 )
 
@@ -23,12 +25,12 @@ func Load() {
 	}
 
 	// 値
-	file, err = ioutil.ReadFile("./env.json")
+	file, err = ioutil.ReadFile("./env.yaml")
 	if err != nil {
 		panic(err)
 	}
 	val := &Variable{}
-	err = json.Unmarshal(file, &val)
+	err = yaml.Unmarshal(file, &val)
 	if err != nil {
 		panic(err)
 	}
@@ -41,11 +43,9 @@ func Load() {
 	} else if deploy.IsStaging() {
 		src = val.Staging
 		src["PROJECT_ID"] = prj.Staging
-		src["DEPLOY"] = "staging"
 	} else if deploy.IsProduction() {
 		src = val.Production
 		src["PROJECT_ID"] = prj.Production
-		src["DEPLOY"] = "production"
 	} else {
 		panic(fmt.Errorf("invalid deploy: %s", os.Getenv("DEPLOY")))
 	}

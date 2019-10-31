@@ -1,28 +1,23 @@
-.PHONY: run deploy deploy-production
+.PHONY: run deploy deploy-prod
 
 # 準備
 help:
+	@echo 'run         : ローカル環境で実行する'
+	@echo 'deploy      : ステージング環境にデプロイする'
+	@echo 'deploy-prod : 本番環境にデプロイする'
 
 run:
-	${call run,local}
+	${call run}
 
 deploy:
-	${call init}
-	${call deploy,staging,$(name),${call get_env,credentials.staging.project_id,--promote}}
+	${call deploy,staging,${call get_project,staging}}
 
-deploy-production:
-	${call init}
-	${call deploy,production,$(name),${call get_env,credentials.production.project_id,--no-promote}}
-
-seed:
-	${call seed}
-
-migration:
-	${call migration}
+deploy-prod:
+	${call deploy,production,${call get_project,production}}
 
 # マクロ
-define get_env
-$(shell node -p "require('../env.json').$1")
+define get_project
+$(shell node -p "require('../../project.json').$1")
 endef
 
 define run
@@ -30,13 +25,5 @@ $(GOPATH)/bin/realize start --server
 endef
 
 define deploy
-@cd ./deploy/$1/$2; gcloud app deploy -q app.yaml $4 --project $3
-endef
-
-define seed
-@go run ../command/seed/main.go 
-endef
-
-define migration
-@go run ../command/migration/main.go 
+@gcloud app deploy -q app_$1.yaml --project $2
 endef

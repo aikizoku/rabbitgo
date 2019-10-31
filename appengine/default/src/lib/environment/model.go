@@ -9,7 +9,7 @@ type Project struct {
 
 // Variable ... 値
 type Variable struct {
-	Local      map[string]string `json:"local"`
-	Staging    map[string]string `json:"staging"`
-	Production map[string]string `json:"production"`
+	Local      map[string]string `yaml:"local"`
+	Staging    map[string]string `yaml:"staging"`
+	Production map[string]string `yaml:"production"`
 }

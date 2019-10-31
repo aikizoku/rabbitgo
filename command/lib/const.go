@@ -1,4 +1,4 @@
-package common
+package lib
 
 const (
 	// Local ... 環境: ローカル
