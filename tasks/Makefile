@@ -1,14 +1,18 @@
-.PHONY: deploy deploy-production
+.PHONY: deploy deploy-prod
+
+h:
+	@echo 'deploy:      ステージング環境にデプロイする'
+	@echo 'deploy-prod: 本番環境にデプロイする'
 
 deploy:
-	${call deploy,${call get_env,credentials.staging.project_id}}
+	${call deploy,${call get_project,staging}}
 
-deploy-production:
-	${call deploy,${call get_env,credentials.production.project_id}}
+deploy-prod:
+	${call deploy,${call get_project,production}}
 
 # マクロ
-define get_env
-$(shell node -p "require('../env.json').$1")
+define get_project
+$(shell node -p "require('../project.json').$1")
 endef
 
 define deploy

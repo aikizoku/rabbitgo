@@ -1,4 +1,4 @@
-.PHONY: init deploy deploy-production
+.PHONY: h deploy deploy-prod
 
 _RUNTIME := go111
 _REGION := asia-northeast1
@@ -7,7 +7,7 @@ _MEMORY := 128MB
 _TIMEOUT := 60s
 _TRIGGER := --trigger-http
 
-help:
+h:
 	@echo 'deploy      : ステージング環境にデプロイする'
 	@echo 'deploy-prod : 本番環境にデプロイする'
 

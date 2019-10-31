@@ -1,7 +1,7 @@
-.PHONY: run deploy deploy-prod
+.PHONY: h run deploy deploy-prod
 
 # 準備
-help:
+h:
 	@echo 'run         : ローカル環境で実行する'
 	@echo 'deploy      : ステージング環境にデプロイする'
 	@echo 'deploy-prod : 本番環境にデプロイする'
