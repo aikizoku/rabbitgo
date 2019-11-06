@@ -1,3 +1,6 @@
+# Version
+3.0.0
+
 # これはなに？
 GAE/Go環境での爆速で汎用性高い開発を目指したフレームワーク
 とても早くて軽いAPIやWorkerをワンソースで作る事が出来る
@@ -7,6 +10,12 @@ GAE/Go環境での爆速で汎用性高い開発を目指したフレームワ�
 - 新しい機能を追加するときもフレームワークの対応を待たないで素直に実装可能
 - 実務で困らない範囲の役務分担と抽象化
 - 難しく考えずにサクサク開発できる
+
+# エラーが出たら
+- `google: could not find default credentials.` が発生したら
+```bash
+gcloud auth application-default login
+```
 
 # 開発環境構築
 ## Goのセットアップ
@@ -55,8 +64,8 @@ GO111MODULE=on go test
 ## 起動
 ```bash
 # GoogleAppEngine
-cd appengine
-make run name=default
+cd appengine/default
+make run
 ```
 
 ## ローカルで確認
@@ -71,33 +80,24 @@ http://localhost:5002/
 ## デプロイ
 ```bash
 # Google App Engine
-cd appengine
-make deploy name=default            # ステージング環境
-make deploy-production name=default # 本番環境
+cd appengine/default
+make deploy      # ステージング環境
+make deploy-prod # 本番環境
 
 # Cloud Functions
-cd functions
-make deploy name=function-name            # ステージング環境
-make deploy-production name=function-name # 本番環境
+cd functions/sample-handler
+make deploy      # ステージング環境
+make deploy-prod # 本番環境
 
 # Cloud Scheduler
-cd scheduler
-make deploy-http name=schedule-name                 # HTTPのURLを実行する ステージング環境
-make deploy-http-production name=schedule-name      # HTTPのURLを実行する 本番環境
-make deploy-appengine name=schedule-name            # GAEのAPIを実行する ステージング環境
-make deploy-appengine-production name=schedule-name # GAEのAPIを実行する 本番環境
-make deploy-pubsub name=schedule-name               # PubSubのトピックに送信する ステージング環境
-make deploy-pubsub-production name=schedule-name    # PubSubのトピックに送信する 本番環境
+cd scheduler/sample
+make deploy      # ステージング環境
+make deploy-prod # 本番環境
 
 # Cloud Tasks
 cd tasks
-make deploy            # ステージング環境
-make deploy-production # 本番環境
-
-# Cloud Pub/Sub
-cd pubsub
-make deploy            # ステージング環境
-make deploy-production # 本番環境
+make deploy      # ステージング環境
+make deploy-prod # 本番環境
 ```
 
 # 開発で使う便利なコマンド集
