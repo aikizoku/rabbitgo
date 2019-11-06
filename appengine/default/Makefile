@@ -2,9 +2,9 @@
 
 # 準備
 h:
-	@echo 'run         ローカル環境で実行する'
-	@echo 'deploy      ステージング環境にデプロイする'
-	@echo 'deploy-prod 本番環境にデプロイする'
+	@echo 'run         アプリを実行する: ローカル'
+	@echo 'deploy      アプリをデプロイする: ステージング'
+	@echo 'deploy-prod アプリをデプロイする: 本番'
 
 run:
 	${call run}
@@ -15,7 +15,6 @@ deploy:
 deploy-prod:
 	${call deploy,production,${call get-project,production}}
 
-# マクロ
 define get-project
 $(shell node -p "require('../../project.json').$1")
 endef

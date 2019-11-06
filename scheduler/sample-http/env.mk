@@ -1,6 +1,6 @@
 _STG_SCHEDULE     := * * * * *
 _STG_DESCRIPTION  := HogeHoge
-_STG_URI          := /v1/worker/hoge/fuga
+_STG_URI          := https://google.co.jp
 _STG_HTTP_METHOD  := GET
 _STG_HTTP_HEADERS := Authorization=token
 _STG_HTTP_BODY    :=

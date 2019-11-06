@@ -1,4 +1,8 @@
-.PHONY: deploy deploy-prod
+.PHONY: h deploy deploy-prod
+
+h:
+	@echo 'deploy      FirebaseStorageにルールをデプロイする: ステージング'
+	@echo 'deploy-prod FirebaseStorageにルールをデプロイする: 本番'
 
 deploy:
 	${call deploy,${call get-project,staging}}
@@ -6,7 +10,6 @@ deploy:
 deploy-prod:
 	${call deploy,${call get-project,production}}
 
-# マクロ
 define get-project
 $(shell node -p "require('../../project.json').$1")
 endef

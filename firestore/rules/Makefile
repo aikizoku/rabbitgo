@@ -3,8 +3,8 @@
 _NAME := $(notdir $(CURDIR))
 
 h:
-	@echo 'deploy      ルールをステージング環境にデプロイする'
-	@echo 'deploy-prod ルールを本番環境にデプロイする'
+	@echo 'deploy      Firestoreのルールをデプロイする: ステージング'
+	@echo 'deploy-prod Firestoreのルールをデプロイする: 本番'
 
 deploy:
 	${call deploy,${call get-project,staging}}
@@ -12,8 +12,6 @@ deploy:
 deploy-prod:
 	${call deploy,${call get-project,production}}
 
-
-# マクロ
 define get-project
 $(shell node -p "require('../../project.json').$1")
 endef

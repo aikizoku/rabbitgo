@@ -3,10 +3,10 @@
 _NAME := $(notdir $(CURDIR))
 
 h:
-	@echo 'get         インデックスをステージング環境から取得する'
-	@echo 'get-prod    インデックスを本番環境から取得する'
-	@echo 'deploy      インデックスをステージング環境にデプロイする'
-	@echo 'deploy-prod インデックスを本番環境にデプロイする'
+	@echo 'get         Firestoreのインデックスを取得する: ステージング'
+	@echo 'get-prod    Firestoreのインデックスを取得する: 本番'
+	@echo 'deploy      Firestoreのインデックスをデプロイする: ステージング'
+	@echo 'deploy-prod Firestoreのインデックスをデプロイする: 本番'
 
 get:
 	${call get,${call get-project,staging}}
@@ -20,7 +20,6 @@ deploy:
 deploy-prod:
 	${call deploy,${call get-project,production}}
 
-# マクロ
 define get-project
 $(shell node -p "require('../../project.json').$1")
 endef

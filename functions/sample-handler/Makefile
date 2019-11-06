@@ -5,8 +5,8 @@ include env.mk
 _NAME := $(notdir $(CURDIR))
 
 h:
-	@echo 'deploy      ステージング環境にデプロイする'
-	@echo 'deploy-prod 本番環境にデプロイする'
+	@echo 'deploy      Functionsをデプロイする: ステージング'
+	@echo 'deploy-prod Functionsをデプロイする: 本番'
 
 deploy:
 	${call deploy,${call get-project,staging},$(_STG_RUNTIME),$(_STG_REGION),$(_STG_ENTRY),$(_STG_ENV),$(_STG_MEMORY),$(_STG_TIMEOUT),$(_STG_TRIGGER)}
@@ -14,7 +14,6 @@ deploy:
 deploy-prod:
 	${call deploy,${call get-project,production},$(_PRD_RUNTIME),$(_PRD_REGION),$(_PRD_ENTRY),$(_PRD_ENV),$(_PRD_MEMORY),$(_PRD_TIMEOUT),$(_PRD_TRIGGER)}
 
-# マクロ
 define get-project
 $(shell node -p "require('../../project.json').$1")
 endef

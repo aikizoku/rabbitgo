@@ -3,19 +3,14 @@
 include env.mk
 
 h:
-	@echo 'deploy-cors:      CORS設定をステージング環境にデプロイする'
-	@echo 'deploy-cors-prod: CORS設定を本番環境にデプロイする'
+	@echo 'deploy-cors:      GCSにCORS設定をデプロイする: ステージング'
+	@echo 'deploy-cors-prod: GCSにCORS設定をデプロイする: 本番'
 
 deploy-cors:
 	${call deploy-cors,$(_STG_BUCKET)}
 
 deploy-cors-prod:
 	${call deploy-cors,$(_PRD_BUCKET)}
-
-# マクロ
-define get-project
-$(shell node -p "require('../project.json').$1")
-endef
 
 define deploy-cors
 @gsutil cors set cors.json gs://$1

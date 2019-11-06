@@ -1,8 +1,8 @@
-.PHONY: deploy deploy-prod
+.PHONY: h deploy deploy-prod
 
 h:
-	@echo 'deploy      ステージング環境にデプロイする'
-	@echo 'deploy-prod 本番環境にデプロイする'
+	@echo 'deploy      TasksのQueueをデプロイする: ステージング'
+	@echo 'deploy-prod TasksのQueueをデプロイする: 本番'
 
 deploy:
 	${call deploy,${call get-project,staging}}
@@ -10,7 +10,6 @@ deploy:
 deploy-prod:
 	${call deploy,${call get-project,production}}
 
-# マクロ
 define get-project
 $(shell node -p "require('../project.json').$1")
 endef
