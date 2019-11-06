@@ -13,19 +13,8 @@ import (
 
 // Load ... 環境変数を読み込む
 func Load() {
-	// プロジェクト
-	file, err := ioutil.ReadFile("../../project.json")
-	if err != nil {
-		panic(err)
-	}
-	prj := &Project{}
-	err = json.Unmarshal(file, &prj)
-	if err != nil {
-		panic(err)
-	}
-
 	// 値
-	file, err = ioutil.ReadFile("./env.yaml")
+	file, err := ioutil.ReadFile("./env.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -37,15 +26,32 @@ func Load() {
 
 	var src map[string]string
 	if deploy.IsLocal() {
+		file, err := ioutil.ReadFile("../../project.json")
+		if err != nil {
+			panic(err)
+		}
+		prj := &Project{}
+		err = json.Unmarshal(file, &prj)
+		if err != nil {
+			panic(err)
+		}
 		src = val.Local
 		src["PROJECT_ID"] = prj.Local
 		src["DEPLOY"] = "local"
 	} else if deploy.IsStaging() {
+		prj := os.Getenv("GOOGLE_CLOUD_PROJECT")
+		if prj == "" {
+			panic("env not found GOOGLE_CLOUD_PROJECT")
+		}
 		src = val.Staging
-		src["PROJECT_ID"] = prj.Staging
+		src["PROJECT_ID"] = prj
 	} else if deploy.IsProduction() {
+		prj := os.Getenv("GOOGLE_CLOUD_PROJECT")
+		if prj == "" {
+			panic("env not found GOOGLE_CLOUD_PROJECT")
+		}
 		src = val.Production
-		src["PROJECT_ID"] = prj.Production
+		src["PROJECT_ID"] = prj
 	} else {
 		panic(fmt.Errorf("invalid deploy: %s", os.Getenv("DEPLOY")))
 	}
