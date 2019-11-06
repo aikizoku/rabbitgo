@@ -1,36 +1,33 @@
 .PHONY: h deploy deploy-prod
 
-_RUNTIME := go111
-_REGION := asia-northeast1
-_ENTRY := Handle
-_MEMORY := 128MB
-_TIMEOUT := 60s
-_TRIGGER := --trigger-http
+include env.mk
+
+_NAME := $(notdir $(CURDIR))
 
 h:
-	@echo 'deploy      : ステージング環境にデプロイする'
-	@echo 'deploy-prod : 本番環境にデプロイする'
+	@echo 'deploy      ステージング環境にデプロイする'
+	@echo 'deploy-prod 本番環境にデプロイする'
 
 deploy:
-	${call deploy,$(notdir $(CURDIR)),staging,${call get_project,staging}}
+	${call deploy,${call get-project,staging},$(_STG_RUNTIME),$(_STG_REGION),$(_STG_ENTRY),$(_STG_ENV),$(_STG_MEMORY),$(_STG_TIMEOUT),$(_STG_TRIGGER)}
 
 deploy-prod:
-	${call deploy,$(notdir $(CURDIR)),production,${call get_project,production}}
+	${call deploy,${call get-project,production},$(_PRD_RUNTIME),$(_PRD_REGION),$(_PRD_ENTRY),$(_PRD_ENV),$(_PRD_MEMORY),$(_PRD_TIMEOUT),$(_PRD_TRIGGER)}
 
 # マクロ
-define get_project
+define get-project
 $(shell node -p "require('../../project.json').$1")
 endef
 
 define deploy
-@gcloud functions deploy $1 \
+@gcloud functions deploy $(_NAME) \
+--project $1 \
 --source ./ \
---runtime $(_RUNTIME) \
---region $(_REGION) \
---entry-point $(_ENTRY) \
---env-vars-file ./env_$2.yaml \
---project $3 \
---memory $(_MEMORY) \
---timeout $(_TIMEOUT) \
-$(_TRIGGER)
+--runtime $2 \
+--region $3 \
+--entry-point $4 \
+--set-env-vars $5 \
+--memory $6 \
+--timeout $7 \
+$8
 endef

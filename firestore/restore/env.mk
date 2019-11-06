@@ -1,0 +1,5 @@
+_STG_BACKUP_BUCKET    := backup-rabee-jp
+_STG_BACKUP_FILE_PATH := 
+
+_PRD_BACKUP_BUCKET    := 
+_PRD_BACKUP_FILE_PATH := 
