@@ -3,7 +3,6 @@ package images
 import (
 	"context"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
 	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudpubsub"
 	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/log"
 )
@@ -18,16 +17,28 @@ type Client struct {
 func (c *Client) SendConvertRequest(
 	ctx context.Context,
 	sourceID string,
-	sourceURL string,
-	outPath string,
-	docRefs []*cloudfirestore.DocRef,
-	fieldName string) error {
+	sources []*Object,
+	dstIsArray bool,
+	dstFilePath string,
+	dstDocPath string,
+	dstFieldName string) error {
+	srcURLs := []string{}
+	for _, source := range sources {
+		if source == nil || source.URL == "" {
+			continue
+		}
+		srcURLs = append(srcURLs, source.URL)
+	}
+	if len(srcURLs) == 0 {
+		return nil
+	}
 	src := &ConvRequest{
-		SourceID:  sourceID,
-		SourceURL: sourceURL,
-		OutPath:   outPath,
-		DocRefs:   docRefs,
-		FieldName: fieldName,
+		SourceID:     sourceID,
+		SourceURLs:   srcURLs,
+		DstIsArray:   dstIsArray,
+		DstFilePath:  dstFilePath,
+		DstDocPath:   dstDocPath,
+		DstFieldName: dstFieldName,
 	}
 	err := c.psCli.Publish(ctx, c.topicName, src)
 	if err != nil {

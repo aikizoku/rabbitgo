@@ -2,10 +2,10 @@ const { IncomingWebhook } = require('@slack/webhook');
 var moment = require("moment");
 
 var COLORS = {
-  SUCCESS:        "#00FF40",
-  FAILURE:        "warning",
-  INTERNAL_ERROR: "warning",
-  TIMEOUT:        "warning",
+  SUCCESS:        "#01DF74",
+  FAILURE:        "danger",
+  INTERNAL_ERROR: "danger",
+  TIMEOUT:        "danger",
 };
 var TIME_FORMAT      = "YYYY-MM-DD HH:mm:ss";
 var TIME_ZONE        = "+0900";
@@ -13,12 +13,17 @@ var TIME_ZONE        = "+0900";
 const url = process.env.SLACK_WEBHOOK_URL;
 const webhook = new IncomingWebhook(url);
 
-// subscribeSlack is the main function called by Cloud Functions.
-module.exports.subscribeSlack = (pubSubEvent, context) => {
+// handle is the main function called by Cloud Functions.
+module.exports.handle = (pubSubEvent, context) => {
   const build = eventToBuild(pubSubEvent.data);
 
   const status = ['SUCCESS', 'FAILURE', 'INTERNAL_ERROR', 'TIMEOUT'];
-  if (status.indexOf(build.status) === -1 || !build.substitutions._ZEUS_SERVICE_ID) {
+  if (status.indexOf(build.status) === -1) {
+    return;
+  }
+
+  // GAE判定
+  if (!build.substitutions._SERVICE) {
     return;
   }
 
@@ -42,8 +47,10 @@ const createSlackMessage = (build) => {
       fields: [
         { title: 'Status', value: build.status, short: true },
         { title: 'Finish Time', value: moment(build.finishTime).utcOffset(TIME_ZONE).format(TIME_FORMAT), short: true },
+        { title: 'Repository', value: build.substitutions.REPO_NAME, short: true },
+        { title: 'Branch', value: build.substitutions.BRANCH_NAME, short: true },
         { title: 'Project', value: build.projectId, short: true },
-        { title: 'Service', value: build.substitutions._ZEUS_SERVICE_ID, short: true },
+        { title: 'Service', value: build.substitutions._SERVICE, short: true },
         { title: 'Build ID', value: build.id, short: false },
       ]
     }]
