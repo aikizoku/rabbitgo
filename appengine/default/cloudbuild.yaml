@@ -1,3 +1,3 @@
 steps:
 - name: gcr.io/cloud-builders/gcloud
-  args: ['app', 'deploy', '-q', 'appengine/default/app_$_DEPLOY.yaml']
+  args: ['app', 'deploy', '-q', 'appengine/$_SERVICE/app_$_DEPLOY.yaml']
