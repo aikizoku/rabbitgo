@@ -14,7 +14,7 @@ import (
 // GetProjectID ... プロジェクトIDを取得する
 func GetProjectID(deploy string) string {
 	// プロジェクト
-	file, err := ioutil.ReadFile("../project.json")
+	file, err := ioutil.ReadFile("../../project.json")
 	if err != nil {
 		panic(err)
 	}
