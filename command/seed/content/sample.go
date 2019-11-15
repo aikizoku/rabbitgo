@@ -31,11 +31,11 @@ func (m *Sample) Generate(ctx context.Context) {
 	// GetByQuery
 	//m.getByQuery(ctx)
 
-	// GetMultiByQuery
-	//m.getMultiByQuery(ctx)
+	// ListByQuery
+	//m.ListByQuery(ctx)
 
-	// GetMultiByQueryAndCursor
-	// m.getMultiByQueryCursor(ctx)
+	// ListByQueryAndCursor
+	// m.ListByQueryCursor(ctx)
 }
 
 func (m *Sample) batchCreate(ctx context.Context) {
@@ -108,10 +108,10 @@ func (m *Sample) getByQuery(ctx context.Context) {
 	pp.Println(dst)
 }
 
-func (m *Sample) getMultiByQuery(ctx context.Context) {
+func (m *Sample) ListByQuery(ctx context.Context) {
 	query := m.FCli.Collection("sample").Where("disabled", "==", false)
 	dsts := []*model.Sample{}
-	err := cloudfirestore.GetMultiByQuery(ctx, query, &dsts)
+	err := cloudfirestore.ListByQuery(ctx, query, &dsts)
 	if err != nil {
 		panic(err)
 	}
@@ -122,11 +122,11 @@ func (m *Sample) getMultiByQuery(ctx context.Context) {
 	pp.Println(dsts)
 }
 
-func (m *Sample) getMultiByQueryCursor(ctx context.Context) {
+func (m *Sample) ListByQueryCursor(ctx context.Context) {
 	// １回目のリクエスト
 	query := m.FCli.Collection("sample").Where("disabled", "==", false)
 	dsts := []*model.Sample{}
-	nextCursor, err := cloudfirestore.GetMultiByQueryCursor(ctx, query, 30, nil, &dsts)
+	nextCursor, err := cloudfirestore.ListByQueryCursor(ctx, query, 30, nil, &dsts)
 	if err != nil {
 		panic(err)
 	}
@@ -138,7 +138,7 @@ func (m *Sample) getMultiByQueryCursor(ctx context.Context) {
 
 	// ２回目のリクエスト
 	dsts = []*model.Sample{}
-	nextCursor, err = cloudfirestore.GetMultiByQueryCursor(ctx, query, 30, nextCursor, &dsts)
+	nextCursor, err = cloudfirestore.ListByQueryCursor(ctx, query, 30, nextCursor, &dsts)
 	if err != nil {
 		panic(err)
 	}

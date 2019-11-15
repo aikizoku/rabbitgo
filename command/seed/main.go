@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/command/content"
 	"github.com/aikizoku/rabbitgo/command/lib"
+	"github.com/aikizoku/rabbitgo/command/seed/content"
 )
 
 func main() {

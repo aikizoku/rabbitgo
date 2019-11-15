@@ -86,8 +86,8 @@ func GetByQuery(ctx context.Context, query firestore.Query, dst interface{}) (bo
 	return true, nil
 }
 
-// GetMultiByQuery ... クエリで複数取得する
-func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{}) error {
+// ListByQuery ... クエリで複数取得する
+func ListByQuery(ctx context.Context, query firestore.Query, dsts interface{}) error {
 	it := query.Documents(ctx)
 	defer it.Stop()
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
@@ -114,8 +114,8 @@ func GetMultiByQuery(ctx context.Context, query firestore.Query, dsts interface{
 	return nil
 }
 
-// GetMultiByQueryCursor ... クエリで複数取得する（ページング）
-func GetMultiByQueryCursor(ctx context.Context, query firestore.Query, limit int, cursor *firestore.DocumentSnapshot, dsts interface{}) (*firestore.DocumentSnapshot, error) {
+// ListByQueryCursor ... クエリで複数取得する（ページング）
+func ListByQueryCursor(ctx context.Context, query firestore.Query, limit int, cursor *firestore.DocumentSnapshot, dsts interface{}) (*firestore.DocumentSnapshot, error) {
 	if cursor != nil {
 		query = query.StartAfter(cursor)
 	}
@@ -212,8 +212,8 @@ func TxGetByQuery(ctx context.Context, tx *firestore.Transaction, query firestor
 	return true, nil
 }
 
-// TxGetMultiByQuery ... クエリで複数取得する（トランザクション）
-func TxGetMultiByQuery(ctx context.Context, tx *firestore.Transaction, query firestore.Query, dsts interface{}) error {
+// TxListByQuery ... クエリで複数取得する（トランザクション）
+func TxListByQuery(ctx context.Context, tx *firestore.Transaction, query firestore.Query, dsts interface{}) error {
 	it := tx.Documents(query)
 	defer it.Stop()
 	rv := reflect.Indirect(reflect.ValueOf(dsts))
