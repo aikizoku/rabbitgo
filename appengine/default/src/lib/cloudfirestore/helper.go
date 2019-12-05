@@ -203,6 +203,10 @@ func TxGetByQuery(ctx context.Context, tx *firestore.Transaction, query firestor
 	if err == iterator.Done {
 		return false, nil
 	}
+	if err != nil {
+		log.Errorm(ctx, "it.Next", err)
+		return false, err
+	}
 	err = dsnp.DataTo(dst)
 	if err != nil {
 		log.Errorm(ctx, "dsnp.DataTo", err)
