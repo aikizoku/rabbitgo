@@ -27,3 +27,13 @@ type MessageAndroid struct {
 type MessageWeb struct {
 	Icon string `json:"icon,omitempty"`
 }
+
+// Reserve ... 予約
+type Reserve struct {
+	ID         string        `json:"id"`
+	Message    *Message      `json:"message"`
+	ReservedAt int64         `json:"reserved_at"`
+	Status     ReserveStatus `json:"status"`
+	CreatedAt  int64         `json:"created_at"`
+	UpdatedAt  int64         `json:"updated_at"`
+}
