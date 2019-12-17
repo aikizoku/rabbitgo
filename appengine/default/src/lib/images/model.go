@@ -19,10 +19,8 @@ type Size struct {
 
 // ConvRequest ... 画像変換リクエスト
 type ConvRequest struct {
-	SourceID     string   `json:"source_id"`
-	SourceURLs   []string `json:"source_urls"`
-	DstIsArray   bool     `json:"dst_is_array"`
-	DstFilePath  string   `json:"dst_file_path"`
-	DstDocPath   string   `json:"dst_doc_path"`
-	DstFieldName string   `json:"dst_field_name"`
+	Key         string   `json:"key"`
+	SourceID    string   `json:"source_id"`
+	SourceURLs  []string `json:"source_urls"`
+	DstFilePath string   `json:"dst_file_path"`
 }

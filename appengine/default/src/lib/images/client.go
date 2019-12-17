@@ -16,12 +16,10 @@ type Client struct {
 // SendConvertRequest ... 画像変換リクエストを送信する
 func (c *Client) SendConvertRequest(
 	ctx context.Context,
+	key string,
 	sourceID string,
 	sources []*Object,
-	dstIsArray bool,
-	dstFilePath string,
-	dstDocPath string,
-	dstFieldName string) error {
+	dstFilePath string) error {
 	srcURLs := []string{}
 	for _, source := range sources {
 		if source == nil || source.URL == "" {
@@ -33,12 +31,10 @@ func (c *Client) SendConvertRequest(
 		return nil
 	}
 	src := &ConvRequest{
-		SourceID:     sourceID,
-		SourceURLs:   srcURLs,
-		DstIsArray:   dstIsArray,
-		DstFilePath:  dstFilePath,
-		DstDocPath:   dstDocPath,
-		DstFieldName: dstFieldName,
+		Key:         key,
+		SourceID:    sourceID,
+		SourceURLs:  srcURLs,
+		DstFilePath: dstFilePath,
 	}
 	err := c.psCli.Publish(ctx, c.topicName, src)
 	if err != nil {
