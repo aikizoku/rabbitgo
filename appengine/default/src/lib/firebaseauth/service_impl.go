@@ -47,6 +47,40 @@ func (s *service) SetCustomClaims(ctx context.Context, userID string, claims *Cl
 	return nil
 }
 
+func (s *service) GetEmail(ctx context.Context, userID string) (string, error) {
+	// FirebaseAuthUserを取得
+	user, err := s.cli.GetUser(ctx, userID)
+	if err != nil {
+		log.Errorm(ctx, "s.cli.GetUser", err)
+		return "", err
+	}
+	if user == nil {
+		return "", err
+	}
+	return user.Email, nil
+}
+
+func (s *service) GetTwitterID(ctx context.Context, userID string) (string, error) {
+	// FirebaseAuthUserを取得
+	user, err := s.cli.GetUser(ctx, userID)
+	if err != nil {
+		log.Errorm(ctx, "s.cli.GetUser", err)
+		return "", err
+	}
+	if user == nil {
+		return "", err
+	}
+
+	dst := ""
+	for _, userInfo := range user.ProviderUserInfo {
+		if userInfo != nil && userInfo.ProviderID == "twitter.com" {
+			dst = userInfo.UID
+			break
+		}
+	}
+	return dst, nil
+}
+
 // NewService ... Serviceを作成する
 func NewService(cli *auth.Client) Service {
 	return &service{

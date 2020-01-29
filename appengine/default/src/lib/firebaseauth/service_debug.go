@@ -58,6 +58,52 @@ func (s *serviceDebug) SetCustomClaims(ctx context.Context, userID string, claim
 	return nil
 }
 
+func (s *serviceDebug) GetEmail(ctx context.Context, userID string) (string, error) {
+	// ユーザーを取得できたらデバッグリクエストと判定する
+	ah := getAuthHeader(ctx)
+	if user := getUserByAuthHeader(ah); user != "" {
+		return "hirose.yuuki@rabee.jp", nil
+	}
+
+	// FirebaseAuthUserを取得
+	user, err := s.cli.GetUser(ctx, userID)
+	if err != nil {
+		log.Errorm(ctx, "s.cli.GetUser", err)
+		return "", err
+	}
+	if user == nil {
+		return "", err
+	}
+	return user.Email, nil
+}
+
+func (s *serviceDebug) GetTwitterID(ctx context.Context, userID string) (string, error) {
+	// AuthorizationHeaderからUserが取得できたらデバッグリクエストと判定する
+	ah := getAuthHeader(ctx)
+	if getUserByAuthHeader(ah) != "" {
+		return "", nil
+	}
+
+	// FirebaseAuthUserを取得
+	user, err := s.cli.GetUser(ctx, userID)
+	if err != nil {
+		log.Errorm(ctx, "s.cli.GetUser", err)
+		return "", err
+	}
+	if user == nil {
+		return "", err
+	}
+
+	dst := ""
+	for _, userInfo := range user.ProviderUserInfo {
+		if userInfo != nil && userInfo.ProviderID == "twitter.com" {
+			dst = userInfo.UID
+			break
+		}
+	}
+	return dst, nil
+}
+
 // NewDebugService ... DebugServiceを作成する
 func NewDebugService(cli *auth.Client) Service {
 	return &serviceDebug{
