@@ -7,11 +7,11 @@ h:
 	@echo 'deploy-cors-prod: GCSにCORS設定をデプロイする: 本番'
 
 deploy-cors:
-	${call deploy-cors,$(_STG_BUCKET)}
+	${call deploy-cors,staging,$(_STG_BUCKET)}
 
 deploy-cors-prod:
-	${call deploy-cors,$(_PRD_BUCKET)}
+	${call deploy-cors,production,$(_PRD_BUCKET)}
 
 define deploy-cors
-@gsutil cors set cors.json gs://$1
+@gsutil cors set cors-$1.json gs://$2
 endef
