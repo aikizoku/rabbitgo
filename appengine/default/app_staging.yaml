@@ -7,6 +7,7 @@ automatic_scaling:
   max_idle_instances: 1
   min_instances: 0
   max_instances: 1
+  max_concurrent_requests: 80
 
 service: default
 
