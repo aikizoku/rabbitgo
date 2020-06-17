@@ -3,7 +3,7 @@ package model
 import (
 	"cloud.google.com/go/firestore"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/images"
+	"github.com/rabee-inc/go-pkg/images"
 )
 
 // Sample ... サンプルモデル

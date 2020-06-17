@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
 	"github.com/aikizoku/rabbitgo/command/lib"
 	"github.com/aikizoku/rabbitgo/command/seed/content"
+	"github.com/rabee-inc/go-pkg/cloudfirestore"
 )
 
 func main() {

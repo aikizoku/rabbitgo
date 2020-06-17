@@ -1,14 +1,15 @@
 package app
 
 import (
+	"github.com/rabee-inc/go-pkg/cloudfirestore"
+	"github.com/rabee-inc/go-pkg/cloudpubsub"
+	"github.com/rabee-inc/go-pkg/deploy"
+	"github.com/rabee-inc/go-pkg/firebaseauth"
+	"github.com/rabee-inc/go-pkg/images"
+	"github.com/rabee-inc/go-pkg/jsonrpc2"
+	"github.com/rabee-inc/go-pkg/log"
+
 	"github.com/aikizoku/rabbitgo/appengine/default/src/handler/api"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudpubsub"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/deploy"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/firebaseauth"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/images"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/jsonrpc2"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/log"
 	"github.com/aikizoku/rabbitgo/appengine/default/src/repository"
 	"github.com/aikizoku/rabbitgo/appengine/default/src/service"
 )
@@ -43,7 +44,7 @@ func (d *Dependency) Inject(e *Environment) {
 	if deploy.IsProduction() {
 		faSvc = firebaseauth.NewService(aCli)
 	} else {
-		faSvc = firebaseauth.NewDebugService(aCli)
+		faSvc = firebaseauth.NewDebugService(aCli, map[string]interface{}{})
 	}
 	svc := service.NewSample(repo)
 

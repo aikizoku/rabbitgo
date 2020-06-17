@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/kelseyhightower/envconfig"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/environment"
+	"github.com/rabee-inc/go-pkg/environment"
 )
 
 // Environment ... 環境変数

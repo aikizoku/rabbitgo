@@ -3,7 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/log"
+	"github.com/rabee-inc/go-pkg/log"
+
 	"github.com/aikizoku/rabbitgo/appengine/default/src/repository"
 )
 

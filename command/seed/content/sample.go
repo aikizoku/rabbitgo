@@ -6,9 +6,9 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/k0kubun/pp"
+	"github.com/rabee-inc/go-pkg/cloudfirestore"
+	"github.com/rabee-inc/go-pkg/timeutil"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/cloudfirestore"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/util"
 	"github.com/aikizoku/rabbitgo/appengine/default/src/model"
 )
 
@@ -46,7 +46,7 @@ func (m *Sample) batchCreate(ctx context.Context) {
 			Category:  "a",
 			Name:      fmt.Sprintf("%d", i),
 			Disabled:  false,
-			CreatedAt: util.TimeNowUnix(),
+			CreatedAt: timeutil.NowUnix(),
 		}
 		cloudfirestore.BtCreate(ctx, bt, colRef, src)
 	}

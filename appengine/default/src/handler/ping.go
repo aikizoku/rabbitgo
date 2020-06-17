@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/log"
+	"github.com/rabee-inc/go-pkg/log"
 )
 
 // Ping ... 生存確認

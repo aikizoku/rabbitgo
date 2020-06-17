@@ -6,8 +6,8 @@ import (
 	"github.com/go-chi/chi"
 
 	"github.com/aikizoku/rabbitgo/appengine/default/src/handler"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/accesscontrol"
-	"github.com/aikizoku/rabbitgo/appengine/default/src/lib/deploy"
+	"github.com/rabee-inc/go-pkg/accesscontrol"
+	"github.com/rabee-inc/go-pkg/deploy"
 )
 
 // Routing ... ルーティング設定
