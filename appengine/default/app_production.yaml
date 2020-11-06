@@ -1,11 +1,8 @@
-runtime: go113
+runtime: go114
 env: standard
 instance_class: F2
 
 automatic_scaling:
-  min_idle_instances: 1
-  min_instances: 1
-  max_concurrent_requests: 40
 
 service: default
 

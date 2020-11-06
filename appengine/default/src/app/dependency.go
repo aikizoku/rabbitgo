@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/rabee-inc/go-pkg/accesscontrol"
 	"github.com/rabee-inc/go-pkg/cloudfirestore"
 	"github.com/rabee-inc/go-pkg/cloudpubsub"
 	"github.com/rabee-inc/go-pkg/deploy"
@@ -16,6 +17,7 @@ import (
 
 // Dependency ... 依存性
 type Dependency struct {
+	Accesscontrol   *accesscontrol.Middleware
 	Log             *log.Middleware
 	FirebaseAuth    *firebaseauth.Middleware
 	SampleHandler   *api.SampleHandler
@@ -44,11 +46,12 @@ func (d *Dependency) Inject(e *Environment) {
 	if deploy.IsProduction() {
 		faSvc = firebaseauth.NewService(aCli)
 	} else {
-		faSvc = firebaseauth.NewDebugService(aCli, map[string]interface{}{})
+		faSvc = firebaseauth.NewServiceDebug(aCli, map[string]interface{}{})
 	}
 	svc := service.NewSample(repo)
 
 	// Middleware
+	d.Accesscontrol = accesscontrol.NewMiddleware(nil)
 	d.Log = log.NewMiddleware(lCli, e.MinLogSeverity)
 	d.FirebaseAuth = firebaseauth.NewMiddleware(faSvc)
 

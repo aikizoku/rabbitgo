@@ -4,16 +4,15 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/rabee-inc/go-pkg/deploy"
 
 	"github.com/aikizoku/rabbitgo/appengine/default/src/handler"
-	"github.com/rabee-inc/go-pkg/accesscontrol"
-	"github.com/rabee-inc/go-pkg/deploy"
 )
 
 // Routing ... ルーティング設定
 func Routing(r *chi.Mux, d *Dependency) {
 	// ブラウザのCORS対応
-	r.Use(accesscontrol.Handle)
+	r.Use(d.Accesscontrol.Handle)
 
 	// Log
 	r.Use(d.Log.Handle)
