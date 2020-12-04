@@ -65,3 +65,4 @@ Session.vim
 #####=== Project specific settings ===#####
 docker/mysql/data/
 bin
+tmp

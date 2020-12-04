@@ -20,7 +20,7 @@ $(shell node -p "require('../../project.json').$1")
 endef
 
 define run
-$(GOPATH)/bin/realize start --server
+$(GOPATH)/bin/air
 endef
 
 define deploy
