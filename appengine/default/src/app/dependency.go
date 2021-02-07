@@ -35,8 +35,8 @@ func (d *Dependency) Inject(e *Environment) {
 	} else {
 		lCli = log.NewWriterStackdriver(e.ProjectID)
 	}
-	psCli := cloudpubsub.NewClient(e.ProjectID, []string{"image-converter"})
-	imgCli := images.NewClient(psCli, "image-converter")
+	psCli := cloudpubsub.NewClient(e.ProjectID, []string{images.ConverterTopicID})
+	imgCli := images.NewClient(psCli)
 
 	// Repository
 	repo := repository.NewSample(fCli, imgCli)
