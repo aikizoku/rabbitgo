@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/rabee-inc/go-pkg/deploy"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/handler"
+	"github.com/aikizoku/rabbitgo/appengine/api/src/handler"
 )
 
 // Routing ... ルーティング設定
@@ -24,9 +24,6 @@ func Routing(r *chi.Mux, d *Dependency) {
 	r.Route("/v1", func(r chi.Router) {
 		// API
 		r.Get("/sample", d.SampleHandler.Sample)
-
-		// API(JSONRPC2)
-		r.With(d.FirebaseAuth.Handle).Post("/rpc", d.JSONRPC2Handler.Handle)
 	})
 
 	// 例: Stagingのみ適用したいルーティング

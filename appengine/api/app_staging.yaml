@@ -1,13 +1,10 @@
-runtime: go114
+runtime: go116
 env: standard
 instance_class: F1
-
 automatic_scaling:
   max_idle_instances: 0
   max_instances: 1
   max_concurrent_requests: 80
-
-service: default
-
+service: api
 env_variables:
   DEPLOY: "staging"

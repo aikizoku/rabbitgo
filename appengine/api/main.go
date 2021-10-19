@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/app"
+	"github.com/aikizoku/rabbitgo/appengine/api/src/app"
 )
 
 func main() {
@@ -23,5 +24,7 @@ func main() {
 	app.Routing(r, d)
 
 	// Run
-	http.ListenAndServe(fmt.Sprintf(":%d", e.Port), r)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", e.Port), r); err != nil {
+		log.Fatal(err)
+	}
 }

@@ -1,10 +1,11 @@
-package api
+package site
 
 import (
 	"net/http"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/service"
 	"github.com/rabee-inc/go-pkg/renderer"
+
+	"github.com/aikizoku/rabbitgo/appengine/api/src/service"
 )
 
 // SampleHandler ... サンプルのハンドラ

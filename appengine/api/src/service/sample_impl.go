@@ -5,7 +5,7 @@ import (
 
 	"github.com/rabee-inc/go-pkg/log"
 
-	"github.com/aikizoku/rabbitgo/appengine/default/src/repository"
+	"github.com/aikizoku/rabbitgo/appengine/api/src/repository"
 )
 
 type sample struct {

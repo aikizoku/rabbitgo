@@ -5,22 +5,25 @@ import (
 
 	"github.com/aikizoku/rabbitgo/command/lib"
 	"github.com/aikizoku/rabbitgo/command/seed/content"
-	"github.com/rabee-inc/go-pkg/cloudfirestore"
 )
 
 func main() {
+	env := lib.GetEnv()
+	d := lib.NewDependency(env)
+	c := NewContent(d)
 	ctx := context.Background()
 
-	// env.jsonの読み込み
-	pID := lib.GetProjectID(lib.Staging)
+	c.Sample.Generate(ctx)
+}
 
-	// Inject
-	fCli := cloudfirestore.NewClient(pID)
+// Content ... 実処理
+type Content struct {
+	Sample *content.Sample
+}
 
-	u := &content.Sample{
-		FCli: fCli,
+// NewContent ... 実処理を取得する
+func NewContent(d *lib.Dependency) *Content {
+	return &Content{
+		Sample: content.NewSample(d),
 	}
-
-	// 実行
-	u.Generate(ctx)
 }

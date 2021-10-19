@@ -2,13 +2,15 @@ package lib
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
-	"os/exec"
-	"strings"
+
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
+	"google.golang.org/api/option"
 )
 
 // GetProjectID ... プロジェクトIDを取得する
@@ -26,73 +28,46 @@ func GetProjectID(deploy string) string {
 	return prj[deploy]
 }
 
-// CreateFile ... 任意の場所に任意のファイルを作成してデータを書き込む
-func CreateFile(path string, text string) {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0644)
-	if err != nil {
-		panic(err.Error())
+// NewAuthClient ... Authクライアントを作成
+func NewAuthClient(env string) *auth.Client {
+	var path string
+	if env == Production {
+		path = "../lib/credentials_production.json"
+	} else {
+		path = "../lib/credentials_staging.json"
 	}
-	defer file.Close()
-	fmt.Fprintln(file, text)
+	ctx := context.Background()
+	opt := option.WithCredentialsFile(path)
+	app, err := firebase.NewApp(ctx, nil, opt)
+	if err != nil {
+		panic(err)
+	}
+	cli, err := app.Auth(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return cli
 }
 
-// WriteFile ... 任意のファイルを開いてデータを書き込む
-func WriteFile(path string, text string) {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer file.Close()
-	fmt.Fprintln(file, text)
-}
+// GetEnv ... 実行環境を取得する
+func GetEnv() string {
+	var text string
+	for {
+		fmt.Print(fmt.Sprintf("%s(default) or %s? :", Staging, Production))
+		scanner := bufio.NewScanner(os.Stdin)
 
-// ReplaceFile ... 任意のファイルを開いてデータを置換する
-func ReplaceFile(path string, old string, new string) {
-	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
-	if err != nil {
-		panic(err.Error())
-	}
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		file.Close()
-		panic(err.Error())
-	}
-	file.Close()
+		// 入力待ち
+		scanner.Scan()
 
-	rData := strings.Replace(string(data), old, new, -1)
-
-	file, err = os.OpenFile(path, os.O_WRONLY|os.O_TRUNC, 0644)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer file.Close()
-	fmt.Fprintf(file, rData)
-}
-
-// ExecCommand ... 任意のコマンドを実行して結果を出力する
-func ExecCommand(name string, args ...string) {
-	cmd := exec.Command(name, args...)
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		panic(err.Error())
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	cmd.Start()
-
-	go PrintOutput(stdout)
-	go PrintOutput(stderr)
-
-	cmd.Wait()
-}
-
-// PrintOutput ... 任意の出力をフックする
-func PrintOutput(r io.Reader) {
-	scanner := bufio.NewScanner(r)
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		// 入力値判定
+		text = scanner.Text()
+		switch text {
+		case "", Staging:
+			return Staging
+		case Production:
+			return Production
+		default:
+			fmt.Println(fmt.Sprintf("Please input \"%s\" or \"%s\"", Staging, Production))
+		}
 	}
 }

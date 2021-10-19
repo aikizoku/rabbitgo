@@ -1,0 +1,5 @@
+dispatch:
+- url: "stg.hogehoge.com/*"
+  service: default
+- url: "stg.api.hogehoge.com/*"
+  service: api
