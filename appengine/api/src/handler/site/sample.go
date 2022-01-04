@@ -19,7 +19,7 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Svc.Sample(ctx)
 	if err != nil {
-		renderer.HandleError(ctx, w, "h.Svc.Sample", err)
+		renderer.HandleError(ctx, w, err)
 		return
 	}
 

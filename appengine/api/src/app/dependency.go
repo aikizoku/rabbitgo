@@ -28,37 +28,37 @@ type Dependency struct {
 // Inject ... 依存性を注入する
 func (d *Dependency) Inject(e *Environment) {
 	// Client
-	authCli := firebaseauth.NewClient(e.ProjectID)
-	fCli := cloudfirestore.NewClient(e.ProjectID)
-	var lCli log.Writer
+	cFirebaseAuth := firebaseauth.NewClient(e.ProjectID)
+	cFirestore := cloudfirestore.NewClient(e.ProjectID)
+	var cLog log.Writer
 	if deploy.IsLocal() {
-		lCli = log.NewWriterStdout()
+		cLog = log.NewWriterStdout()
 	} else {
-		lCli = log.NewWriterStackdriver(e.ProjectID)
+		cLog = log.NewWriterStackdriver(e.ProjectID)
 	}
-	psCli := cloudpubsub.NewClient(e.ProjectID, []string{
+	cPubsub := cloudpubsub.NewClient(e.ProjectID, []string{
 		images.ConverterTopicID,
 	})
-	imgCli := images.NewClient(psCli)
+	cImages := images.NewClient(cPubsub)
 
 	// Repository
-	repo := repository.NewSample(fCli, imgCli)
+	rSample := repository.NewSample(cFirestore, cImages)
 
 	// Service
-	var faSvc firebaseauth.Service
+	var sFirebaseAuth firebaseauth.Service
 	if deploy.IsProduction() {
-		faSvc = firebaseauth.NewService(authCli)
+		sFirebaseAuth = firebaseauth.NewService(cFirebaseAuth)
 	} else {
-		faSvc = firebaseauth.NewServiceDebug(authCli, map[string]interface{}{})
+		sFirebaseAuth = firebaseauth.NewServiceDebug(cFirebaseAuth, map[string]interface{}{})
 	}
-	svc := service.NewSample(repo)
+	sSample := service.NewSample(rSample)
 
 	// Middleware
 	d.Accesscontrol = accesscontrol.NewMiddleware(nil)
-	d.Log = log.NewMiddleware(lCli, e.MinLogSeverity)
-	d.FirebaseAuth = firebaseauth.NewMiddleware(faSvc, false)
+	d.Log = log.NewMiddleware(cLog, e.MinLogSeverity)
+	d.FirebaseAuth = firebaseauth.NewMiddleware(sFirebaseAuth, false)
 	d.InternalAuth = internalauth.NewMiddleware(e.InternalAuthToken)
 
 	// Handler
-	d.SampleHandler = site.NewSampleHandler(svc)
+	d.SampleHandler = site.NewSampleHandler(sSample)
 }

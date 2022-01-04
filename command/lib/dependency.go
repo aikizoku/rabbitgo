@@ -15,7 +15,7 @@ type Dependency struct {
 	FCli      *firestore.Client
 	PsCli     *cloudpubsub.Client
 	ImgCli    *images.Client
-	AlCli     *search.Client
+	AcLog     *search.Client
 	AtCli     *auth.Client
 }
 
@@ -25,15 +25,15 @@ func NewDependency(env string) *Dependency {
 	projectID := GetProjectID(env)
 
 	// Firestore
-	fCli := cloudfirestore.NewClient(projectID)
+	cFirestore := cloudfirestore.NewClient(projectID)
 
 	// PubSub
-	psCli := cloudpubsub.NewClient(projectID, []string{
+	cPubsub := cloudpubsub.NewClient(projectID, []string{
 		images.ConverterTopicID,
 	})
 
 	// ImageConverter
-	imgCli := images.NewClient(psCli)
+	cImages := images.NewClient(cPubsub)
 
 	// Algolia
 	var apiKey, apiSecret string
@@ -46,7 +46,7 @@ func NewDependency(env string) *Dependency {
 		apiKey = ""
 		apiSecret = ""
 	}
-	alCli := search.NewClientWithConfig(search.Configuration{
+	acLog := search.NewClientWithConfig(search.Configuration{
 		AppID:  apiKey,
 		APIKey: apiSecret,
 	})
@@ -56,10 +56,10 @@ func NewDependency(env string) *Dependency {
 
 	return &Dependency{
 		ProjectID: projectID,
-		FCli:      fCli,
-		PsCli:     psCli,
-		ImgCli:    imgCli,
-		AlCli:     alCli,
+		FCli:      cFirestore,
+		PsCli:     cPubsub,
+		ImgCli:    cImages,
+		AcLog:     acLog,
 		AtCli:     atCli,
 	}
 }

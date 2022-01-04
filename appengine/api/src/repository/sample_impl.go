@@ -8,8 +8,8 @@ import (
 )
 
 type sample struct {
-	fCli   *firestore.Client
-	imgCli *images.Client
+	cFirestore *firestore.Client
+	cImages    *images.Client
 }
 
 func (r *sample) Sample(ctx context.Context) error {
@@ -17,9 +17,9 @@ func (r *sample) Sample(ctx context.Context) error {
 }
 
 // NewSample ... リポジトリを作成する
-func NewSample(fCli *firestore.Client, imgCli *images.Client) Sample {
+func NewSample(cFirestore *firestore.Client, cImages *images.Client) Sample {
 	return &sample{
-		fCli:   fCli,
-		imgCli: imgCli,
+		cFirestore: cFirestore,
+		cImages:    cImages,
 	}
 }

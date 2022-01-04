@@ -63,6 +63,8 @@ Session.vim
 .vscode/
 
 #####=== Project specific settings ===#####
-docker/mysql/data/
 bin
+node_modules
 tmp
+credentials_staging.json
+credentials_production.json

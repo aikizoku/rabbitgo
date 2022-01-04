@@ -23,9 +23,8 @@
 *.test
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-rundoc/
 bin
-tmp/
-cloudbuild.yaml
-.air.toml
+cloudbuild_production.yaml
+cloudbuild_staging.yaml
 Makefile
+.air.toml

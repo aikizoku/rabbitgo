@@ -9,21 +9,21 @@ import (
 )
 
 type sample struct {
-	repo repository.Sample
+	rSample repository.Sample
 }
 
 func (s *sample) Sample(ctx context.Context) error {
-	err := s.repo.Sample(ctx)
+	err := s.rSample.Sample(ctx)
 	if err != nil {
-		log.Errorm(ctx, "s.repo.Sample", err)
+		log.Error(ctx, err)
 		return err
 	}
 	return nil
 }
 
 // NewSample ... サービスを作成する
-func NewSample(repo repository.Sample) Sample {
+func NewSample(rSample repository.Sample) Sample {
 	return &sample{
-		repo: repo,
+		rSample: rSample,
 	}
 }

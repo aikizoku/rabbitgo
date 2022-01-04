@@ -16,3 +16,8 @@ type Sample struct {
 	CreatedAt    int64                  `firestore:"created_at"`
 	UpdatedAt    int64                  `firestore:"updated_at"`
 }
+
+// SampleRef ... 参照を取得
+func SampleRef(cFirestore *firestore.Client) *firestore.CollectionRef {
+	return cFirestore.Collection("samples")
+}
