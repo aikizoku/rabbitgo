@@ -3,6 +3,8 @@ package app
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rabee-inc/go-pkg/environment"
+
+	"github.com/aikizoku/rabbitgo/appengine/api/src/config"
 )
 
 // Environment ... 環境変数
@@ -17,7 +19,7 @@ type Environment struct {
 
 // Get ... 環境変数を取得する
 func (e *Environment) Get() {
-	environment.Load("api")
+	environment.Load(config.GetFilePath("env.yaml"))
 	err := envconfig.Process("", e)
 	if err != nil {
 		panic(err)
