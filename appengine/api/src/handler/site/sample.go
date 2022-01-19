@@ -8,12 +8,16 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/api/src/service"
 )
 
-// SampleHandler ... サンプルのハンドラ
 type SampleHandler struct {
 	Svc service.Sample
 }
 
-// Sample ... サンプルハンドラ
+func NewSampleHandler(svc service.Sample) *SampleHandler {
+	return &SampleHandler{
+		Svc: svc,
+	}
+}
+
 func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -24,11 +28,4 @@ func (h *SampleHandler) Sample(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderer.Success(ctx, w)
-}
-
-// NewSampleHandler ... ハンドラを作成する
-func NewSampleHandler(svc service.Sample) *SampleHandler {
-	return &SampleHandler{
-		Svc: svc,
-	}
 }

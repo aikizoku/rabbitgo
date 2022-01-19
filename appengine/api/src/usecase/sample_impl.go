@@ -1,4 +1,4 @@
-package service
+package usecase
 
 import (
 	"context"
@@ -6,18 +6,15 @@ import (
 	"github.com/rabee-inc/go-pkg/log"
 
 	"github.com/aikizoku/rabbitgo/appengine/api/src/repository"
-	"github.com/aikizoku/rabbitgo/appengine/api/src/usecase"
 )
 
 type sample struct {
-	uSample usecase.Sample
 	rSample repository.Sample
 }
 
-func NewSample(uSample usecase.Sample, rSample repository.Sample) Sample {
+func NewSample(rSample repository.Sample) Sample {
 	return &sample{
-		uSample,
-		rSample,
+		rSample: rSample,
 	}
 }
 

@@ -12,14 +12,13 @@ type sample struct {
 	cImages    *images.Client
 }
 
-func (r *sample) Sample(ctx context.Context) error {
-	return nil
-}
-
-// NewSample ... リポジトリを作成する
 func NewSample(cFirestore *firestore.Client, cImages *images.Client) Sample {
 	return &sample{
 		cFirestore: cFirestore,
 		cImages:    cImages,
 	}
+}
+
+func (r *sample) Sample(ctx context.Context) error {
+	return nil
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/aikizoku/rabbitgo/appengine/api/src/handler/site"
 	"github.com/aikizoku/rabbitgo/appengine/api/src/repository"
 	"github.com/aikizoku/rabbitgo/appengine/api/src/service"
+	"github.com/aikizoku/rabbitgo/appengine/api/src/usecase"
 )
 
 // Dependency ... 依存性
@@ -44,6 +45,9 @@ func (d *Dependency) Inject(e *Environment) {
 	// Repository
 	rSample := repository.NewSample(cFirestore, cImages)
 
+	// Usecase
+	uSample := usecase.NewSample(rSample)
+
 	// Service
 	var sFirebaseAuth firebaseauth.Service
 	if deploy.IsProduction() {
@@ -51,7 +55,7 @@ func (d *Dependency) Inject(e *Environment) {
 	} else {
 		sFirebaseAuth = firebaseauth.NewServiceDebug(cFirebaseAuth, map[string]interface{}{})
 	}
-	sSample := service.NewSample(rSample)
+	sSample := service.NewSample(uSample, rSample)
 
 	// Middleware
 	d.Accesscontrol = accesscontrol.NewMiddleware(nil)

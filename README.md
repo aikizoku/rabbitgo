@@ -1,5 +1,5 @@
 # これはなに？
-Go API Template
+Go GCP Project Template
 
 # 開発環境構築
 

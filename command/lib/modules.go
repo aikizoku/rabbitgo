@@ -3,7 +3,6 @@ package lib
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -11,21 +10,22 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"google.golang.org/api/option"
+	"gopkg.in/yaml.v3"
 )
 
 // GetProjectID ... プロジェクトIDを取得する
 func GetProjectID(deploy string) string {
 	// プロジェクト
-	file, err := ioutil.ReadFile("../../project.json")
+	file, err := ioutil.ReadFile("../../env.yaml")
 	if err != nil {
 		panic(err)
 	}
-	prj := map[string]string{}
-	err = json.Unmarshal(file, &prj)
+	prj := map[string]interface{}{}
+	err = yaml.Unmarshal(file, &prj)
 	if err != nil {
 		panic(err)
 	}
-	return prj[deploy]
+	return prj[deploy].(map[string]interface{})["PROJECT_ID"].(string)
 }
 
 // NewAuthClient ... Authクライアントを作成
