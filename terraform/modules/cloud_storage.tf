@@ -4,8 +4,10 @@ resource "google_storage_bucket" "content" {
   location = var.region
 }
 
-resource "google_storage_bucket_access_control" "content" {
+resource "google_storage_bucket_iam_binding" "content" {
   bucket = var.content_bucket_name
-  role   = "READER"
-  entity = "allUsers"
+    role = "roles/storage.legacyObjectReader"
+    members = [
+      "allUsers",
+    ]
 }
