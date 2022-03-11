@@ -21,15 +21,3 @@ resource "google_cloudbuild_trigger" "backend_api_deploy" {
     }
   }
 }
-
-resource "google_project_iam_member" "appengine_account" {
-  project = var.project_id
-  role    = "roles/appengine.appAdmin"
-  member  = "serviceAccount:${var.project_num}@cloudbuild.gserviceaccount.com"
-}
-
-resource "google_project_iam_member" "service_account" {
-  project = var.project_id
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${var.project_num}@cloudbuild.gserviceaccount.com"
-}
