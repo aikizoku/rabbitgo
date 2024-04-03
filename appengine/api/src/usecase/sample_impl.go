@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/rabee-inc/go-pkg/log"
 
@@ -25,4 +26,15 @@ func (s *sample) Sample(ctx context.Context) error {
 		return err
 	}
 	return nil
+}
+
+func (s *sample) UnitTestMethod(
+	ctx context.Context,
+	hoge int,
+	fuga int,
+) (int, error) {
+	if hoge < 0 || fuga < 0 {
+		return 0, fmt.Errorf("hoge or fuga is less than 0")
+	}
+	return hoge + fuga, nil
 }

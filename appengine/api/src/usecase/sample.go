@@ -5,5 +5,13 @@ import (
 )
 
 type Sample interface {
-	Sample(ctx context.Context) error
+	Sample(
+		ctx context.Context,
+	) error
+
+	UnitTestMethod(
+		ctx context.Context,
+		hoge int,
+		fuga int,
+	) (int, error)
 }
